@@ -1,0 +1,49 @@
+{% extends "base_login.html" %}
+
+{% block content %}
+<div class="col-md-2">
+</div>
+<div class="col-md-6">
+    <div style="text-align:center">
+        <img src="../static/images/tno.png" alt="tno-logo1"
+             style="height:70px"/>
+        <img src="../static/images/pollux_logo_V1_300dpi.png" alt="tno-logo1"
+             style="height:70px;"/></a>
+        <br>
+        <br>
+        <a href="/documentation" target="_blank">Documentation</a>
+        <br>
+    </div>
+    <div class="login-panel panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Please Sign In</h3>
+        </div>
+        <div class="panel-body">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="alert alert-danger">
+                {{ messages[0] }}
+            </div>
+            {% endif %}
+            {% endwith %}
+            <form method="POST" action="/login">
+                <fieldset>
+                    <div class="form-group">
+                        <input class="form-control" placeholder="E-mail" name="email" type="email" autofocus>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" placeholder="Password" name="password" type="password" value="">
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input name="remember" type="checkbox" value="Remember Me">Remember Me
+                        </label>
+                    </div>
+                    <button class="btn btn-lg btn-success btn-block">Login</button>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
