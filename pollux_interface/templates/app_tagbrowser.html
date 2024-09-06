@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+<div class="col-lg-12">
+    <h1 class="page-header">Tag Browser</h1>
+</div>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="col-lg-12">
+    <label>Database Name</label>
+    <select class='form-control' style='width: 200px;' id='select_database'>
+        <option value="influxdb">influxdb</option>
+    </select>
+    <br>
+    <br>
+    <label>Unitname</label>
+    <select class='form-control' style='width: 300px;' id='select_unitnames' value="">
+    </select>
+    <label>Tagname</label>
+    <select class='form-control' style='width: 300px;' id='select_tagnames' value="">
+    </select>
+    <br>
+    <br>
+    <label_tab>Start Date:<i class="fa fa-calendar"></i></label_tab>
+    <input class='form-control' type="text" name="datetimesstart" id="starttime" style='width: 200px'>
+    <br>
+    <label_tab>End Date:<i class="fa fa-calendar"></i></label_tab>
+    <input class='form-control' type="text" name="datetimesend" id="endtime" style='width: 200px'>
+    <br>
+    <br>
+
+</div>
+<div class="col-lg-12">
+    <div class="card ">
+        <div class="card-body">
+            <input type="button" id="plot_tagname" value="Plot" onclick="plot_tagname();" class="btn btn-default btn-sm"
+                style="width:100px">
+            <div id="div_plot_tagname">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='page/app_tagbrowser/js/api.js') }}"></script>
+
+<script>
+    $('input[name="datetimesstart"]').daterangepicker({
+        timePicker: true,
+        singleDatePicker: true,
+        showDropdowns: true,
+        timePicker24Hour: true,
+        timePickerSeconds: true,
+        startDate: moment().startOf('day').subtract(1, 'days'),
+        locale: {
+            format: 'YYYY-MM-DD HH:mm:ss'
+        }
+    });
+    $('input[name="datetimesend"]').daterangepicker({
+        timePicker: true,
+        singleDatePicker: true,
+        showDropdowns: true,
+        timePicker24Hour: true,
+        timePickerSeconds: true,
+        startDate: moment().startOf('hour'),
+        locale: {
+            format: 'YYYY-MM-DD HH:mm:ss'
+        }
+    });
+</script>
+
+{% endblock %}

@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "gemini-user-interface"
+name = "pollux-user-interface"
 version = "0.1.0"
-description = "Core GUI library of the GEMINI Digital Twin"
+description = "Core GUI library of the POLLUX Digital Twin"
 authors = ["Ryvo Octaviano <ryvo.octaviano@tno.nl>"]
 readme = "README.md"
-packages = [{ include = "gemini_interface" }]
+packages = [{ include = "pollux_interface" }]
 classifiers = [
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Programming Language :: Python :: 3",
@@ -18,9 +18,9 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Mathematics",
     "Topic :: Scientific/Engineering :: Physics",
 ]
-homepage = "https://nwn.nu/projecten/innovaties/datagedreven-optimalisatie-aardwarmte-systemen/"
+homepage = "https://tno.nl"
 documentation = "https://readthedocs.org"
-repository = "https://github.com/GEMINI-Digital-Twin/gemini-user-interface"
+repository = "https://github.com/Pollux-digital-twin/pollux-user-interface"
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -28,8 +28,6 @@ pandas = "^2.2.2"
 pytest = "^8.2.2"
 pytest-cov = "^5.0.0"
 flake8 = "^7.0.0"
-gemini-framework = "^0.1.7"
-gemini-application = "^0.1.15"
 Flask = "^2.2.5"
 Flask-SQLAlchemy = "^3.0.4"
 Flask-Login = "^0.6.2"
@@ -38,7 +36,6 @@ flask_session = "^0.5.0"
 werkzeug = "^2.3.5"
 mysqlclient = "^2.2.0"
 influxdb-client = "^1.36.1"
-adh_sample_library_preview = "^0.10.10rc0"
 pytz = "^2024.1"
 flask-admin = "1.6.1"
 Flask-Migrate = "^4.0.7"
