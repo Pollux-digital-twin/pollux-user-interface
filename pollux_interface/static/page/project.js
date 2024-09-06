@@ -28,7 +28,7 @@ function create_new_project() {
     if (value == true) {
         project_name = window.prompt("What is the project name?", "project1");
 
-
+       
 
         $.ajax({
             type: 'POST',
@@ -135,7 +135,7 @@ function open_project() {
     if (project_name) {
         document.getElementById("select_project").value = project_name
 
-
+        
         $.ajax({
             type: 'POST',
             url: '/loadproject',
@@ -149,7 +149,7 @@ function open_project() {
 
                 window.location.reload()
 
-
+            
             }
         });
 

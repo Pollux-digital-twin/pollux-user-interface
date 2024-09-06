@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TNO GEMINI</title>
+    <title>TNO POLLUX</title>
 
     <link
         href="{{ url_for('static', filename='assets/fonts/fonts.googleapis.com_css_family=Poppins_200,300,400,600,700,800.css')}}"
@@ -43,6 +43,9 @@
                                 </div>
                             </a>
                             <ul class="dropdown-menu dropdown-navbar">
+                                <li><a href="/documentation" target="_blank" class="nav-item dropdown-item"><i
+                                    class="tim-icons icon-single-copy-04"></i>Documentation</a>
+                                </li>
                                 {% if not current_user.is_authenticated %}
                                 <li><a href="{{ url_for('auth.login') }}" class="nav-item dropdown-item"><i
                                             class="tim-icons icon-single-02"></i>Login</a>

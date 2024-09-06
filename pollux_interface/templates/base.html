@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TNO GEMINI</title>
+    <title>TNO POLLUX</title>
 
 
     <link href="{{ url_for('static', filename='vendor/font-awesome/font-awesome.min.css') }}" rel="stylesheet"
@@ -33,20 +33,35 @@
         .column-header {
             color: 'white';
         }
+
         .parameter-name {
             color: white;
         }
 
-        .parameters_table, .tagnames_table {
+        .parameters_table_class,
+        .tagnames_table_class {
             width: 100%;
         }
 
-        .parameters_table th, .parameters_table td,
-        .tagnames_table th, .tagnames_table td {
+        .parameters_table_class th,
+        .parameters_table_class td,
+        .tagnames_table th,
+        .tagnames_table td {
             width: 50%;
             text-align: left;
         }
 
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
     </style>
 
 </head>
@@ -67,43 +82,26 @@
                         <a href="#"><i class="tim-icons icon-app"></i> Application</a>
                         <ul>
                             <li>
-                                <a href="/app/example_app"><i class="tim-icons icon-bullet-list-67"></i>Example Application</a>
+                                <a href="/app/diagram"><i class="tim-icons icon-vector"></i>Diagram
+                                    Builder</a>
                             </li>
-<!--                            <li>-->
-<!--                                <a href="/app/diagram"><i class="tim-icons icon-vector"></i>Diagram-->
-<!--                                    Builder</a>-->
-<!--                            </li>-->
-<!--                            <li>-->
-<!--                                <a href="/app/timeseriesviewer"><i class="tim-icons icon-chart-bar-32"></i>Timeseries-->
-<!--                                    Viewer</a>-->
-<!--                            </li>-->
-                            <!-- <li>
-                                <a href="/app/esp"><i class="tim-icons icon-sound-wave"></i>ESP Monitoring</a>
-                            </li> -->
                             <li>
-                                <a href="/app/example_app_route"><i
-                                        class="tim-icons icon-sound-wave"></i>Example App</a>
+                                <a href="/app/timeseriesviewer"><i class="tim-icons icon-chart-bar-32"></i>Timeseries
+                                    Viewer</a>
                             </li>
-<!--                            <li>-->
-<!--                                <a href="/app/injectionwellmonitoring"><i-->
-<!--                                        class="tim-icons icon-sound-wave"></i>Injection Well Monitoring</a>-->
-<!--                            </li>-->
-<!--                            <li>-->
-<!--                                <a href="/app/tagbrowser"><i class="tim-icons icon-tag"></i>Tag Browser</a>-->
-<!--                            </li>-->
-<!--                            <li>-->
-<!--                                <a href="/app/parameters_overview"><i class="tim-icons icon-bullet-list-67"></i>Parameters overview</a>-->
-<!--                            </li>-->
+                            <li>
+                                <a href="/app/tagbrowser"><i class="tim-icons icon-tag"></i>Tag Browser</a>
+                            </li>
                         </ul>
                     </li>
-<!--                    <li>-->
-<!--                        <a href="#"><i class="tim-icons icon-settings-gear-63"></i> Settings</a>-->
-<!--                        <ul>-->
-<!--                            <li>-->
-<!--                                <a href="/setting/plant"><i class="fa fa-database"></i>Plant Configuration</a>-->
-<!--                            </li>-->
-<!--                        </ul>-->
-<!--                    </li>-->
+                    <li>
+                        <a href="#"><i class="tim-icons icon-settings-gear-63"></i> Settings</a>
+                        <ul>
+                            <li>
+                                <a href="/setting/plant"><i class="fa fa-database"></i>Plant Configuration</a>
+                            </li>
+                        </ul>
+                    </li>
                     <li>
                         <a href="#"><i class="tim-icons icon-paper"></i> Info</a>
                         <ul>
@@ -111,8 +109,7 @@
                                 <a href="/report"><i class="tim-icons icon-double-right"></i>Report</a>
                             </li>
                             <li>
-                                <a href="/documentation" target="_blank"><i
-                                        class="tim-icons icon-double-right"></i>Documentation</a>
+                                <a href="/documentation"><i class="tim-icons icon-double-right"></i>Documentation</a>
                             </li>
                         </ul>
                     </li>
@@ -124,8 +121,8 @@
             <nav class="navbar navbar-expand-lg navbar-absolute navbar-transparent">
                 <div class="container-fluid">
                     <a class="navbar-brand"><img src="../static/images/tno.png" alt="tno-logo1"
-                            style="height:45px" /><img src="../static/images/pollux_logo_V1_300dpi.png"
-                            alt="tno-logo1" style="height:45px" /></a>
+                            style="height:45px" /><img src="../static/images/pollux.png"
+                            alt="pollux-logo1" style="height:45px" /></a>
                     <ul class="navbar-nav ml-xl">
                         <li class="dropdown nav-item">
                             <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
@@ -178,6 +175,9 @@
                                 </div>
                             </a>
                             <ul class="dropdown-menu dropdown-navbar">
+                                <li><a href="/documentation" target="_blank" class="nav-item dropdown-item"><i
+                                            class="tim-icons icon-single-copy-04"></i>Documentation</a>
+                                </li>
                                 {% if not current_user.is_authenticated %}
                                 <li><a href="{{ url_for('auth.login') }}" class="nav-item dropdown-item"><i
                                             class="tim-icons icon-single-02"></i>Login</a>
@@ -189,11 +189,12 @@
                                         out</a>
                                 </li>
                                 <li class="nav-link"><a href="{{ url_for('auth.password') }}"
-                                    class="nav-item dropdown-item"><i class="tim-icons icon-refresh-02"></i>Change Password</a>
+                                        class="nav-item dropdown-item"><i class="tim-icons icon-refresh-02"></i>Change
+                                        Password</a>
                                 </li>
                                 {% if current_user.role == 'admin' %}
                                 <li><a href="{{ url_for('auth.signup') }}" class="nav-item dropdown-item"><i
-                                    class="tim-icons icon-tap-02"></i>Add User</a>
+                                            class="tim-icons icon-tap-02"></i>Add User</a>
                                 </li>
                                 <li><a href="/admin" class="nav-item dropdown-item"><i
                                             class="tim-icons icon-badge"></i>Admin Manager</a>

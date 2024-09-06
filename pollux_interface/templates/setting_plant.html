@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block content %}
+
+<div class="col-lg-6">
+    <h1 class="page-header">Plant Configuration</h1>
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td> Start time</td>
+                        <td><input class='form-control' id='start_time' value="" style="color:white">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> Measured Interval [s]</td>
+                        <td><input class='form-control' id='measured_interval' value="" style="color:white">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> Filtered Interval [s]</td>
+                        <td><input class='form-control' id='filtered_interval' value="" style="color:white"></td>
+                    </tr>
+                    <tr>
+                        <td> Calculated Interval [s]</td>
+                        <td><input class='form-control' id='calculated_interval' value="" style="color:white"></td>
+                    </tr>
+                    <tr>
+                        <td> Prediction Interval [s]</td>
+                        <td><input class='form-control' id='prediction_interval' value="" style="color:white"></td>
+                    </tr>
+                    <tr>
+                        <td> Prediction Horizon [day]</td>
+                        <td><input class='form-control' id='prediction_horizon' value="" style="color:white"></td>
+                    </tr>
+                    <tr>
+                        <td> Dashboard url</td>
+                        <td><input class='form-control' id='dashboard_url' value="" style="color:white"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <input type="button" id="save" value="Save Parameters" onclick="save_plant_parameters();"
+                class="btn btn-default btn-sm">
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-6">
+    <h1 class="page-header">Database Configuration</h1>
+    <div class="card">
+        <div class="card-body">
+            <label>Database Name</label>
+            <select class='form-control' style='width: 200px;' id='select_database' value="">
+                <option value=""></option>
+            </select>
+            <br>
+
+            <input type="button" id="save" value="Save Database Parameters" onclick="save_database_parameters();"
+                class="btn btn-default btn-sm">
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+<script src="{{ url_for('static', filename='page/setting_plant/js/api.js') }}"></script>
+
+{% endblock %}
