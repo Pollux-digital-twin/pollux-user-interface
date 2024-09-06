@@ -5,7 +5,7 @@ import json
 from datetime import datetime, timezone
 import pytz
 
-# from pollux_framework.database.influxdb_driver import InfluxdbDriver
+from pollux_framework.database.influxdb_driver import InfluxdbDriver
 
 app_tagbrowser = Blueprint('app_tagbrowser', __name__)
 
@@ -28,7 +28,7 @@ def connect_database():
         plant_conf = json.load(jsonfile)
 
     if database_name == 'influxdb':
-        # db_driver = InfluxdbDriver()
+        db_driver = InfluxdbDriver()
         db_conf = {
             "url": os.getenv('INFLUXDB_URL', 'http://localhost:8086'),
             "org": os.getenv('INFLUXDB_ORG', 'TNO'),
@@ -65,18 +65,16 @@ def get_tagnames():
     unit_name = request.json['unit_name']
     tagnames = []
 
-    # if isinstance(db_driver, AvevaDriver):
-    #     tagnames = db_driver.get_tagnames('')
-    # if isinstance(db_driver, InfluxdbDriver):
-    #     project_folder_path = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'],
-    #                                        project_name)
-    #     with open(os.path.join(project_folder_path, unit_name + '.param'), "r") as jsonfile:
-    #         component_param = json.load(jsonfile)
-    #
-    #     for tagname in component_param['tagnames']['measured'].keys():
-    #         tagnames.append(tagname + '.measured')
-    #     for tagname in component_param['tagnames']['calculated'].keys():
-    #         tagnames.append(tagname + '.calculated')
+    if isinstance(db_driver, InfluxdbDriver):
+        project_folder_path = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'],
+                                           project_name)
+        with open(os.path.join(project_folder_path, unit_name + '.param'), "r") as jsonfile:
+            component_param = json.load(jsonfile)
+
+        for tagname in component_param['tagnames']['measured'].keys():
+            tagnames.append(tagname + '.measured')
+        for tagname in component_param['tagnames']['calculated'].keys():
+            tagnames.append(tagname + '.calculated')
 
     return {'tagnames': sorted(tagnames)}
 
@@ -105,15 +103,14 @@ def plot_tagnames():
     times_utc = []
     times_local = []
 
-    # if isinstance(db_driver, InfluxdbDriver):
-    #     tagname = request.json['tagname']
-    #     result, times_utc = db_driver.read_data(project_name, unitname, tagname, start_time,
-    #                                             end_time)
-    #
-    #
-    # for time_utc in times_utc:
-    #     time_local = datetime.fromisoformat(time_utc).astimezone(tzobject).strftime(
-    #         "%Y-%m-%d %H:%M:%S")
-    #     times_local.append(time_local)
+    if isinstance(db_driver, InfluxdbDriver):
+        tagname = request.json['tagname']
+        result, times_utc = db_driver.read_data(project_name, unitname, tagname, start_time,
+                                                end_time)
+
+    for time_utc in times_utc:
+        time_local = datetime.fromisoformat(time_utc).astimezone(tzobject).strftime(
+            "%Y-%m-%d %H:%M:%S")
+        times_local.append(time_local)
 
     return {'x': times_local, 'y': result}
