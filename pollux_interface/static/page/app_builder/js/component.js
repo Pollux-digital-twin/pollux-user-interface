@@ -19,6 +19,197 @@ function addElectrolyzer() {
     addComponent(componentStyling, inports, outports, parameters, tagnames);
 }
 
+function addHydrogenDemand() {
+    componentStyling = {
+        ".label": {
+            text: "Hydrogen Demand",
+            fontSize: 12
+        },
+    };
+    inports = ["in"]
+    outports = []
+    parameters = {
+        type: 'hydrogen_demand'
+    }
+    tagnames = {
+        "measured": {
+        },
+        "calculated": {
+        }
+    }
+    addComponent(componentStyling, inports, outports, parameters, tagnames);
+}
+
+function addHydrogenStorage() {
+    componentStyling = {
+        ".label": {
+            text: "Hydrogen Storage",
+            fontSize: 12
+        },
+    };
+    inports = ["in"]
+    outports = ["out"]
+    parameters = {
+        type: 'hydrogen_storage'
+    }
+    tagnames = {
+        "measured": {
+        },
+        "calculated": {
+        }
+    }
+    addComponent(componentStyling, inports, outports, parameters, tagnames);
+}
+
+function addElectricitySource() {
+    componentStyling = {
+        ".label": {
+            text: "Electricity Source",
+            fontSize: 12
+        },
+    };
+    inports = []
+    outports = ["out"]
+    parameters = {
+        type: 'electricity_source'
+    }
+    tagnames = {
+        "measured": {
+        },
+        "calculated": {
+        }
+    }
+    addComponent(componentStyling, inports, outports, parameters, tagnames);
+}
+
+
+function addElectricityDemand() {
+    componentStyling = {
+        ".label": {
+            text: "Electricity Demand",
+            fontSize: 12
+        },
+    };
+    inports = ["in"]
+    outports = []
+    parameters = {
+        type: 'electricity_demand'
+    }
+    tagnames = {
+        "measured": {
+        },
+        "calculated": {
+        }
+    }
+    addComponent(componentStyling, inports, outports, parameters, tagnames);
+}
+
+function addElectricityStorage() {
+    componentStyling = {
+        ".label": {
+            text: "Electricity Storage",
+            fontSize: 12
+        },
+    };
+    inports = ["in"]
+    outports = ["out"]
+    parameters = {
+        type: 'electricity_storage'
+    }
+    tagnames = {
+        "measured": {
+        },
+        "calculated": {
+        }
+    }
+    addComponent(componentStyling, inports, outports, parameters, tagnames);
+}
+
+
+function addHeatDemand() {
+    componentStyling = {
+        ".label": {
+            text: "Heat Demand",
+            fontSize: 12
+        },
+    };
+    inports = ["in"]
+    outports = ["out"]
+    parameters = {
+        type: 'heat_demand'
+    }
+    tagnames = {
+        "measured": {
+        },
+        "calculated": {
+        }
+    }
+    addComponent(componentStyling, inports, outports, parameters, tagnames);
+}
+
+function addHeatPump() {
+    componentStyling = {
+        ".label": {
+            text: "Heat Pump",
+            fontSize: 12
+        },
+    };
+    inports = ["primary_in","primary_out","electricity_in"]
+    outports = ["secondary_in", "secondary_out"]
+    parameters = {
+        type: 'heatpump'
+    }
+    tagnames = {
+        "measured": {
+        },
+        "calculated": {
+        }
+    }
+    addComponent(componentStyling, inports, outports, parameters, tagnames);
+}
+
+function addHeatSource() {
+    componentStyling = {
+        ".label": {
+            text: "Heat Source",
+            fontSize: 12
+        },
+    };
+    inports = ["in"]
+    outports = ["out"]
+    parameters = {
+        type: 'heat_source'
+    }
+    tagnames = {
+        "measured": {
+        },
+        "calculated": {
+        }
+    }
+    addComponent(componentStyling, inports, outports, parameters, tagnames);
+}
+
+function addHeatStorage() {
+    componentStyling = {
+        ".label": {
+            text: "Heat Storage",
+            fontSize: 12
+        },
+    };
+    inports = ["in"]
+    outports = ["out"]
+    parameters = {
+        type: 'heat_storage'
+    }
+    tagnames = {
+        "measured": {
+        },
+        "calculated": {
+        }
+    }
+    addComponent(componentStyling, inports, outports, parameters, tagnames);
+}
+
 function addComponent(styling, inports, outports, parameters, tagnames) {
     element = new joint.shapes.devs.Model({
         position: { x: 100, y: 100 },

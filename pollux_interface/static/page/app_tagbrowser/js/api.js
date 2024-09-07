@@ -70,7 +70,7 @@ $('#select_unitnames').on('change', function () {
 function get_tagnames() {
     var unitname = $('#select_unitnames').val();
     var fieldID = $('#select_project').val();
-
+    console.log(unitname)
     $.ajax({
         type: 'POST',
         url: '/app/tagbrowser/get_tagnames',

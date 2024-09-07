@@ -68,13 +68,15 @@ def get_tagnames():
     if isinstance(db_driver, InfluxdbDriver):
         project_folder_path = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'],
                                            project_name)
-        with open(os.path.join(project_folder_path, unit_name + '.param'), "r") as jsonfile:
-            component_param = json.load(jsonfile)
 
-        for tagname in component_param['tagnames']['measured'].keys():
-            tagnames.append(tagname + '.measured')
-        for tagname in component_param['tagnames']['calculated'].keys():
-            tagnames.append(tagname + '.calculated')
+        if os.path.exists(os.path.join(project_folder_path, unit_name + '.param')):
+            with open(os.path.join(project_folder_path, unit_name + '.param'), "r") as jsonfile:
+                component_param = json.load(jsonfile)
+
+            for tagname in component_param['tagnames']['measured'].keys():
+                tagnames.append(tagname + '.measured')
+            for tagname in component_param['tagnames']['calculated'].keys():
+                tagnames.append(tagname + '.calculated')
 
     return {'tagnames': sorted(tagnames)}
 

@@ -58,10 +58,11 @@ def load_diagram():
     project_name = request.json['field_name']
     project_folder_path = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], project_name)
 
-    diagram = dict()
     if os.path.exists(os.path.join(project_folder_path, 'diagram.json')):
         with open(os.path.join(project_folder_path, 'diagram.json'), "r") as jsonfile:
             diagram = json.load(jsonfile)
+    else:
+        diagram = {'cells':{}}
 
     for component in diagram['cells']:
         if (component['type'] == 'devs.Link') or (component['type'] == 'standard.Circle'):
