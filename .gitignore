@@ -1,0 +1,7 @@
+.idea
+/venv
+__pycache__
+flask_session
+instance
+poetry.lock
+.coverage
