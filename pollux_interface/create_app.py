@@ -32,7 +32,7 @@ def create_app():
 
     app.config['SECRET_KEY'] = b'0\xbf\xb6\x04q\xf2\x12,\xfa\xfa\xf8T'
     app.config['SQLALCHEMY_DATABASE_URI'] = \
-        f"mysql://root:root@{os.getenv('GEMINI_MYSQLDB_URL', 'localhost')}:3306/geminidb"
+        f"mysql://root:root@{os.getenv('POLLUX_MYSQLDB_URL', 'localhost')}:3306/polluxdb"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     app.config["SESSION_PERMANENT"] = False
@@ -101,25 +101,25 @@ def create_app():
 
 
 
-    # try:
-    #     with app.app_context():
-    #         db.create_all()
-    #
-    #         user = User.query.filter_by(email="admin@localhost").first()
-    #         if not user:
-    #             new_user = User(email="admin@localhost",
-    #                             name=os.getenv('POLLUX_ADMIN_NAME', "admin"),
-    #                             password=generate_password_hash(
-    #                                 os.getenv('POLLUX_ADMIN_PASSWORD', "Admin123456!@#$"),
-    #                                 method='scrypt'), role="admin")
-    #
-    #             db.session.add(new_user)
-    #             db.session.commit()
-    # except Exception as exception:
-    #     print(
-    #         "got the following exception when attempting db.create_all() in create_app.py: " + str(
-    #             exception))
-    # finally:
-    #     print("db.create_all() in create_app.py was successful - no exceptions were raised")
+    try:
+        with app.app_context():
+            db.create_all()
+
+            user = User.query.filter_by(email="admin@localhost").first()
+            if not user:
+                new_user = User(email="admin@localhost",
+                                name=os.getenv('POLLUX_ADMIN_NAME', "admin"),
+                                password=generate_password_hash(
+                                    os.getenv('POLLUX_ADMIN_PASSWORD', "Admin123456!@#$"),
+                                    method='scrypt'), role="admin")
+
+                db.session.add(new_user)
+                db.session.commit()
+    except Exception as exception:
+        print(
+            "got the following exception when attempting db.create_all() in create_app.py: " + str(
+                exception))
+    finally:
+        print("db.create_all() in create_app.py was successful - no exceptions were raised")
 
     return app

@@ -1,6 +1,6 @@
 from flask import Blueprint, current_app, request, jsonify
 # Import models
-from pollux_framework.modules.productionwell.unit import ExampleModule
+# from pollux_framework.modules.productionwell.unit import ExampleModule
 
 # Import packages
 
