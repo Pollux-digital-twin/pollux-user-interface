@@ -10,6 +10,16 @@ main = Blueprint('main', __name__)
 def index():
     return render_template('index.html')
 
+@main.route('/app/diagram')
+@login_required
+def app_diagram():
+    return render_template('app_diagram.html')
+
+@main.route('/app/scenarioanalysis')
+@login_required
+def app_scenarioanalysis():
+    return render_template('app_scenarioanalysis.html')
+
 @main.route('/documentation')
 def documentation():
     return render_template('index.html')
