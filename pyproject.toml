@@ -18,9 +18,9 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Mathematics",
     "Topic :: Scientific/Engineering :: Physics",
 ]
-homepage = "/"
-documentation = ""
-repository = "https://github.com/Pollux-digital-Twin/pollux-user-interface"
+
+documentation = "https://readthedocs.org"
+repository = "https://github.com/Pollux-digital-twin/pollux-user-interface"
 
 [tool.poetry.dependencies]
 python = "^3.11"
