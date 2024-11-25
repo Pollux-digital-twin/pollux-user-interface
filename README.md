@@ -1,6 +1,6 @@
 # pollux-user-interface
 
-This repository is part of the Pollux digital twin of the MRDH/People project. 
+This repository is part of the TNO PolluX Digital Twin
 
 It includes the web based user interface repository of the Pollux Digital Twin
 
