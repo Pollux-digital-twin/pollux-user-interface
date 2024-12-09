@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, current_app, send_from_directory
-from flask_login import login_required, current_user
+from flask_login import login_required
 import os
 
 main = Blueprint('main', __name__)
@@ -9,6 +9,7 @@ main = Blueprint('main', __name__)
 @login_required
 def index():
     return render_template('index.html')
+
 
 @main.route('/app/diagram')
 @login_required
@@ -20,9 +21,18 @@ def app_diagram():
 def app_scenarioanalysis():
     return render_template('app_scenarioanalysis.html')
 
+
+@main.route('/app/tagbrowser')
+@login_required
+def app_tagbrowser():
+    return render_template('app_tagbrowser.html')
+
+
+# ===================================================================
 @main.route('/documentation')
 def documentation():
-    return render_template('index.html')
+    return render_template('documentation.html')
+
 
 @main.route('/documentation/sphinx/', defaults={'filename': 'index.html'})
 @main.route('/documentation/sphinx/<path:filename>')
@@ -32,27 +42,26 @@ def docshtml(filename):
         filename
     )
 
-# @main.route('/app/example_app_route')
-# @login_required
-# def app_example():
-#     return render_template('app_example.html')
+
+@main.route('/report')
+@login_required
+def report():
+    return render_template('report.html')
+
 
 @main.route('/app/timeseriesviewer')
 @login_required
 def timeseriesviewer():
     return render_template('timeseries.html')
 
-@main.route('/app/app_electrolyser')
-@login_required
-def app_electrolyser():
-    return render_template('app_electrolyser.html')
 
-@main.route('/app/app_heatpump')
-@login_required
-def app_heatpump():
-    return render_template('app_heatpump.html')
-
+# ====================================================================
 @main.route('/setting/plant')
 @login_required
 def setting_plant():
     return render_template('setting_plant.html')
+
+
+@main.route('/templates/<path:filename>')
+def serve_template_file(filename):
+    return send_from_directory('templates', filename)

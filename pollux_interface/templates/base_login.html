@@ -43,6 +43,9 @@
                                 </div>
                             </a>
                             <ul class="dropdown-menu dropdown-navbar">
+                                <li><a href="/documentation" target="_blank" class="nav-item dropdown-item"><i
+                                    class="tim-icons icon-single-copy-04"></i>Documentation</a>
+                                </li>
                                 {% if not current_user.is_authenticated %}
                                 <li><a href="{{ url_for('auth.login') }}" class="nav-item dropdown-item"><i
                                             class="tim-icons icon-single-02"></i>Login</a>

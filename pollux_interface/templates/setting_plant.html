@@ -2,6 +2,10 @@
 
 {% block title %}
 
+{% endblock %}
+
+{% block content %}
+
 <div class="col-lg-6">
     <h1 class="page-header">Plant Configuration</h1>
     <div class="card">
@@ -34,10 +38,14 @@
                         <td> Prediction Horizon [day]</td>
                         <td><input class='form-control' id='prediction_horizon' value="" style="color:white"></td>
                     </tr>
+                    <tr>
+                        <td> Dashboard url</td>
+                        <td><input class='form-control' id='dashboard_url' value="" style="color:white"></td>
+                    </tr>
                 </tbody>
             </table>
             <input type="button" id="save" value="Save Parameters" onclick="save_plant_parameters();"
-                class="btn btn-info btn-sm">
+                class="btn btn-default btn-sm">
         </div>
     </div>
 </div>
@@ -47,87 +55,16 @@
     <div class="card">
         <div class="card-body">
             <label>Database Name</label>
-            <select class='form-control' style='width: 200px;' id='select_database' value="influxdb">
-                <option value="influxdb">influxdb</option>
-                <option value="avevadb">avevadb</option>
+            <select class='form-control' style='width: 200px;' id='select_database' value="">
+                <option value=""></option>
             </select>
             <br>
-            <table class="table table-bordered" id="table-influxdb">
-                <tbody>
-                    <tr>
-                        <td> url</td>
-                        <td><input class='form-control' id='influxdb_url' value="" style="color:white">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td> org</td>
-                        <td><input class='form-control' id='influxdb_org' value="" style="color:white">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td> bucket</td>
-                        <td><input class='form-control' id='influxdb_bucket' value="" style="color:white">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td> username</td>
-                        <td><input class='form-control' id='influxdb_username' value="" style="color:white">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td> password</td>
-                        <td><input class='form-control' id='influxdb_password' value="" style="color:white">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td> token</td>
-                        <td><input class='form-control' id='influxdb_token' value="" style="color:white">
-                        </td>
-                    </tr>
-                </tbody>
-
-            </table>
-            <table class="table table-bordered" id="table-avevadb">
-                <tbody>
-                    <tr>
-                        <td> url</td>
-                        <td><input class='form-control' id='avevadb_url' value="" style="color:white">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td> tenant</td>
-                        <td><input class='form-control' id='avevadb_tenant' value="" style="color:white">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td> client id</td>
-                        <td><input class='form-control' id='avevadb_client_id' value="" style="color:white">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td> client secret</td>
-                        <td><input class='form-control' id='avevadb_client_secret' value="" style="color:white">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td> namespace id</td>
-                        <td><input class='form-control' id='avevadb_namespace_id' value="" style="color:white">
-                        </td>
-                    </tr>
-                </tbody>
-
-            </table>
-
 
             <input type="button" id="save" value="Save Database Parameters" onclick="save_database_parameters();"
-                class="btn btn-info btn-sm">
+                class="btn btn-default btn-sm">
         </div>
     </div>
 </div>
-
-{% endblock %}
-
-{% block content %}
 
 {% endblock %}
 

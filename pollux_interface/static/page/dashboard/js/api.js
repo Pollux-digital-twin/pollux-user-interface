@@ -1,5 +1,5 @@
 function loadURL(){
-    var fieldID = $('#select_project').val();
+    var fieldID = $('#project_name').val();
 
     $.ajax({
         type: 'POST',

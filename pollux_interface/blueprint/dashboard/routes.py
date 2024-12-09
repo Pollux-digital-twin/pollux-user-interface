@@ -13,7 +13,7 @@ dashboard = Blueprint('dashboard', __name__)
 @dashboard.route('/dashboard/get_url', methods=['POST'])
 def get_plant_parameters():
     project_name = request.json['field_name']
-    project_folder_path = os.path.join(current_app.config['GEMINI_PROJECT_FOLDER'], project_name)
+    project_folder_path = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], project_name)
 
     with open(os.path.join(project_folder_path, 'plant.conf'), "r") as jsonfile:
         plant_conf = json.load(jsonfile)

@@ -12,7 +12,7 @@ function connect_database() {
     clear_unitnames()
     clear_tagnames()
 
-    var fieldID = $('#select_project').val();
+    var fieldID = $('#project_name').val();
     var database = $('#select_database').val();
 
 
@@ -34,7 +34,7 @@ function connect_database() {
 }
 
 function get_unitnames() {
-    var fieldID = $('#select_project').val();
+    var fieldID = $('#project_name').val();
 
     $.ajax({
         type: 'POST',
@@ -69,7 +69,7 @@ $('#select_unitnames').on('change', function () {
 
 function get_tagnames() {
     var unitname = $('#select_unitnames').val();
-    var fieldID = $('#select_project').val();
+    var fieldID = $('#project_name').val();
     console.log(unitname)
     $.ajax({
         type: 'POST',
@@ -96,7 +96,7 @@ function plot_tagname() {
 
     Plotly.newPlot('div_plot_tagname', [], layout)
 
-    var fieldID = $('#select_project').val();
+    var fieldID = $('#project_name').val();
     var tagname = $('#select_tagnames').val();
     var unitname = $('#select_unitnames').val();
     var starttime = document.getElementById("starttime").value;

@@ -1,61 +1,4 @@
-<html>
-<body>
-    <p>
-    {% extends "base.html" %}
-
-{% block title %}
-    </p>
-    <div class="col-lg-12">
-    <h1 class="page-header">
-        Diagram Builder App
-    </h1>
-    </div>
-    {% endblock %}
-
-{% block content %}
-    <div class="col-lg-12">
-    <input class="btn btn-info btn-sm" id="save" onclick="save_diagram();" style="width:100px" type="button" value="Save"/>
-    <input class="btn btn-default btn-sm" id="load" onclick="load_diagram();" style="width:100px" type="button" value="Reset"/>
-    <!-- <input type="button" id="load" value="Show All Components" onclick="print_all_cells();"
-class="btn btn-primary btn-sm"> -->
-    </div>
-    <div class="col-lg-12">
-    <div class="panel panel-default">
-        <div class="panel-body">
-        <div class="jumbotron" id="mybuilder">
-        </div>
-        </div>
-    </div>
-    </div>
-    <div class="col-lg-12">
-    <input class="btn btn-default btn-sm" id="electrolyser" onclick="addElectrolyser();" style="width:150px; height:100px" type="button" value="Electrolyser"/>
-    <input class="btn btn-default btn-sm" id="hydroden_demand" onclick="addHydrogenDemand();" style="width:150px; height:100px" type="button" value="Hydrogen Demand"/>
-    <input class="btn btn-default btn-sm" id="hydroden_storage" onclick="addHydrogenStorage();" style="width:150px; height:100px" type="button" value="Hydrogen Storage"/>
-    <input class="btn btn-default btn-sm" id="electricity_source" onclick="addElectricitySource();" style="width:150px; height:100px" type="button" value="Electricity Source"/>
-    <input class="btn btn-default btn-sm" id="electricity_demand" onclick="addElectricityDemand();" style="width:150px; height:100px" type="button" value="Electricity Demand"/>
-    <input class="btn btn-default btn-sm" id="electricity_storage" onclick="addElectricityStorage();" style="width:150px; height:100px" type="button" value="Electricity Battery"/>
-    <input class="btn btn-default btn-sm" id="heat_source" onclick="addHeatSource();" style="width:150px; height:100px" type="button" value="Heat Source"/>
-    <input class="btn btn-default btn-sm" id="heat_demand" onclick="addHeatDemand();" style="width:150px; height:100px" type="button" value="Heat Demand"/>
-    <input class="btn btn-default btn-sm" id="heat_storage" onclick="addHeatStorage();" style="width:150px; height:100px" type="button" value="Heat Storage"/>
-    <input class="btn btn-default btn-sm" id="heat_pump" onclick="addHeatPump();" style="width:150px; height:100px" type="button" value="Heat Pump"/>
-    <input class="btn btn-default btn-sm" id="node" onclick="addNode();" style="width:150px; height:100px" type="button" value="Node"/>
-    </div>
-    <div class="container">
-    <div class="row my-3">
-        <div class="col">
-        <div class="dropdown-menu dropdown-menu-sm" id="context-menu">
-            <a class="dropdown-item" onclick="show_parameter_modal()">
-            Open Parameter
-            </a>
-            <a class="dropdown-item" onclick="delete_element()">
-            Delete
-            </a>
-        </div>
-        </div>
-    </div>
-    </div>
-    <div class="modal right fade" id="componentModal" role="dialog">
-    <div class="modal-dialog">
+<div class="modal-dialog">
         <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times</button>
@@ -204,10 +147,16 @@ class="btn btn-primary btn-sm"> -->
                 </tr>
                 </table>
                 <table class="table" id="table-component-properties-hydrogen_demand">
-                <tr>
-                    <td>
-                    </td>
-                </tr>
+<!--                <tr>-->
+<!--                    <td>-->
+<!--                    <span style="color: black">-->
+<!--                        Capacity [MW]-->
+<!--                    </span>-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                    <input id="hydrogen_demand_capacity" style="width:300px" value=""/>-->
+<!--                    </td>-->
+<!--                </tr>-->
                 </table>
                 <table class="table" id="table-component-properties-hydrogen_storage">
                 <tr>
@@ -346,16 +295,10 @@ class="btn btn-primary btn-sm"> -->
                 </tr>
                 </table>
                 <table class="table" id="table-component-properties-node">
-<!--                <tr>-->
-<!--                    <td>-->
-<!--                    <span style="color: black">-->
-<!--                        Initial guess-->
-<!--                    </span>-->
-<!--                    </td>-->
-<!--                    <td>-->
-<!--                    <input id="node_initial_guess" style="width:300px" value=""/>-->
-<!--                    </td>-->
-<!--                </tr>-->
+                <tr>
+                    <td>
+                    </td>
+                </tr>
                 </table>
             </div>
             <div class="tab-pane fade" id="tagnames">
@@ -386,6 +329,7 @@ class="btn btn-primary btn-sm"> -->
                 <table class="table" id="table-tagnames-measured-hydrogen_storage">
                 <tr>
                     <td>
+
                     </td>
                 </tr>
                 </table>
@@ -414,10 +358,16 @@ class="btn btn-primary btn-sm"> -->
                 </tr>
                 </table>
                 <table class="table" id="table-tagnames-measured-electricity_storage">
-                <tr>
-                    <td>
-                    </td>
-                </tr>
+<!--                <tr>-->
+<!--                    <td>-->
+<!--                    <span style="color: black">-->
+<!--                        TAGNAME TITLE-->
+<!--                    </span>-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                    <input id="TAGNAME_ID" style="width:300px" value=""/>-->
+<!--                    </td>-->
+<!--                </tr>-->
                 </table>
                 <table class="table" id="table-tagnames-measured-heat_source">
                 <tr>
@@ -490,47 +440,3 @@ class="btn btn-primary btn-sm"> -->
         </div>
         </div>
     </div>
-    {% endblock %}
-
-
-{% block script %}
-    <style>
-        .modal.right .modal-dialog { position: fixed; margin: auto; width: 500px; height: 100%;
--webkit-transform: translate3d(0%, 0, 0); -ms-transform: translate3d(0%, 0, 0); -o-transform: translate3d(0%, 0, 0);
-transform: translate3d(0%, 0, 0); }
-
-.modal.right .modal-content { height: 100%; overflow-y: auto; }
-
-.modal.right .modal-body { padding: 15px 15px 80px; }
-
-.modal.right.fade .modal-dialog { right: 0px; -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
--moz-transition: opacity 0.3s linear, right 0.3s ease-out; -o-transition: opacity 0.3s linear, right 0.3s ease-out;
-transition: opacity 0.3s linear, right 0.3s ease-out; }
-
-.modal.right.fade.in .modal-dialog { right: 0; }
-    </style>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/jointjs/3.7.4/joint.css" rel="stylesheet" type="text/css"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.js">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.1/backbone.js">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jointjs/3.7.4/joint.js">
-    </script>
-    <script src="{{ url_for('static', filename='page/app_builder/js/diagram.js') }}">
-    </script>
-    <script src="{{ url_for('static', filename='page/app_builder/js/component.js') }}">
-    </script>
-    <script src="{{ url_for('static', filename='page/app_builder/js/api.js') }}">
-    </script>
-    <script src="{{ url_for('static', filename='vendor/dataTables/jquery.dataTables.min.js') }}">
-    </script>
-    <script src="{{ url_for('static', filename='vendor/dataTables/dataTables.bootstrap.min.js') }}">
-    </script>
-    <script src="{{ url_for('static', filename='vendor/dataTables/jquery.dataTables.min.js') }}">
-    </script>
-    <link href="{{ url_for('static', filename='vendor/dataTables/dataTables.bootstrap.css') }}" rel="stylesheet"/>
-    <link href="{{ url_for('static', filename='vendor/dataTables/dataTables.responsive.css') }}" rel="stylesheet"/>
-    {% endblock %}
-    </div>
-</body>
-</html>

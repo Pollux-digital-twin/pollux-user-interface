@@ -19,7 +19,7 @@ get_project_list()
 
 
 function create_new_project() {
-    project_name = document.getElementById("select_project").value
+    project_name = document.getElementById("project_name").value
     if (project_name == "") {
         value = true
     }else{
@@ -28,7 +28,7 @@ function create_new_project() {
     if (value == true) {
         project_name = window.prompt("What is the project name?", "project1");
 
-
+       
 
         $.ajax({
             type: 'POST',
@@ -39,7 +39,7 @@ function create_new_project() {
 
                 window.alert(data)
 
-                document.getElementById("select_project").value = project_name
+                document.getElementById("project_name").value = project_name
 
                 window.location.reload()
             }
@@ -49,7 +49,7 @@ function create_new_project() {
 }
 
 function save_project() {
-    project_name = document.getElementById("select_project").value
+    project_name = document.getElementById("project_name").value
 
     if (project_name == "") {
         project_name = window.prompt("What is the project name?", "project1");
@@ -64,7 +64,7 @@ function save_project() {
         success: function (data) {
             window.alert(data);
 
-            document.getElementById("select_project").value = project_name
+            document.getElementById("project_name").value = project_name
 
             window.location.reload()
         }
@@ -75,7 +75,7 @@ function save_project() {
 }
 
 function close_project() {
-    project_name = document.getElementById("select_project").value
+    project_name = document.getElementById("project_name").value
 
     if (project_name == "") {
         return
@@ -89,7 +89,7 @@ function close_project() {
         success: function (data) {
             window.alert(data);
 
-            document.getElementById("select_project").value = ""
+            document.getElementById("project_name").value = ""
 
             window.location.reload()
         }
@@ -100,7 +100,7 @@ function close_project() {
 }
 
 function delete_project() {
-    project_name = document.getElementById("select_project").value
+    project_name = document.getElementById("project_name").value
 
     if (project_name == "") {
         return
@@ -117,7 +117,7 @@ function delete_project() {
 
                 window.alert(data);
 
-                document.getElementById("select_project").value = ""
+                document.getElementById("project_name").value = ""
 
                 window.location.reload()
 
@@ -133,9 +133,9 @@ function open_project() {
     project_name = document.getElementById('project_name_list').value;
 
     if (project_name) {
-        document.getElementById("select_project").value = project_name
+        document.getElementById("project_name").value = project_name
 
-
+        
         $.ajax({
             type: 'POST',
             url: '/loadproject',
@@ -149,14 +149,42 @@ function open_project() {
 
                 window.location.reload()
 
-
+            
             }
         });
 
     }
-
-
 }
 
+// Function updateProjectCase ----------------------------------------------------------
+async function updateProjectCase() {
+    try {
+        const data = await getScenarioData('scenario_default');
+        let project_case = data.case;
+        let project_case_string = "";
 
+        if (project_case === null || project_case === "") {
+            project_case_string = "Not Defined";
+        }
+        else if (project_case === "power_to_hydrogen") {
+            project_case_string = "Power to Hydrogen";
+        }
+        else if (project_case === "power_to_heat") {
+            project_case_string = "Power to Heat";
+        }
+        else {
+            project_case_string = project_case;
+        }
 
+        document.getElementById('project_case').value = project_case_string;
+
+    } catch (error) {
+        console.error("Error loading scenario data:", error);
+        return null;
+    }
+}
+
+// Listener updateProjectCase when page is loaded ----------------------------------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+    updateProjectCase()
+});

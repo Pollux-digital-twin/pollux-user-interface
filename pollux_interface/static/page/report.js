@@ -1,6 +1,6 @@
 function get_report_list() {
 
-    var project_name = document.getElementById("select_project").value;
+    var project_name = document.getElementById("project_name").value;
     if (project_name) {
         $.ajax({
             type: 'POST',
@@ -25,7 +25,7 @@ get_report_list()
 $('#select_report').on('change', function () {
     clear_report_frame()
 
-    var project_name = document.getElementById("select_project").value;
+    var project_name = document.getElementById("project_name").value;
     var file_name = document.getElementById("select_report").value;
 
     if (file_name) {
@@ -60,7 +60,7 @@ function clear_report_list() {
 
 function upload_report() {
 
-    var project_name = document.getElementById("select_project").value;
+    var project_name = document.getElementById("project_name").value;
 
     var form_data = new FormData()
     form_data.append('file', $('#report_pdf')[0].files[0])
@@ -86,7 +86,7 @@ function upload_report() {
 function delete_report() {
 
 
-    var project_name = document.getElementById("select_project").value;
+    var project_name = document.getElementById("project_name").value;
     var file_name = document.getElementById("select_report").value;
 
     value = confirm("Do you want to delete this document: " + file_name + " ?")

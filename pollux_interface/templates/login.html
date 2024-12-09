@@ -6,12 +6,10 @@
 <div class="col-md-6">
     <div style="text-align:center">
         <img src="../static/images/tno.png" alt="tno-logo1"
-             style="height:70px"/>
-        <img src="../static/images/pollux_logo_white_background.png" alt="tno-logo1"
-             style="height:70px;"/></a>
+             style="height:50px"/>
+        <img src="../static/images/pollux.png" alt="pollux-logo1"
+             style="height:50px;"/></a>
         <br>
-        <br>
-        <a href="/documentation" target="_blank">Documentation</a>
         <br>
     </div>
     <div class="login-panel panel panel-default">
@@ -21,7 +19,7 @@
         <div class="panel-body">
             {% with messages = get_flashed_messages() %}
             {% if messages %}
-            <div class="alert alert-danger">
+            <div class="alert alert-info">
                 {{ messages[0] }}
             </div>
             {% endif %}
@@ -39,7 +37,7 @@
                             <input name="remember" type="checkbox" value="Remember Me">Remember Me
                         </label>
                     </div>
-                    <button class="btn btn-lg btn-success btn-block">Login</button>
+                    <button class="btn btn-lg btn-info btn-block">Login</button>
                 </fieldset>
             </form>
         </div>

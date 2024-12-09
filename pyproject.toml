@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "pollux-user-interface"
 version = "0.1.0"
-description = "Core GUI library of the Pollux Digital Twin"
-authors = ["Ryvo Octaviano <ryvo.octaviano@tno.nl>"]
+description = "Core GUI library of the POLLUX Digital Twin"
+authors = ["Demetris Palochis <demetris.palochis@tno.nl>"]
 readme = "README.md"
 packages = [{ include = "pollux_interface" }]
 classifiers = [
@@ -18,7 +18,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Mathematics",
     "Topic :: Scientific/Engineering :: Physics",
 ]
-
+homepage = "https://tno.nl"
 documentation = "https://readthedocs.org"
 repository = "https://github.com/Pollux-digital-twin/pollux-user-interface"
 
@@ -36,10 +36,11 @@ flask_session = "^0.5.0"
 werkzeug = "^2.3.5"
 mysqlclient = "^2.2.0"
 influxdb-client = "^1.36.1"
-adh_sample_library_preview = "^0.10.10rc0"
 pytz = "^2024.1"
 flask-admin = "1.6.1"
 Flask-Migrate = "^4.0.7"
+pollux-framework = "^0.1.0"
+pollux-application = "^0.1.1"
 
 [build-system]
 requires = ["poetry-core"]
