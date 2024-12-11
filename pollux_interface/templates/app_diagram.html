@@ -16,8 +16,6 @@
     <div class="col-lg-12">
     <input class="btn btn-info btn-sm" id="save" onclick="save_diagram();" style="width:100px" type="button" value="Save"/>
     <input class="btn btn-default btn-sm" id="load" onclick="load_diagram();" style="width:100px" type="button" value="Reset"/>
-    <!-- <input type="button" id="load" value="Show All Components" onclick="print_all_cells();"
-class="btn btn-primary btn-sm"> -->
     </div>
     <div class="col-lg-12">
     <div class="panel panel-default">
@@ -510,24 +508,15 @@ transition: opacity 0.3s linear, right 0.3s ease-out; }
 .modal.right.fade.in .modal-dialog { right: 0; }
     </style>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jointjs/3.7.4/joint.css" rel="stylesheet" type="text/css"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.js">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.1/backbone.js">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jointjs/3.7.4/joint.js">
-    </script>
-    <script src="{{ url_for('static', filename='page/app_builder/js/diagram.js') }}">
-    </script>
-    <script src="{{ url_for('static', filename='page/app_builder/js/component.js') }}">
-    </script>
-    <script src="{{ url_for('static', filename='page/app_builder/js/api.js') }}">
-    </script>
-    <script src="{{ url_for('static', filename='vendor/dataTables/jquery.dataTables.min.js') }}">
-    </script>
-    <script src="{{ url_for('static', filename='vendor/dataTables/dataTables.bootstrap.min.js') }}">
-    </script>
-    <script src="{{ url_for('static', filename='vendor/dataTables/jquery.dataTables.min.js') }}">
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.1/backbone.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jointjs/3.7.4/joint.js"></script>
+    <script src="{{ url_for('static', filename='page/app_builder/js/diagram.js') }}"></script>
+    <script src="{{ url_for('static', filename='page/app_builder/js/component.js') }}"></script>
+    <script src="{{ url_for('static', filename='page/app_builder/js/api.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/dataTables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/dataTables/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/dataTables/jquery.dataTables.min.js') }}"></script>
     <link href="{{ url_for('static', filename='vendor/dataTables/dataTables.bootstrap.css') }}" rel="stylesheet"/>
     <link href="{{ url_for('static', filename='vendor/dataTables/dataTables.responsive.css') }}" rel="stylesheet"/>
     {% endblock %}

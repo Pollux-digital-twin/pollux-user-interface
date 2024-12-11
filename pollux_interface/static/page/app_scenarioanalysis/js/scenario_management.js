@@ -31,7 +31,7 @@ function getExistingScenarioList(scenario_name) {
             $('#scenarioname_list').val(scenario_name)
 //            $('#simulation_scenarioname_list').val(scenario_name)
 
-            openScenario(scenario_name)
+            open_scenario(scenario_name)
         }
     })
 }
@@ -44,8 +44,8 @@ function openNewScenarioModal() {
 }
 
 
-// Function deleteScenario ----------------------------------------------------------
-function deleteScenario() {
+// Function delete_scenario ----------------------------------------------------------
+function delete_scenario() {
 
     project_name = $('#project_name').val();
     if (project_name == "") {
@@ -84,8 +84,8 @@ function deleteScenario() {
 
 }
 
-// Function saveScenario ----------------------------------------------------------
-function saveScenario() {
+// Function save_scenario ----------------------------------------------------------
+function save_scenario() {
 
     project_name = $('#project_name').val();
     if (project_name == "") {
@@ -95,7 +95,7 @@ function saveScenario() {
     scenario_name = $('#scenarioname_list').val();
     if (scenario_name == "scenario_default") {
         var scenario_name = prompt("Can't overwrite scenario_default. Please enter new scenario name", "scenario_1");
-
+            store_scenario(project_name, scenario_name)
         if (scenario_name === null) {
             return
         }
@@ -111,7 +111,7 @@ function saveScenario() {
         }
     }
 
-    storeScenario(project_name, scenario_name)
+    store_scenario(project_name, scenario_name)
 
 }
 
@@ -178,51 +178,9 @@ function extractIdValuePairs(data) {
     return dictionary;
 }
 
-function extractTableData(tableRows) {
-    const data = {};
-    tableRows.forEach(row => {
-        const keyInput = row.querySelector('td input[id$="_key"]');
-        const valueInput = row.querySelector('td input[id$="_value"]');
 
-        if (keyInput && valueInput) {
-            const key = keyInput.value.trim();
-            const value = valueInput.value.trim();
-            if (key) { // Only include rows with a non-empty key
-                data[key] = value;
-            }
-        }
-    });
-    return data;
-}
-
-function get_table_data() {
-    project_case = document.getElementById('project_case').value;
-
-    if (project_case === "Power to Hydrogen") {
-        // Retrieve electrolyser parameters
-        const electrolyserTableRows = document.querySelectorAll('#electrolyser_parameters tbody tr');
-        const electrolyser_parameters = extractTableData(electrolyserTableRows);
-
-        // Retrieve hydrogen storage parameters
-        const hydrogenStorageTableRows = document.querySelectorAll('#hydrogen_storage_parameters tbody tr');
-        const hydrogen_storage_parameters = extractTableData(hydrogenStorageTableRows);
-
-        // Construct the table data object
-        table_data = {
-            'power_to_hydrogen': {
-                'electrolyser_parameters': electrolyser_parameters,
-                'hydrogen_storage_parameters': hydrogen_storage_parameters
-                // Uncomment the following if needed
-                // 'input_profiles': input_profiles,
-                // 'control_parameters': control_parameters
-            }
-        }
-    }
-    return table_data;
-}
-
-// Function storeScenario ----------------------------------------------------------
-function storeScenario(project_name, scenario_name) {
+// Function store_scenario ----------------------------------------------------------
+function store_scenario(project_name, scenario_name) {
 
     table_data = get_table_data()
 
@@ -259,8 +217,8 @@ function importScenario() {
     })
 }
 
-// Function openScenario ----------------------------------------------------------
-function openScenario(scenario_name) {
+// Function open_scenario ----------------------------------------------------------
+function open_scenario(scenario_name) {
 
     project_name = $('#project_name').val();
 //    scenario_name = $('#scenarioname_list').val();
@@ -270,62 +228,14 @@ function openScenario(scenario_name) {
 //        refreshParam()
         getExistingScenarioList('scenario_default')
     } else {
-        loadScenario(project_name, scenario_name)
+        load_scenario(project_name, scenario_name)
     }
 };
-
-// Function to load table data and populate it
-function loadTableData(tableId, data) {
-    const table = document.getElementById(tableId);
-
-    if (table && data) {
-        const tbody = table.querySelector('tbody');
-
-        // Clear existing rows in the table
-        if (tbody) {
-            tbody.innerHTML = '';
-        }
-
-        // Populate the table with the provided data
-        Object.keys(data).forEach((key, index) => {
-            const row = document.createElement('tr');
-            const keyCell = document.createElement('td');
-            const valueCell = document.createElement('td');
-
-            // Create an input field for the key
-            const keyInput = document.createElement('input');
-            keyInput.type = 'text';
-            keyInput.className = 'form-control';
-            keyInput.id = `${key}_key`;
-            keyInput.value = key; // Set the input field value to the key
-
-            // Create an input field for the value
-            const valueInput = document.createElement('input');
-            valueInput.type = 'text';
-            valueInput.className = 'form-control';
-            valueInput.id = `${key}_value`;
-            valueInput.value = data[key]; // Set the input field value to the value
-
-            // Append inputs to respective cells
-            keyCell.appendChild(keyInput);
-            valueCell.appendChild(valueInput);
-
-            // Append cells to the row
-            row.appendChild(keyCell);
-            row.appendChild(valueCell);
-
-            // Append the row to the table body
-            tbody.appendChild(row);
-        });
-    } else {
-        console.warn(`Table with ID "${tableId}" not found or no data provided.`);
-    }
-}
 
 
 
 // Function to load the scenario and update the relevant tables
-function loadScenario(project_name, scenario_name) {
+function load_scenario(project_name, scenario_name) {
     $.ajax({
         type: 'POST',
         url: '/app/scenarioanalysis/loadscenario',
@@ -343,20 +253,20 @@ function loadScenario(project_name, scenario_name) {
 //                const tablesToUpdate = Object.keys(powerToHydrogenData); // Dynamic list of tables to update
                 const tablesToUpdate = ["electrolyser_parameters", "hydrogen_storage_parameters"]
 
-                // Loop through each table and call loadTableData
+                // Loop through each table and call load_table_data
                 tablesToUpdate.forEach(tableKey => {
                     const tableData = powerToHydrogenData[tableKey]; // Get the subdictionary for this table
-                    loadTableData(tableKey, tableData); // Update the table with the corresponding data
+                    load_table_data(tableKey, tableData); // Update the table with the corresponding data
                 });
             } else if (scenarioData['case'] === 'power_to_heat') {
                 const powerToHeatData = scenarioData['power_to_heat'];
 //                const tablesToUpdate = Object.keys(powerToHydrogenData); // Dynamic list of tables to update
-                const tablesToUpdate = ["electrolyser_parameters", "hydrogen_storage_parameters", "input_profiles", "control_parameters"]
+                const tablesToUpdate = ["electrolyser_parameters", "hydrogen_storage_parameters", "input_profiles", "control_profiles"]
 
-                // Loop through each table and call loadTableData
+                // Loop through each table and call load_table_data
                 tablesToUpdate.forEach(tableKey => {
                     const tableData = powerToHeatData[tableKey]; // Get the subdictionary for this table
-                    loadTableData(tableKey, tableData); // Update the table with the corresponding data
+                    load_table_data(tableKey, tableData); // Update the table with the corresponding data
                 });
             } else {
                 console.warn("The scenario case is not 'power_to_hydrogen'. No tables to update.");

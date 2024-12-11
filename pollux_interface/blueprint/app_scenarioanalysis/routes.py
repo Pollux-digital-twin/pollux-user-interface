@@ -19,7 +19,6 @@ PROJECT_FOLDER = os.path.join(pollux_main, 'pollux-project')
 # =================================================================================
 @app_scenarioanalysis.route('/app/scenarioanalysis/get_scenario_data', methods=['POST'])
 def get_scenario_data():
-    print("get_scenario_data FUNCTION WAS CALLED")
     project_name = request.json["project_name"]
     scenario_name = request.json['scenario_name']
 
@@ -41,31 +40,33 @@ def get_scenario_data():
 @app_scenarioanalysis.route("/app/scenarioanalysis/run_solver", methods=["POST"])
 def run_solver():
     input_param = request.json["input_data"]
-    profile_data = json.loads(input_param["profile_data"])
+    control_parameters = input_param["control_parameters"]
     parameters = {
-        "table_data": input_param['table_data'],
+        "component_parameters": input_param['table_data'],
         "project_name": input_param['project_name'],
         "project_case": input_param['project_case'],
         "time_horizon": input_param['time_horizon'],
         "time_step": input_param['time_step'],
-        "profile_data": profile_data
-    }
-    input = {
-        "time_horizon": input_param['time_horizon'],
-        "time_step": input_param['time_step'],
-        "project_case": input_param['project_case']
+        "control_parameters": control_parameters,
+        "mode": input_param['mode'],
+        "optimization_method": input_param['optimization_method']
     }
 
     app_solver = Power2Hydrogen()
 
     app_solver.init_parameters(parameters)
 
-    u = dict()
-    app_solver.get_input(u, input)
+    # Define inputs
+    input = {
+        "time_horizon": float(input_param['time_horizon']),
+        "time_step": float(input_param['time_step']),
+        "project_case": input_param['project_case'],
+        "mode": input_param['mode'],
+        "optimization_method": input_param['optimization_method'],
+        "control_parameters": control_parameters
+    }
 
-    app_solver.connect_components()
-
-    app_solver.calculate()
+    app_solver.calculate(input)
 
     output = app_solver.get_output()
 
@@ -92,9 +93,7 @@ def get_existing_scenario_list():
 @app_scenarioanalysis.route('/app/scenarioanalysis/loadscenario', methods=['POST'])
 def loadscenario():
     project_name = request.json['project_name']
-    print(f'project_name = {project_name}')
     scenario_name = request.json['scenario_name']
-    print(f'scenario_name = {scenario_name}')
     if scenario_name == '':
         scenario_name = 'scenario_default'
 
@@ -104,7 +103,6 @@ def loadscenario():
     if os.path.exists(file_path):
         with open(file_path, 'r') as json_file:
             json_data = json.load(json_file)
-            print("JSON data loaded successfully.")
     else:
         print(f"File {file_path} does not exist.")
 

@@ -135,27 +135,76 @@ function print_all_cells(){
     console.log(graph.getCells())
 }
 
+// Function get_active_mode ----------------------------------------------------------
+function get_active_mode() {
+    const simulation_panel = document.getElementById("simulation_parameters_panel");
+    const optimization_panel = document.getElementById("optimization_parameters_panel");
+
+    // Determine which panel is currently visible
+    if (simulation_panel.style.display === "block") {
+        return "simulation";
+    } else if (optimization_panel.style.display === "block") {
+        return "optimization";
+    } else {
+        return null; // Neither panel is visible
+    }
+}
+
 // Function run_solver ----------------------------------------------------------
 function run_solver() {
     console.log('run_solver() FUNCTION CALLED');
     table_data = get_table_data()
 
-    const profile_data = localStorage.getItem('allParsedCSVData');
 
-    var project_case = $('#project_case').val();
+    var mode = get_active_mode()
+    var project_case_label = $('#project_case').val();
+    if (project_case_label == 'Power to Hydrogen'){
+        project_case = 'power_to_hydrogen'
+    } else if (project_case_label == 'Power to Heat'){
+        project_case = 'power_to_heat'
+    }
     var time_horizon = $('#time_horizon').val();
     var time_step = $('#time_step').val();
     var scenario_name = $('#scenario_name').val();
     var project_name = $('#project_name').val();
 
+    const local_storage_json = localStorage.getItem('allParsedCSVData');
+    local_storage_dict = JSON.parse(local_storage_json);
+
+    if (mode == "simulation") {
+    var optimization_method = ""
+        control_parameters = {
+            'power_supply': local_storage_dict['power_supply_profile_data'],
+            'power_demand': local_storage_dict['power_demand_profile_data'],
+            'hydrogen_demand': local_storage_dict['hydrogen_demand_profile_data'],
+            'power_splitter': local_storage_dict['power_splitter_control_profile_data'],
+            'hydrogen_splitter': local_storage_dict['hydrogen_splitter_control_profile_data'],
+            'gas_storage': local_storage_dict['gas_storage_profile_data']
+        }
+    } else if (mode == 'optimization') {
+        var optimization_method = $('#optimization_method').val();
+        optimization_parameters = get_optimization_parameters()
+
+        control_parameters = {
+            'power_supply': local_storage_dict['power_supply_profile_data'],
+            'power_demand': local_storage_dict['power_demand_profile_data'],
+            'hydrogen_demand': local_storage_dict['hydrogen_demand_profile_data'],
+            'power_splitter': optimization_parameters['power_splitter'],
+            'hydrogen_splitter': optimization_parameters['hydrogen_splitter'],
+            'gas_storage': optimization_parameters['gas_storage']
+        }
+    }
+
     input_data = {
         "time_horizon": time_horizon,
         "time_step": time_step,
-        "profile_data": profile_data,
-        "table_data": table_data,
+        "control_parameters": control_parameters,
+        "table_data": table_data[project_case],
         "scenario_name": scenario_name,
         "project_name": project_name,
-        "project_case": project_case
+        "project_case": project_case,
+        "mode": mode,
+        "optimization_method": optimization_method
     }
     console.log('input data = ', input_data)
     $.ajax({
@@ -175,6 +224,26 @@ function run_solver() {
         }
     });
 }
+
+
+// Function run_solver ----------------------------------------------------------
+function togglePanels() {
+    // Get both panels
+    const panel1 = document.getElementById("simulation_parameters_panel");
+    const panel2 = document.getElementById("optimization_parameters_panel");
+
+    // Check which panel is currently visible
+    if (panel1.style.display === "block") {
+        panel1.style.display = "none";
+        panel2.style.display = "block";
+    } else {
+        panel1.style.display = "block";
+        panel2.style.display = "none";
+    }
+}
+
+
+
 
 // ===================================================================================
 //                      EVENT LISTENERS / ON-CHANGE actions
@@ -197,7 +266,7 @@ $("#scenarioname_list").change(function () {
     });
 
 
-    openScenario(scenario_name)
+    open_scenario(scenario_name)
 });
 
 // Listener getExistingScenarioList when page is loaded ----------------------------------------------------------
