@@ -41,18 +41,18 @@ function extract_table_data(tableRows) {
 }
 
 
-// Function get_optimization_parameters ----------------------------------------------------------
-function get_optimization_parameters() {
+// Function get_optimisation_parameters ----------------------------------------------------------
+function get_optimisation_parameters() {
 
-    // Retrieve optimization parameters
+    // Retrieve optimisation parameters
     const optparamTableRows = document.querySelectorAll('#control_parameters tbody tr');
-    const optimization_parameters = extract_optimization_parameters(optparamTableRows);
+    const optimisation_parameters = extract_optimisation_parameters(optparamTableRows);
 
-    return optimization_parameters;
+    return optimisation_parameters;
 }
 
-// Function extract_optimization_parameters ----------------------------------------------------------
-function extract_optimization_parameters(rows) {
+// Function extract_optimisation_parameters ----------------------------------------------------------
+function extract_optimisation_parameters(rows) {
     const tableData = {};
 
     rows.forEach(row => {
@@ -60,7 +60,7 @@ function extract_optimization_parameters(rows) {
         const cells = row.querySelectorAll('td');
 
         // Extract parameter name
-        const parameterKey = cells[0].querySelector('div').id.replace('_parameters', '');
+        const parameterKey = cells[0].querySelector('div').id.replace('_opt_parameters', '');
 
         // Extract values from input fields
         const initialValue = parseFloat(cells[1].querySelector('input').value);
@@ -69,9 +69,9 @@ function extract_optimization_parameters(rows) {
 
         // Add data to the dictionary
         tableData[parameterKey] = {
-            initialValue: initialValue,
-            lowerBound: lowerBound,
-            upperBound: upperBound
+            initial_value: initialValue,
+            lower_bound: lowerBound,
+            upper_bound: upperBound
         };
     });
 

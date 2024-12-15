@@ -11,12 +11,12 @@
 //            document.getElementById('power_demand_profile_csv').click();
 //        } else if (event.target.id === 'hydrogen_demand_profile') {
 //            document.getElementById('hydrogen_demand_profile_csv').click();
-//        } else if (event.target.id === 'power_splitter_profile') {
-//            document.getElementById('power_splitter_control_profile_csv').click();
-//        } else if (event.target.id === 'hydrogen_splitter_profile') {
-//            document.getElementById('hydrogen_splitter_control_profile_csv').click();
-//        } else if (event.target.id === 'gas_storage_profile') {
-//            document.getElementById('gas_storage_profile_csv').click();
+//        } else if (event.target.id === 'splitter1_profile') {
+//            document.getElementById('splitter1_control_profile_csv').click();
+//        } else if (event.target.id === 'splitter2_profile') {
+//            document.getElementById('splitter2_control_profile_csv').click();
+//        } else if (event.target.id === 'hydrogen_storage_profile') {
+//            document.getElementById('hydrogen_storage_profile_csv').click();
 //        }
 //    }
 //});
@@ -28,12 +28,12 @@ document.addEventListener('click', function(event) {
             document.getElementById('power_demand_profile_csv').click();
         } else if (event.target.id === 'hydrogen_demand_profile_button') {
             document.getElementById('hydrogen_demand_profile_csv').click();
-        } else if (event.target.id === 'power_splitter_control_profile_button') {
-            document.getElementById('power_splitter_control_profile_csv').click();
-        } else if (event.target.id === 'hydrogen_splitter_control_profile_button') {
-            document.getElementById('hydrogen_splitter_control_profile_csv').click();
-        } else if (event.target.id === 'gas_storage_profile_button') {
-            document.getElementById('gas_storage_profile_csv').click();
+        } else if (event.target.id === 'splitter1_control_profile_button') {
+            document.getElementById('splitter1_control_profile_csv').click();
+        } else if (event.target.id === 'splitter2_control_profile_button') {
+            document.getElementById('splitter2_control_profile_csv').click();
+        } else if (event.target.id === 'hydrogen_storage_profile_button') {
+            document.getElementById('hydrogen_storage_profile_csv').click();
         }
     }
 });
@@ -61,12 +61,12 @@ function handleFileSelect(event) {
                 storageKey = 'power_demand_profile_data';
             } else if (buttonId === 'hydrogen_demand_profile_csv') {
                 storageKey = 'hydrogen_demand_profile_data';
-            } else if (buttonId === 'power_splitter_control_profile_csv') {
-                storageKey = 'power_splitter_control_profile_data';
-            } else if (buttonId === 'hydrogen_splitter_control_profile_csv') {
-                storageKey = 'hydrogen_splitter_control_profile_data';
-            } else if (buttonId === 'gas_storage_profile_csv') {
-                storageKey = 'gas_storage_profile_data';
+            } else if (buttonId === 'splitter1_control_profile_csv') {
+                storageKey = 'splitter1_control_profile_data';
+            } else if (buttonId === 'splitter2_control_profile_csv') {
+                storageKey = 'splitter2_control_profile_data';
+            } else if (buttonId === 'hydrogen_storage_profile_csv') {
+                storageKey = 'hydrogen_storage_profile_data';
             }
 
             // Retrieve existing data from localStorage (if any)

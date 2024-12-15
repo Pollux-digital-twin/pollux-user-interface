@@ -156,35 +156,9 @@ function open_project() {
     }
 }
 
-// Function updateProjectCase ----------------------------------------------------------
-async function updateProjectCase() {
-    try {
-        const data = await getScenarioData('scenario_default');
-        let project_case = data.case;
-        let project_case_string = "";
 
-        if (project_case === null || project_case === "") {
-            project_case_string = "Not Defined";
-        }
-        else if (project_case === "power_to_hydrogen") {
-            project_case_string = "Power to Hydrogen";
-        }
-        else if (project_case === "power_to_heat") {
-            project_case_string = "Power to Heat";
-        }
-        else {
-            project_case_string = project_case;
-        }
-
-        document.getElementById('project_case').value = project_case_string;
-
-    } catch (error) {
-        console.error("Error loading scenario data:", error);
-        return null;
-    }
-}
 
 // Listener updateProjectCase when page is loaded ----------------------------------------------------------
-document.addEventListener('DOMContentLoaded', () => {
-    updateProjectCase()
-});
+//document.addEventListener('DOMContentLoaded', () => {
+//    updateProjectCase()
+//});

@@ -1,51 +1,182 @@
 // ===================================================================================
-//                                       FUNCTIONS
+//                      EVENT LISTENERS / ON-CHANGE actions
 // ===================================================================================
-function loadScenarioAnalysisHTML() {
-    let project_case = document.getElementById('project_case').value;
+// Listener getExistingScenarioList when page is loaded ----------------------------------------------------------
+document.addEventListener("DOMContentLoaded", function() {
+    initialize_page()
+});
 
-    // If project_case is null or empty, update it
-    if (project_case === null || project_case === "") {
-        updateProjectCase(); // Assuming this function updates the project_case value
-        project_case = document.getElementById('project_case').value; // Get the updated value
-    }
+//updateProjectCase()
 
-    let apiEndpoint_2;
+$('#project_name').on('change', function () {
 
-    // Determine the correct URL to load based on project_case
-    if (project_case === "Power to Hydrogen") {
-        apiEndpoint_2 = urlP2H2Case; // Use the pre-defined URL for Power to Hydrogen
-    } else if (project_case === "Power to Heat") {
-        apiEndpoint_2 = urlP2HeatCase; // Use the pre-defined URL for Power to Heat
-    } else {
-        document.getElementById('scenario_analysis_table').innerHTML = ''; // Clear the table if invalid case
-        return;
-    }
-
-    // Fetch and load the HTML content
-    fetch(apiEndpoint_2)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Failed to fetch HTML: ${response.status}`);
-            }
-            return response.text();
-        })
-        .then(html => {
-            document.getElementById('scenario_analysis_table').innerHTML = html;
-        })
-        .catch(error => {
-            console.error('Error importing HTML file:', error);
-        });
-}
+    load_diagram()
+})
 
 // Load HTML when the page is loaded
-window.addEventListener('load', loadScenarioAnalysisHTML);
+//window.addEventListener('load', loadScenarioAnalysisHTML);
+
 
 // Add an event listener for changes in the project_name element
-document.getElementById('project_name').addEventListener('change', loadScenarioAnalysisHTML);
+//document.getElementById('project_name').addEventListener('change', loadScenarioAnalysisHTML);
 
-// Add an event listener for changes in the project_case element
-document.getElementById('project_case').addEventListener('change', loadScenarioAnalysisHTML);
+
+// Listener update scenario data when scenario is changed ----------------------------------------------------------
+$("#scenarioname_list").change(function () {
+    scenario_name = $('#scenarioname_list').val();
+
+    $('#simulation_scenarioname_list').val(scenario_name)
+
+    open_scenario(scenario_name)
+});
+
+
+
+
+// ===================================================================================
+//                                       FUNCTIONS
+// ===================================================================================
+function initialize_page() {
+    load_diagram()
+
+    updateProjectCase()
+
+    //    Update the dropdown menu with scenarios
+    getExistingScenarioList('scenario_default');
+
+    loadScenarioAnalysisHTML()
+
+}
+
+
+async function get_case() {
+    try {
+        const data = await getDefaultScenarioData();
+//        $('#project_case').val(data.case);
+        return data.case;
+    } catch (error) {
+        console.error("Error fetching case data:", error);
+        return null;
+    }
+}
+
+
+// Function updateProjectCase ----------------------------------------------------------
+async function updateProjectCase() {
+    try {
+        const data = await getDefaultScenarioData(); // Call getDefaultScenarioData asynchronously
+        let project_case = data.case;
+        let project_case_string = "";
+
+        if (project_case === null || project_case === "") {
+            project_case_string = "Not Defined";
+        }
+        else if (project_case === "power_to_hydrogen") {
+            project_case_string = "Power to Hydrogen";
+        }
+        else if (project_case === "power_to_heat") {
+            project_case_string = "Power to Heat";
+        }
+        else {
+            project_case_string = project_case;
+        }
+
+        document.getElementById('project_case').value = project_case_string;
+
+    } catch (error) {
+        console.error("Error loading scenario data:", error);
+        return null;
+    }
+}
+
+
+async function loadScenarioAnalysisHTML() {
+    try {
+        const project_case = await get_case();
+        if (!project_case) {
+            console.error('Invalid project case returned. Aborting HTML load.');
+            document.getElementById('scenario_analysis_table').innerHTML = 'Failed to load data.';
+            return;
+        }
+
+        let apiEndpoint_2;
+
+        // Determine the correct URL to load based on project_case
+        if (
+            project_case === "Power to Hydrogen" ||
+            project_case === "power_to_hydrogen"
+        ) {
+            apiEndpoint_2 = urlP2H2Case;
+        } else if (
+            project_case === "Power to Heat" ||
+            project_case === "power_to_heat"
+        ) {
+            apiEndpoint_2 = urlP2HeatCase;
+        } else {
+            console.warn('Unexpected project case:', project_case);
+            document.getElementById('scenario_analysis_table').innerHTML = 'Unexpected case. Please check configuration.';
+            return;
+        }
+
+        // Ensure API endpoint is defined
+        if (!apiEndpoint_2) {
+            console.error('API endpoint is not defined.');
+            document.getElementById('scenario_analysis_table').innerHTML = 'Error: Missing API endpoint.';
+            return;
+        }
+
+        // Fetch and load the HTML content
+        const html = await fetchWithRetry(apiEndpoint_2);
+        document.getElementById('scenario_analysis_table').innerHTML = html;
+
+        // Optional: Call additional functions if needed
+        // open_scenario('scenario_default');
+
+    } catch (error) {
+        console.error('Error loading scenario analysis HTML:', error);
+        document.getElementById('scenario_analysis_table').innerHTML = 'Failed to load HTML content.';
+    }
+}
+
+async function fetchWithRetry(url, retries = 3) {
+    for (let i = 0; i < retries; i++) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`Fetch failed with status: ${response.status}`);
+            return await response.text();
+        } catch (error) {
+            console.warn(`Retry ${i + 1} failed:`, error);
+            if (i === retries - 1) throw error;
+        }
+    }
+}
+
+
+
+// Function getScenarioData ----------------------------------------------------------
+function getDefaultScenarioData() {
+    var project_name = $('#project_name').val();
+    var scenario_name = 'scenario_default';
+
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: 'POST',
+            url: '/app/scenarioanalysis/get_scenario_data',
+            contentType: 'application/json',
+            data: JSON.stringify({ project_name: project_name, scenario_name: scenario_name }),
+            success: function (data) {
+                console.log('data = ', data);
+                resolve(data); // Resolve the promise with the data
+            },
+            error: function (xhr, status, error) {
+                console.error('Error: ', error);
+                console.error('Status: ', status);
+                console.error('Response: ', xhr.responseText);
+                reject(error); // Reject the promise with the error
+            }
+        });
+    });
+}
 
 
 
@@ -119,7 +250,7 @@ function load_diagram() {
 
                 graph.fromJSON(data)
 
-                
+
 
             },
             error: function () {
@@ -138,13 +269,13 @@ function print_all_cells(){
 // Function get_active_mode ----------------------------------------------------------
 function get_active_mode() {
     const simulation_panel = document.getElementById("simulation_parameters_panel");
-    const optimization_panel = document.getElementById("optimization_parameters_panel");
+    const optimisation_panel = document.getElementById("optimisation_parameters_panel");
 
     // Determine which panel is currently visible
     if (simulation_panel.style.display === "block") {
         return "simulation";
-    } else if (optimization_panel.style.display === "block") {
-        return "optimization";
+    } else if (optimisation_panel.style.display === "block") {
+        return "optimisation";
     } else {
         return null; // Neither panel is visible
     }
@@ -156,44 +287,20 @@ function run_solver() {
     table_data = get_table_data()
 
 
-    var mode = get_active_mode()
-    var project_case_label = $('#project_case').val();
+    const mode = get_active_mode();
+    const time_horizon = $('#time_horizon').val();
+    const time_step = $('#time_step').val();
+    const project_case_label = $('#project_case').val();
+
     if (project_case_label == 'Power to Hydrogen'){
         project_case = 'power_to_hydrogen'
     } else if (project_case_label == 'Power to Heat'){
         project_case = 'power_to_heat'
     }
-    var time_horizon = $('#time_horizon').val();
-    var time_step = $('#time_step').val();
-    var scenario_name = $('#scenario_name').val();
+    var scenario_name = $('#scenarioname_list').val();
     var project_name = $('#project_name').val();
 
-    const local_storage_json = localStorage.getItem('allParsedCSVData');
-    local_storage_dict = JSON.parse(local_storage_json);
-
-    if (mode == "simulation") {
-    var optimization_method = ""
-        control_parameters = {
-            'power_supply': local_storage_dict['power_supply_profile_data'],
-            'power_demand': local_storage_dict['power_demand_profile_data'],
-            'hydrogen_demand': local_storage_dict['hydrogen_demand_profile_data'],
-            'power_splitter': local_storage_dict['power_splitter_control_profile_data'],
-            'hydrogen_splitter': local_storage_dict['hydrogen_splitter_control_profile_data'],
-            'gas_storage': local_storage_dict['gas_storage_profile_data']
-        }
-    } else if (mode == 'optimization') {
-        var optimization_method = $('#optimization_method').val();
-        optimization_parameters = get_optimization_parameters()
-
-        control_parameters = {
-            'power_supply': local_storage_dict['power_supply_profile_data'],
-            'power_demand': local_storage_dict['power_demand_profile_data'],
-            'hydrogen_demand': local_storage_dict['hydrogen_demand_profile_data'],
-            'power_splitter': optimization_parameters['power_splitter'],
-            'hydrogen_splitter': optimization_parameters['hydrogen_splitter'],
-            'gas_storage': optimization_parameters['gas_storage']
-        }
-    }
+    const control_parameters = get_control_param(mode);
 
     input_data = {
         "time_horizon": time_horizon,
@@ -204,7 +311,7 @@ function run_solver() {
         "project_name": project_name,
         "project_case": project_case,
         "mode": mode,
-        "optimization_method": optimization_method
+        "optimisation_method": optimisation_method
     }
     console.log('input data = ', input_data)
     $.ajax({
@@ -230,7 +337,7 @@ function run_solver() {
 function togglePanels() {
     // Get both panels
     const panel1 = document.getElementById("simulation_parameters_panel");
-    const panel2 = document.getElementById("optimization_parameters_panel");
+    const panel2 = document.getElementById("optimisation_parameters_panel");
 
     // Check which panel is currently visible
     if (panel1.style.display === "block") {
@@ -244,63 +351,3 @@ function togglePanels() {
 
 
 
-
-// ===================================================================================
-//                      EVENT LISTENERS / ON-CHANGE actions
-// ===================================================================================
-updateProjectCase()
-
-load_diagram()
-$('#project_name').on('change', function () {
-    load_diagram()
-})
-
-
-
-// Listener update scenario data when scenario is changed ----------------------------------------------------------
-$("#scenarioname_list").change(function () {
-    scenario_name = $('#scenarioname_list').val();
-    $('#simulation_scenarioname_list').val(scenario_name)
-
-    updateProjectCase().then(project_case => {
-    });
-
-
-    open_scenario(scenario_name)
-});
-
-// Listener getExistingScenarioList when page is loaded ----------------------------------------------------------
-document.addEventListener("DOMContentLoaded", function() {
-//    Update the dropdown menu with scenarios
-    getExistingScenarioList('scenario_default');
-    document.getElementById('scenarioname_list').value = 'scenario_default';
-});
-
-
-//// On change ----------------------------------------------------------
-//$('#scenariofile').on('change', function () {
-//
-//    var form_data = new FormData()
-//    form_data.append('file', $('#scenariofile')[0].files[0])
-//    form_data.append('project_name', project_name)
-//
-//    var fullPath = $('#scenariofile').val();
-//    var startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
-//    var filename = fullPath.substring(startIndex + 1,fullPath.length-5);
-//
-//    $.ajax({
-//        type: 'POST',
-//        url: '/importscenario',
-//        dataType: 'json',
-//        cache: false,
-//        contentType: false,
-//        processData: false,
-//        data: form_data,
-//        success: function (response) {
-//            getExistingScenarioList(filename)
-//
-//            alert(response)
-//        }
-//    })
-//
-//});

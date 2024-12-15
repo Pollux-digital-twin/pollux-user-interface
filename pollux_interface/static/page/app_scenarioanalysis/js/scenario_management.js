@@ -15,21 +15,17 @@ function getExistingScenarioList(scenario_name) {
             if (data != null) {
 
                 var fieldselect = document.getElementById('scenarioname_list');
-//                var fieldselect2 = document.getElementById('simulation_scenarioname_list');
                 var fieldselect3 = document.getElementById('new_scenarioname_list');
                 fieldselect.options.length = 0;
-//                fieldselect2.options.length = 0;
-//                fieldselect3.options.length = 0;
+
                 for (var i = 0; i < data.length; i++) {
 
                     fieldselect.options[fieldselect.options.length] = new Option(data[i], data[i]);
-//                    fieldselect2.options[fieldselect2.options.length] = new Option(data[i], data[i]);
                     fieldselect3.options[fieldselect3.options.length] = new Option(data[i], data[i]);
                 }
             }
 
             $('#scenarioname_list').val(scenario_name)
-//            $('#simulation_scenarioname_list').val(scenario_name)
 
             open_scenario(scenario_name)
         }
@@ -85,35 +81,82 @@ function delete_scenario() {
 }
 
 // Function save_scenario ----------------------------------------------------------
-function save_scenario() {
+async function save_scenario() {
+    const mode = get_active_mode();
+    const project_name = $('#project_name').val();
 
-    project_name = $('#project_name').val();
-    if (project_name == "") {
-        return
+    if (!project_name) {
+        alert("Project name is required.");
+        return;
     }
 
-    scenario_name = $('#scenarioname_list').val();
-    if (scenario_name == "scenario_default") {
-        var scenario_name = prompt("Can't overwrite scenario_default. Please enter new scenario name", "scenario_1");
-            store_scenario(project_name, scenario_name)
-        if (scenario_name === null) {
-            return
+    let scenario_name = $('#scenarioname_list').val();
+
+    if (scenario_name === "scenario_default") {
+        scenario_name = prompt("Can't overwrite scenario_default. Please enter a new scenario name", "scenario_1");
+
+        if (!scenario_name) {
+            alert("Scenario name is required.");
+            return;
         }
+
+        await store_scenario(project_name, scenario_name, mode);
+        alert(`${scenario_name} has been saved successfully.`);
+        return;
     }
 
-    if (confirm('Do you want to save this ' + scenario_name + ' ?')) {
-
+    if (confirm(`Do you want to save this scenario: ${scenario_name}?`)) {
+        await store_scenario(project_name, scenario_name, mode);
+        alert(`${scenario_name} has been saved successfully.`);
+        return;
     } else {
-        var scenario_name = prompt("Do you want to save as new scenario name?", scenario_name + "_new");
+        const new_scenario_name = prompt("Do you want to save as a new scenario name?", `${scenario_name}_new`);
 
-        if (scenario_name === null) {
-            return
+        if (!new_scenario_name) {
+            alert("Scenario name is required.");
+            return;
         }
+
+        scenario_name = new_scenario_name;
+        await store_scenario(project_name, scenario_name, mode);
+        alert(`${scenario_name} has been saved successfully.`);
     }
-
-    store_scenario(project_name, scenario_name)
-
 }
+
+
+// Function store_scenario ----------------------------------------------------------
+async function store_scenario(project_name, scenario_name, mode) {
+    try {
+        const table_data = await get_table_data();
+        const control_parameters = await get_control_param(mode);
+        const project_case = $('#project_case').val();
+
+        const response = await $.ajax({
+            type: 'POST',
+            url: '/app/scenarioanalysis/save_scenario',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                project_name: project_name,
+                scenario_name: scenario_name,
+                scenario_data: table_data,
+                project_case: project_case,
+                control_parameters: control_parameters
+            })
+        });
+
+        alert(`${scenario_name} is saved`);
+        getExistingScenarioList(scenario_name);
+    } catch (error) {
+        console.error("Error saving scenario:", error);
+        console.error("Error details:", {
+            status: error.status,
+            statusText: error.statusText,
+            responseText: error.responseText,
+        });
+        alert("Failed to save scenario. Please try again.");
+    }
+}
+
 
 // Function addScenario ----------------------------------------------------------
 function addScenario() {
@@ -176,27 +219,6 @@ function extractIdValuePairs(data) {
     });
 
     return dictionary;
-}
-
-
-// Function store_scenario ----------------------------------------------------------
-function store_scenario(project_name, scenario_name) {
-
-    table_data = get_table_data()
-
-
-    $.ajax({
-        type: 'POST',
-        url: '/app/scenarioanalysis/save_scenario',
-        contentType: 'application/json',
-        data: JSON.stringify({ project_name: project_name, scenario_name: scenario_name, scenario_data: table_data}),
-        success: function (data) {
-
-            alert([scenario_name + ' is saved'])
-
-            getExistingScenarioList(scenario_name)
-        }
-    })
 }
 
 // Function importScenario ----------------------------------------------------------
@@ -311,3 +333,64 @@ function getScenarioData(scenario_name) {
         return Promise.reject("Scenario name is null or empty."); // Reject if scenario name is invalid
     }
 }
+
+
+// Function get_control_param ----------------------------------------------------------
+async function get_control_param(mode) {
+    const local_storage_json = localStorage.getItem('allParsedCSVData');
+    if (!local_storage_json) {
+        console.error("No data found in local storage.");
+        alert("No data found in local storage.");
+        return null;
+    }
+
+    const local_storage_dict = JSON.parse(local_storage_json);
+    let control_parameters;
+
+    const required_components = ['power_supply', 'power_demand', 'hydrogen_demand', 'splitter1', 'splitter2', 'hydrogen_storage'];
+    let missing_components = [];
+
+    if (mode === "simulation") {
+        control_parameters = {
+            'power_supply': await Promise.resolve(local_storage_dict['power_supply_profile_data']),
+            'power_demand': await Promise.resolve(local_storage_dict['power_demand_profile_data']),
+            'hydrogen_demand': await Promise.resolve(local_storage_dict['hydrogen_demand_profile_data']),
+            'splitter1': await Promise.resolve(local_storage_dict['splitter1_control_profile_data']),
+            'splitter2': await Promise.resolve(local_storage_dict['splitter2_control_profile_data']),
+            'hydrogen_storage': await Promise.resolve(local_storage_dict['hydrogen_storage_profile_data'])
+        };
+    } else if (mode === "optimisation") {
+        const optimisation_method = $('#optimisation_method').val();
+        const optimisation_parameters = await get_optimisation_parameters();
+
+        control_parameters = {
+            'power_supply': await Promise.resolve(local_storage_dict['power_supply_profile_data']),
+            'power_demand': await Promise.resolve(local_storage_dict['power_demand_profile_data']),
+            'hydrogen_demand': await Promise.resolve(local_storage_dict['hydrogen_demand_profile_data']),
+            'splitter1': await Promise.resolve(optimisation_parameters['splitter1']),
+            'splitter2': await Promise.resolve(optimisation_parameters['splitter2']),
+            'hydrogen_storage': await Promise.resolve(optimisation_parameters['hydrogen_storage'])
+        };
+    } else {
+        console.error("Invalid mode provided. Expected 'simulation' or 'optimisation'.");
+        alert("Invalid mode provided. Expected 'simulation' or 'optimisation'.");
+        return null;
+    }
+
+    // Check for missing components
+    required_components.forEach(component => {
+        if (!control_parameters[component]) {
+            missing_components.push(component);
+        }
+    });
+
+    if (missing_components.length > 0) {
+        const missingList = missing_components.map(component => `- ${component}`).join('\n');
+        alert(`Control parameters for the following components are missing:\n${missingList}`);
+        console.error(`Missing components:\n${missingList}`);
+        return control_parameters;
+    }
+
+    return control_parameters;
+}
+

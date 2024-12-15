@@ -21,6 +21,11 @@ def app_diagram():
 def app_scenarioanalysis():
     return render_template('app_scenarioanalysis.html')
 
+@main.route('/app/visualisation')
+@login_required
+def app_visualisation():
+    return render_template('app_visualisation.html')
+
 
 @main.route('/app/tagbrowser')
 @login_required

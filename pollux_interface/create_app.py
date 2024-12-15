@@ -107,6 +107,10 @@ def create_app():
     from pollux_interface.blueprint.app_scenarioanalysis.routes import app_scenarioanalysis as app_scenarioanalysis_blueprint
     app.register_blueprint(app_scenarioanalysis_blueprint)
 
+    # blueprint for builder routes in our app
+    from pollux_interface.blueprint.app_visualisation.routes import app_visualisation as app_visualisation_blueprint
+    app.register_blueprint(app_visualisation_blueprint)
+
     # blueprint for setting plant routes in our app
     from pollux_interface.blueprint.setting_plant.routes import \
         setting_plant as setting_plant_blueprint
