@@ -9,12 +9,6 @@ from pollux_application.power2hydrogen.p2h2_solver import Power2Hydrogen
 # Create Blueprint
 app_scenarioanalysis = Blueprint("scenarioanalysis", __name__)
 
-
-current_dir = os.getcwd()
-pollux_main = os.path.dirname(current_dir)
-PROJECT_FOLDER = os.path.join(pollux_main, "pollux-project")
-
-
 # =================================================================================
 # Initialization
 # =================================================================================
@@ -23,7 +17,7 @@ def get_scenario_data():
     project_name = request.json["project_name"]
     scenario_name = request.json["scenario_name"]
 
-    PROJECT_DIR = os.path.join(PROJECT_FOLDER, project_name)
+    PROJECT_DIR = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], project_name)
     file_path = os.path.join(PROJECT_DIR, scenario_name + ".json")
 
     with open(file_path, "r") as file:
@@ -87,10 +81,10 @@ def run_solver():
         }
 
         app_solver.save_results(
-            PROJECT_FOLDER, project_name, scenario_name, mode, solver_param
+            current_app.config['POLLUX_PROJECT_FOLDER'], project_name, scenario_name, mode, solver_param
         )
         # Return success response with the result filepath
-        return jsonify({f"{mode} ran successfully"}), 200
+        return jsonify(f"{mode} ran successfully"), 200
 
     except Exception as e:
         print("Error during solver execution:", str(e))
@@ -107,7 +101,7 @@ def run_solver():
 def get_existing_scenario_list():
     filename = []
     project_name = request.json["project_name"]
-    PROJECT_DIR = os.path.join(PROJECT_FOLDER, project_name)
+    PROJECT_DIR = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], project_name)
     for x in os.listdir(PROJECT_DIR):
         # Get the full path of the item
         full_path = os.path.join(PROJECT_DIR, x)
@@ -125,7 +119,7 @@ def loadscenario():
     if scenario_name == "":
         scenario_name = "scenario_default"
 
-    projectpath = os.path.join(PROJECT_FOLDER, project_name)
+    projectpath = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], project_name)
     file_path = os.path.join(projectpath, f"{scenario_name}.json")
 
     if os.path.exists(file_path):
@@ -158,7 +152,7 @@ def save_scenario():
         elif project_case == "Power to Heat":
             project_case = "power_to_heat"
 
-        projectpath = os.path.join(PROJECT_FOLDER, project_name)
+        projectpath = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], project_name)
         file_path = os.path.join(projectpath, f"{scenario_name}.json")
 
         # Ensure the project folder exists
@@ -240,7 +234,7 @@ def newscenario():
     new_scenario_name = request.json["new_scenario_name"]
     copy_scenario_name = request.json["copy_scenario_name"]
 
-    projectpath = os.path.join(PROJECT_FOLDER, project_name)
+    projectpath = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], project_name)
 
     copy_conf = os.path.join(projectpath, copy_scenario_name + ".json")
     new_conf = os.path.join(projectpath, new_scenario_name + ".json")
@@ -256,7 +250,7 @@ def deletescenario():
     project_name = request.json["project_name"]
     scenario_name = request.json["scenario_name"]
 
-    PROJECT_DIR = os.path.join(PROJECT_FOLDER, project_name)
+    PROJECT_DIR = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], project_name)
 
     os.remove(os.path.join(PROJECT_DIR, scenario_name + ".json"))
 

@@ -1,342 +1,290 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="utf-8"/>
-    <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
-    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <meta charset="utf-8" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
     <title>
-    TNO POLLUX
+        TNO POLLUX
     </title>
-    <link href="{{ url_for('static', filename='vendor/font-awesome/font-awesome.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ url_for('static', filename='vendor/font-awesome/font-awesome.min.css') }}" rel="stylesheet"
+        type="text/css" />
     <!-- Nucleo Icons -->
-    <link href="{{ url_for('static', filename='assets/css/nucleo-icons.css')}}" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='assets/css/nucleo-icons.css')}}" rel="stylesheet" />
     <!-- CSS Files -->
-    <link href="{{ url_for('static', filename='assets/css/black-dashboard.css')}}" rel="stylesheet"/>
-    <link href="{{ url_for('static', filename='vendor/daterangepicker/daterangepicker.css') }}" rel="stylesheet" type="text/css"/>
-    <link href="{{ url_for('static', filename='vendor/waitme/waitMe.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ url_for('static', filename='assets/css/black-dashboard.css')}}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='vendor/daterangepicker/daterangepicker.css') }}" rel="stylesheet"
+        type="text/css" />
+    <link href="{{ url_for('static', filename='vendor/waitme/waitMe.css') }}" rel="stylesheet" type="text/css" />
     <style>
-    .warning {
-                    color: red;
-                    font-size: 12px;
-                    margin-top: 5px;
-                    display: none;
-            }
+        .warning {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
 
-            /* Parameters Overview table -- Define styles for each column */
-            .column-header {
-                    color: 'white';
-            }
+        /* Parameters Overview table -- Define styles for each column */
+        .column-header {
+            color: 'white';
+        }
 
-            .parameter-name {
-                    color: white;
-            }
+        .parameter-name {
+            color: white;
+        }
 
-            .parameters_table_class,
-            .tagnames_table_class {
-                    width: 100%;
-            }
+        .parameters_table_class,
+        .tagnames_table_class {
+            width: 100%;
+        }
 
-            .parameters_table_class th,
-            .parameters_table_class td,
-            .tagnames_table th,
-            .tagnames_table td {
-                    width: 50%;
-                    text-align: left;
-            }
+        .parameters_table_class th,
+        .parameters_table_class td,
+        .tagnames_table th,
+        .tagnames_table td {
+            width: 50%;
+            text-align: left;
+        }
 
-            /* Chrome, Safari, Edge, Opera */
-            input::-webkit-outer-spin-button,
-            input::-webkit-inner-spin-button {
-                    -webkit-appearance: none;
-                    margin: 0;
-            }
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
 
-            /* Firefox */
-            input[type=number] {
-                    -moz-appearance: textfield;
-            }
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
     </style>
 </head>
+
 <body>
     <div id="wrapper">
-    {% if session.project_name %}
-    <div class="sidebar" data="blue">
-        <div class="sidebar-wrapper">
-        <ul class="nav">
-            <li>
-            <a href="{{ url_for('main.index') }}">
-                <i class="tim-icons icon-chart-pie-36">
-                </i>
-                Dashboard
-            </a>
-            </li>
-            <li>
-            <a href="#">
-                <i class="tim-icons icon-app">
-                </i>
-                Application
-            </a>
-            <ul>
-                <li>
-                <a href="/app/diagram">
-                    <i class="tim-icons icon-vector">
-                    </i>
-                    Diagram Builder
-                </a>
-                </li>
-                <li>
-                <a href="/app/scenarioanalysis">
-                    <i class="tim-icons icon-settings">
-                    </i>
-                    Scenario Analysis
-                </a>
-                </li>
-                <li>
-                <a href="/app/visualisation">
-                    <i class="tim-icons icon-chart-bar-32"></i>
-                    Visualisation
-                    </a>
-                </li>
+        {% if session.project_name %}
+        <div class="sidebar" data="blue">
+            <div class="sidebar-wrapper">
+                <ul class="nav">
+                    <li>
+                        <a href="{{ url_for('main.index') }}">
+                            <i class="tim-icons icon-chart-pie-36">
+                            </i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="tim-icons icon-app">
+                            </i>
+                            Application
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="/app/scenarioanalysis">
+                                    <i class="tim-icons icon-settings">
+                                    </i>
+                                    Scenario Analysis
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/app/visualisation">
+                                    <i class="tim-icons icon-chart-bar-32"></i>
+                                    Visualisation
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
 
-<!--                <li>-->
-<!--                <a href="/app/timeseriesviewer">-->
-<!--                    <i class="tim-icons icon-chart-bar-32">-->
-<!--                    </i>-->
-<!--                    Timeseries Viewer-->
-<!--                </a>-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                <a href="/app/tagbrowser">-->
-<!--                    <i class="tim-icons icon-tag">-->
-<!--                    </i>-->
-<!--                    Tag Browser-->
-<!--                </a>-->
-<!--                </li>-->
-            </ul>
-            </li>
-<!--            <li>-->
-<!--            <a href="#">-->
-<!--                <i class="tim-icons icon-settings-gear-63">-->
-<!--                </i>-->
-<!--                Settings-->
-<!--            </a>-->
-<!--            <ul>-->
-<!--                <li>-->
-<!--                <a href="/setting/plant">-->
-<!--                    <i class="fa fa-database">-->
-<!--                    </i>-->
-<!--                    Plant Configuration-->
-<!--                </a>-->
-<!--                </li>-->
-<!--            </ul>-->
-<!--            </li>-->
-<!--            <li>-->
-<!--            <a href="#">-->
-<!--                <i class="tim-icons icon-paper">-->
-<!--                </i>-->
-<!--                Info-->
-<!--            </a>-->
-<!--            <ul>-->
-<!--                <li>-->
-<!--                <a href="/report">-->
-<!--                    <i class="tim-icons icon-double-right">-->
-<!--                    </i>-->
-<!--                    Report-->
-<!--                </a>-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                <a href="/documentation">-->
-<!--                    <i class="tim-icons icon-double-right">-->
-<!--                    </i>-->
-<!--                    Documentation-->
-<!--                </a>-->
-<!--                </li>-->
-<!--            </ul>-->
-<!--            </li>-->
-        </ul>
-        </div>
-    </div>
-    {% endif %}
-    <div class="main-panel" data="blue">
-        <nav class="navbar navbar-expand-lg navbar-absolute navbar-transparent">
-        <div class="container-fluid">
-            <a class="navbar-brand">
-            <img alt="tno-logo1" src="../static/images/tno.png" style="height:45px"/>
-            <img alt="pollux-logo1" src="../static/images/pollux.png" style="height:45px"/>
-            </a>
-            <ul class="navbar-nav ml-xl">
-            <li class="dropdown nav-item">
-                <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
-                File
-                <i class="tim-icons icon-minimal-down">
-                </i>
-                </a>
-                <ul class="dropdown-menu dropdown-navbar">
-                <li class="nav-item dropdown-item">
-                    <a onclick="create_new_project()">
-                    <i class="fa fa-folder-o">
-                    </i>
-                    New Project
-                    </a>
-                </li>
-                <li class="nav-item dropdown-item" data-toggle="modal" href="#myProjectModal">
-                    <i class="fa fa-folder-open">
-                    </i>
-                    Open Project
-                </li>
-                {% if session.project_name %}
-                <li class="nav-item dropdown-item">
-                    <a onclick="close_project()">
-                    <i class="fa fa-close">
-                    </i>
-                    Close Project
-                    </a>
-                </li>
-                {% if current_user.role == 'admin' %}
-                <li class="dropdown-divider">
-                </li>
-                <li class="nav-item dropdown-item">
-                    <a onclick="delete_project()">
-                    <i class="fa fa-trash-o">
-                    </i>
-                    Delete Project
-                    </a>
-                </li>
-                {% endif %}
-                                                                {% endif %}
                 </ul>
-            </li>
-            <li class="dropdown nav-item">
-                <div style="margin-top: 0.5rem">
-                Project Name:
-                </div>
-            </li>
-            <li class="dropdown nav-item">
-                <input class="form-control" disabled="" id="project_name" style="width: 200px;color: rgb(255, 255, 255)" value="{{ session.project_name }}"/>
-            </li>
-            <li class="dropdown nav-item">
-                <div style="margin-top: 0.5rem">
-                Case :
-                </div>
-            </li>
-            <li class="dropdown nav-item">
-                <input class="form-control" disabled="" id="project_case" style="width: 200px;color: rgb(255, 255, 255)" value=""/>
-            </li>
-            </ul>
-            <ul class="navbar-nav ml-auto">
-            <li class="dropdown nav-item">
-                <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
-                {% if current_user.is_authenticated %}
-                                                                {{ current_user.name }}
-                                                                {% endif %}
-                                                                {% if not current_user.is_authenticated %}
-                                                                anonymous
-                                                                {% endif %}
-                <div class="photo">
-                    <img alt="Profile Photo" src="{{ url_for('static', filename='assets/img/anime3.png')}}"/>
-                </div>
-                </a>
-                <ul class="dropdown-menu dropdown-navbar">
-                <li>
-                    <a class="nav-item dropdown-item" href="/documentation" target="_blank">
-                    <i class="tim-icons icon-single-copy-04">
-                    </i>
-                    Documentation
-                    </a>
-                </li>
-                {% if not current_user.is_authenticated %}
-                <li>
-                    <a class="nav-item dropdown-item" href="{{ url_for('auth.login') }}">
-                    <i class="tim-icons icon-single-02">
-                    </i>
-                    Login
-                    </a>
-                </li>
-                {% endif %}
-                                                                {% if current_user.is_authenticated %}
-                <li class="nav-link">
-                    <a class="nav-item dropdown-item" href="{{ url_for('auth.logout') }}">
-                    <i class="tim-icons icon-user-run">
-                    </i>
-                    Log out
-                    </a>
-                </li>
-                <li class="nav-link">
-                    <a class="nav-item dropdown-item" href="{{ url_for('auth.password') }}">
-                    <i class="tim-icons icon-refresh-02">
-                    </i>
-                    Change Password
-                    </a>
-                </li>
-                {% if current_user.role == 'admin' %}
-                <li>
-                    <a class="nav-item dropdown-item" href="{{ url_for('auth.signup') }}">
-                    <i class="tim-icons icon-tap-02">
-                    </i>
-                    Add User
-                    </a>
-                </li>
-                <li>
-                    <a class="nav-item dropdown-item" href="/admin">
-                    <i class="tim-icons icon-badge">
-                    </i>
-                    Admin Manager
-                    </a>
-                </li>
-                {% endif %}
-                                                                {% endif %}
-                </ul>
-            </li>
-            </ul>
-        </div>
-        </nav>
-        <div class="content">
-        <div class="row">
-            {% if session.project_name %}
-
-                                        {% block title %}
-                                        {% endblock %}
-                                        {% block content %}
-                                        {% endblock %}
-
-                                        {% endif %}
-
-                                        {% if not session.project_name %}
-            <div class="alert alert-warning">
-            Please create a new project or open an existing project!
             </div>
-            {% endif %}
         </div>
-        <div class="row">
-            <footer class="page-footer">
-            </footer>
-        </div>
+        {% endif %}
+        <div class="main-panel" data="blue">
+            <nav class="navbar navbar-expand-lg navbar-absolute navbar-transparent">
+                <div class="container-fluid">
+                    <a class="navbar-brand">
+                        <img alt="tno-logo1" src="../static/images/tno.png" style="height:45px" />
+                        <img alt="pollux-logo1" src="../static/images/pollux.png" style="height:45px" />
+                    </a>
+                    <ul class="navbar-nav ml-xl">
+                        <li class="dropdown nav-item">
+                            <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
+                                File
+                                <i class="tim-icons icon-minimal-down">
+                                </i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-navbar">
+                                <li class="nav-item dropdown-item">
+                                    <a onclick="create_new_project()">
+                                        <i class="fa fa-folder-o">
+                                        </i>
+                                        New Project
+                                    </a>
+                                </li>
+                                <li class="nav-item dropdown-item" data-toggle="modal" href="#myProjectModal">
+                                    <i class="fa fa-folder-open">
+                                    </i>
+                                    Open Project
+                                </li>
+                                {% if session.project_name %}
+                                <li class="nav-item dropdown-item">
+                                    <a onclick="close_project()">
+                                        <i class="fa fa-close">
+                                        </i>
+                                        Close Project
+                                    </a>
+                                </li>
+                                {% if current_user.role == 'admin' %}
+                                <li class="dropdown-divider">
+                                </li>
+                                <li class="nav-item dropdown-item">
+                                    <a onclick="delete_project()">
+                                        <i class="fa fa-trash-o">
+                                        </i>
+                                        Delete Project
+                                    </a>
+                                </li>
+                                {% endif %}
+                                {% endif %}
+                            </ul>
+                        </li>
+                        <li class="dropdown nav-item">
+                            <div style="margin-top: 0.5rem">
+                                Project Name:
+                            </div>
+                        </li>
+                        <li class="dropdown nav-item">
+                            <input class="form-control" disabled="" id="project_name"
+                                style="width: 200px;color: rgb(255, 255, 255)" value="{{ session.project_name }}" />
+                        </li>
+                        <li class="dropdown nav-item">
+                            <div style="margin-top: 0.5rem">
+                                Case :
+                            </div>
+                        </li>
+                        <li class="dropdown nav-item">
+                            <input class="form-control" disabled="" id="project_case"
+                                style="width: 200px;color: rgb(255, 255, 255)" value="" />
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="dropdown nav-item">
+                            <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
+                                {% if current_user.is_authenticated %}
+                                {{ current_user.name }}
+                                {% endif %}
+                                {% if not current_user.is_authenticated %}
+                                anonymous
+                                {% endif %}
+                                <div class="photo">
+                                    <img alt="Profile Photo"
+                                        src="{{ url_for('static', filename='assets/img/anime3.png')}}" />
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu dropdown-navbar">
+                                <li>
+                                    <a class="nav-item dropdown-item" href="/documentation" target="_blank">
+                                        <i class="tim-icons icon-single-copy-04">
+                                        </i>
+                                        Documentation
+                                    </a>
+                                </li>
+                                {% if not current_user.is_authenticated %}
+                                <li>
+                                    <a class="nav-item dropdown-item" href="{{ url_for('auth.login') }}">
+                                        <i class="tim-icons icon-single-02">
+                                        </i>
+                                        Login
+                                    </a>
+                                </li>
+                                {% endif %}
+                                {% if current_user.is_authenticated %}
+                                <li class="nav-link">
+                                    <a class="nav-item dropdown-item" href="{{ url_for('auth.logout') }}">
+                                        <i class="tim-icons icon-user-run">
+                                        </i>
+                                        Log out
+                                    </a>
+                                </li>
+                                <li class="nav-link">
+                                    <a class="nav-item dropdown-item" href="{{ url_for('auth.password') }}">
+                                        <i class="tim-icons icon-refresh-02">
+                                        </i>
+                                        Change Password
+                                    </a>
+                                </li>
+                                {% if current_user.role == 'admin' %}
+                                <li>
+                                    <a class="nav-item dropdown-item" href="{{ url_for('auth.signup') }}">
+                                        <i class="tim-icons icon-tap-02">
+                                        </i>
+                                        Add User
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="nav-item dropdown-item" href="/admin">
+                                        <i class="tim-icons icon-badge">
+                                        </i>
+                                        Admin Manager
+                                    </a>
+                                </li>
+                                {% endif %}
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="content">
+                <div class="row">
+                    {% if session.project_name %}
+
+                    {% block title %}
+                    {% endblock %}
+                    {% block content %}
+                    {% endblock %}
+
+                    {% endif %}
+
+                    {% if not session.project_name %}
+                    <div class="alert alert-warning">
+                        Please create a new project or open an existing project!
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="row">
+                    <footer class="page-footer">
+                    </footer>
+                </div>
+            </div>
         </div>
     </div>
-    </div>
-    <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="myProjectModal" role="dialog" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-        <div class="modal-header">
-            <button aria-hidden="true" class="close" data-dismiss="modal" type="button">
-            ×
-            </button>
-            <h3 id="myModalLabel1" style="color: black">
-            Load Existing Project
-            </h3>
+    <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="myProjectModal" role="dialog"
+        tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button aria-hidden="true" class="close" data-dismiss="modal" type="button">
+                        ×
+                    </button>
+                    <h3 id="myModalLabel1" style="color: black">
+                        Load Existing Project
+                    </h3>
+                </div>
+                <div class="modal-body">
+                    <select id="project_name_list" style="width: 300px;height: 30px">
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button aria-hidden="true" class="btn" data-dismiss="modal">
+                        Close
+                    </button>
+                    <input class="btn btn-info" onclick="open_project();" type="button" value="Open" />
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-            <select id="project_name_list" style="width: 300px;height: 30px">
-            </select>
-        </div>
-        <div class="modal-footer">
-            <button aria-hidden="true" class="btn" data-dismiss="modal">
-            Close
-            </button>
-            <input class="btn btn-info" onclick="open_project();" type="button" value="Open"/>
-        </div>
-        </div>
-    </div>
     </div>
 </body>
 <script src="{{ url_for('static', filename='assets/js/core/jquery.min.js')}}">
@@ -362,16 +310,16 @@
 <script>
     var current_effect = 'roundBounce'; //
 
-        function run_waitMe(effect) {
-                $('#container').waitMe({
-                        effect: effect,
-                        text: 'Please waiting...',
-                        bg: 'rgba(255,255,255,0.7)',
-                        color: '#000'
-                });
-        }
+    function run_waitMe(effect) {
+        $('#container').waitMe({
+            effect: effect,
+            text: 'Please waiting...',
+            bg: 'rgba(255,255,255,0.7)',
+            color: '#000'
+        });
+    }
 
-        run_waitMe(current_effect)
+    run_waitMe(current_effect)
 </script>
 <script src="{{ url_for('static', filename='page/project.js') }}">
 </script>
@@ -380,9 +328,10 @@
 <p>
     {% if session.project_name %}
 
-{% block script %}
-{% endblock %}
+    {% block script %}
+    {% endblock %}
 
-{% endif %}
+    {% endif %}
 </p>
+
 </html>
