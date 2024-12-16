@@ -6,19 +6,10 @@ document.addEventListener("DOMContentLoaded", function() {
     initialize_page()
 });
 
-//updateProjectCase()
-
 $('#project_name').on('change', function () {
 
     load_diagram()
 })
-
-// Load HTML when the page is loaded
-//window.addEventListener('load', loadScenarioAnalysisHTML);
-
-
-// Add an event listener for changes in the project_name element
-//document.getElementById('project_name').addEventListener('change', loadScenarioAnalysisHTML);
 
 
 // Listener update scenario data when scenario is changed ----------------------------------------------------------
@@ -29,8 +20,6 @@ $("#scenarioname_list").change(function () {
 
     open_scenario(scenario_name)
 });
-
-
 
 
 // ===================================================================================
@@ -152,7 +141,6 @@ async function fetchWithRetry(url, retries = 3) {
 }
 
 
-
 // Function getScenarioData ----------------------------------------------------------
 function getDefaultScenarioData() {
     var project_name = $('#project_name').val();
@@ -177,62 +165,6 @@ function getDefaultScenarioData() {
         });
     });
 }
-
-
-
-// Function getTableHTML ----------------------------------------------------------
-function getTableHTML(projectCase) {
-    if (projectCase === 'case1') {
-        return `
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Column 1</th>
-                        <th>Column 2</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Data 1.1</td>
-                        <td>Data 1.2</td>
-                    </tr>
-                    <tr>
-                        <td>Data 2.1</td>
-                        <td>Data 2.2</td>
-                    </tr>
-                </tbody>
-            </table>
-        `;
-    } else if (projectCase === 'case2') {
-        return `
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Column A</th>
-                        <th>Column B</th>
-                        <th>Column C</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Data A1</td>
-                        <td>Data B1</td>
-                        <td>Data C1</td>
-                    </tr>
-                    <tr>
-                        <td>Data A2</td>
-                        <td>Data B2</td>
-                        <td>Data C2</td>
-                    </tr>
-                </tbody>
-            </table>
-        `;
-    } else {
-        return `<p>Unknown project case: ${projectCase}</p>`;
-    }
-}
-
-
 
 
 // Function load_diagram ----------------------------------------------------------
@@ -282,7 +214,7 @@ function get_active_mode() {
 }
 
 // Function run_solver ----------------------------------------------------------
-function run_solver() {
+async function run_solver() {
     console.log('run_solver() FUNCTION CALLED');
     table_data = get_table_data()
 
@@ -291,6 +223,7 @@ function run_solver() {
     const time_horizon = $('#time_horizon').val();
     const time_step = $('#time_step').val();
     const project_case_label = $('#project_case').val();
+    const optimisation_method = $('#optimisation_method').val();
 
     if (project_case_label == 'Power to Hydrogen'){
         project_case = 'power_to_hydrogen'
@@ -300,7 +233,7 @@ function run_solver() {
     var scenario_name = $('#scenarioname_list').val();
     var project_name = $('#project_name').val();
 
-    const control_parameters = get_control_param(mode);
+    const control_parameters = await get_control_param(mode);
 
     input_data = {
         "time_horizon": time_horizon,

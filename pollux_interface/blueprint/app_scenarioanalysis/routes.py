@@ -37,52 +37,65 @@ def get_scenario_data():
 # =================================================================================
 @app_scenarioanalysis.route("/app/scenarioanalysis/run_solver", methods=["POST"])
 def run_solver():
-    input_param = request.json["input_data"]
-    control_parameters = input_param["control_parameters"]
-    parameters = {
-        "component_parameters": input_param["table_data"],
-        "project_name": input_param["project_name"],
-        "project_case": input_param["project_case"],
-        "time_horizon": input_param["time_horizon"],
-        "time_step": input_param["time_step"],
-        "control_parameters": control_parameters,
-        "mode": input_param["mode"],
-        "optimisation_method": input_param["optimisation_method"],
-    }
+    try:
+        input_param = request.json["input_data"]
+        control_parameters = input_param["control_parameters"]
+        parameters = {
+            "component_parameters": input_param["table_data"],
+            "project_name": input_param["project_name"],
+            "project_case": input_param["project_case"],
+            "time_horizon": input_param["time_horizon"],
+            "time_step": input_param["time_step"],
+            "control_parameters": control_parameters,
+            "mode": input_param["mode"],
+            "optimisation_method": input_param["optimisation_method"],
+        }
 
-    app_solver = Power2Hydrogen()
+        app_solver = Power2Hydrogen()
 
-    app_solver.init_parameters(parameters)
+        app_solver.init_parameters(parameters)
 
-    # Define inputs
-    input = {
-        "time_horizon": float(input_param["time_horizon"]),
-        "time_step": float(input_param["time_step"]),
-        "project_case": input_param["project_case"],
-        "mode": input_param["mode"],
-        "optimisation_method": input_param["optimisation_method"],
-        "control_parameters": control_parameters,
-        "maxiter": 200,
-        "finite_diff_step": 0.001,
-    }
+        # Define inputs
+        input = {
+            "time_horizon": float(input_param["time_horizon"]),
+            "time_step": float(input_param["time_step"]),
+            "project_case": input_param["project_case"],
+            "mode": input_param["mode"],
+            "optimisation_method": input_param["optimisation_method"],
+            "control_parameters": control_parameters,
+            "maxiter": 200,
+            "finite_diff_step": 0.001,
+        }
 
-    app_solver.calculate(input)
+        app_solver.calculate(input)
 
-    app_solver.get_output()
+        app_solver.get_output()
 
-    plot_input = {"mode": input_param["mode"], "label": "rmse [MW]"}
+        project_name = input_param["project_name"]
+        scenario_name = input_param["scenario_name"]
+        mode = input_param["mode"]
 
-    project_name = input_param["project_name"]
-    scenario_name = input_param["scenario_name"]
-    mode = input_param["mode"]
+        solver_param = {
+            "control_reshaped": app_solver.control_reshaped,
+            "function_value": app_solver.function_value,
+            "step_size_control": app_solver.step_size_control,
+            "time_vector_control": app_solver.time_vector_control,
+            "time_vector": app_solver.time_vector,
+            "control_scaled_value": app_solver.control_scaled_value,
+            "time_horizon": app_solver.time_horizon,
+            "components_with_control": app_solver.components_with_control,
+        }
 
-    solver_param = {"control_reshaped": app_solver.control_reshaped}
+        app_solver.save_results(
+            PROJECT_FOLDER, project_name, scenario_name, mode, solver_param
+        )
+        # Return success response with the result filepath
+        return jsonify({f"{mode} ran successfully"}), 200
 
-    app_solver.save_results(
-        PROJECT_FOLDER, project_name, scenario_name, mode, solver_param
-    )
-
-    app_solver.plot(app_solver.outputs, app_solver.kpis, plot_input)
+    except Exception as e:
+        print("Error during solver execution:", str(e))
+        # Return an error response
+        return jsonify({"error": str(e)}), 500
 
 
 # =================================================================================
