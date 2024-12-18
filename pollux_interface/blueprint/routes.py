@@ -15,10 +15,12 @@ def index():
 def app_diagram():
     return render_template('app_diagram.html')
 
+
 @main.route('/app/scenarioanalysis')
 @login_required
 def app_scenarioanalysis():
     return render_template('app_scenarioanalysis.html')
+
 
 @main.route('/app/visualisation')
 @login_required

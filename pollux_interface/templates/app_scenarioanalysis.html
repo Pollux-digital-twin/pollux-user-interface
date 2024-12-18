@@ -1,177 +1,187 @@
-<html>
-<body>
-    <p>
-    {% extends "base.html" %}
+{% extends "base.html" %}
 
 {% block title %}
-    </p>
-    <div class="col-lg-12">
-        <h1 class="page-header">
-            Scenario Analysis App
-        </h1>
-    </div>
-    <div class="col-lg-12">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="jumbotron" id="mybuilder">
-                </div>
+</p>
+<div class="col-lg-12">
+    <h1 class="page-header">
+        Scenario Analysis App
+    </h1>
+</div>
+<div class="col-lg-12">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="jumbotron" id="mybuilder">
             </div>
         </div>
     </div>
-    <div class="container">
-        <div class="row my-3">
-            <div class="col">
-                <div class="dropdown-menu dropdown-menu-sm" id="context-menu">
-                    <a class="dropdown-item" onclick="show_parameter_modal()">
-                        Open Parameter
-                    </a>
-                </div>
+</div>
+<div class="container">
+    <div class="row my-3">
+        <div class="col">
+            <div class="dropdown-menu dropdown-menu-sm" id="context-menu">
+                <a class="dropdown-item" onclick="show_parameter_modal()">
+                    Open Parameter
+                </a>
             </div>
         </div>
-        <div class="modal right fade" id="componentModal" role="dialog">
-            <div id="component_parameters_popup">
-            </div>
+    </div>
+    <div class="modal right fade" id="componentModal" role="dialog">
+        <div id="component_parameters_popup">
+        </div>
         <!-- Placeholder for imported HTML -->
-        </div>
     </div>
+</div>
 
-    <!--            ====================================================================================    -->
-    <!--                                 1st ROW, Case specific tables                                      -->
-    <!--            ====================================================================================    -->
-    <div class="container-fluid">
-        <div id="scenario_analysis_table"></div>
-        <script>
+<!--            ====================================================================================    -->
+<!--                                 1st ROW, Case specific tables                                      -->
+<!--            ====================================================================================    -->
+<div class="container-fluid">
+    <div id="scenario_analysis_table"></div>
+    <script>
 <!--        function togglePanels() {-->
-<!--            var panel1 = document.getElementById('panel1');-->
-<!--            var panel2 = document.getElementById('panel2');-->
-<!--            if (panel1.style.display === 'none') {-->
-<!--                            panel1.style.display = 'block';-->
-<!--                            panel2.style.display = 'none';-->
-<!--            } else {-->
-<!--                            panel1.style.display = 'none';-->
-<!--                            panel2.style.display = 'block';-->
-<!--            }-->
-<!--        }-->
-        </script>
-        <!--    ====================================================================================    -->
-        <!--                                     2nd ROW, General inputs                                -->
-        <!--    ====================================================================================    -->
-        <div class="row">
-            <div class="col-6">
-                <div class="card full-width-panel">
-                    <h3 class="card-header">
-                        Options
-                    </h3>
-                    <div class="card-body">
+    < !-- var panel1 = document.getElementById('panel1'); -->
+        < !-- var panel2 = document.getElementById('panel2'); -->
+            < !-- if (panel1.style.display === 'none') {
+            -->
+                < !--panel1.style.display='block'; -->
+                    < !--panel2.style.display='none'; -->
+                        < !-- } else {
+            -->
+                            < !--panel1.style.display='none'; -->
+                                < !--panel2.style.display='block'; -->
+                                    < !-- } -->
+                                        < !-- }-->
+    </script>
+    <!--    ====================================================================================    -->
+    <!--                                     2nd ROW, General inputs                                -->
+    <!--    ====================================================================================    -->
+    <div class="row">
+        <div class="col-6">
+            <div class="card full-width-panel">
+                <h3 class="card-header">
+                    Options
+                </h3>
+                <div class="card-body">
+                    <div class="panel panel-default">
+                        <!--                            <input id="degradation_model_checkbox" name="degradation_model_checkbox" type="checkbox"/>-->
+                        <!--                            <label for="degradation_model_checkbox">-->
+                        <!--                            Check to enable degradation model-->
+                        <!--                            </label>-->
                         <div class="panel panel-default">
-<!--                            <input id="degradation_model_checkbox" name="degradation_model_checkbox" type="checkbox"/>-->
-<!--                            <label for="degradation_model_checkbox">-->
-<!--                            Check to enable degradation model-->
-<!--                            </label>-->
-                            <div class="panel panel-default">
-                                <label class="mr-2" for="time_horizon" style="margin-right: 10px; font-size: 16px">
-                                    Time horizon [hours]:
+                            <label class="mr-2" for="time_horizon" style="margin-right: 10px; font-size: 16px">
+                                Time horizon [hours]:
+                            </label>
+                            <input data-min-length="1" id="time_horizon" placeholder="Type a time horizon in hours"
+                                type="text" value="24" readonly />
+                            <div style="display: inline-flex; align-items: center;">
+                                <label class="mr-2" for="time_step" style="margin-right: 10px; font-size: 16px">
+                                    Timestep [hours]:
                                 </label>
-                                <input data-min-length="1" id="time_horizon" placeholder="Type a time horizon in hours" type="text" value="24" readonly />
-                                <div style="display: inline-flex; align-items: center;">
-                                    <label class="mr-2" for="time_step" style="margin-right: 10px; font-size: 16px">
-                                        Timestep [hours]:
-                                    </label>
-                                    <select class="form-control" id="time_step" style="background-color: white; color: black; width: auto; min-width: 100px;">
-                                        <option value="1">1 hour</option>
-                                        <option value="2">2 hours</option>
-                                        <option value="3">3 hours</option>
-                                        <option value="4">4 hours</option>
-                                        <option value="6">6 hours</option>
-                                        <option value="12">12 hours</option>
-                                    </select>
-                                </div>
-                                <div>
-                                  <input class="btn btn-primary btn-lg" id="run_solver_button" onclick="run_solver();" type="button" value="Run"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-6">
-                <div class="card full-width-panel">
-                    <h3 class="card-header">
-                        Scenario management
-                    </h3>
-                    <div class="card-body">
-                        <div class="panel panel-default">
-    <!--                        Scenario name:-->
-    <!--                        <input class="flexdatalist" data-min-length="1" data-selection-required="true" id="scenario_name" list="option_list" placeholder="Type a scenario name" type="text" value=""/>-->
-    <!--                        <datalist id="option_list">-->
-    <!--                        <option value="Scenario 1">-->
-    <!--                        </option>-->
-    <!--                        <option value="Scenario 2">-->
-    <!--                        </option>-->
-    <!--                        </datalist>-->
-    <!--                        <br/>-->
-    <!--                        <br/>-->
-    <!--                        <input class="btn btn-primary btn-sm" onclick="save_scenario();" type="button" value="Save"/>-->
-    <!--                        <input class="btn btn-primary btn-sm" onclick="load_scenario();" type="button" value="Load"/>-->
-    <!--                        <input class="btn btn-primary btn-sm" onclick="delete_scenario();" type="button" value="Delete"/>-->
-    <!--                    </div>-->
-                            <div style="margin-bottom: 10px;">
-                                <label class="mr-2" for="scenarioname_list" style="margin-right: 10px; font-size: 16px">
-                                    Scenario Name:
-                                </label>
-                                <select class="form-Input" style="width: 200px; height: 30px;" id="scenarioname_list">
-                                    <option value=""></option>
+                                <select class="form-control" id="time_step"
+                                    style="background-color: white; color: black; width: auto; min-width: 100px;">
+                                    <option value="1">1 hour</option>
+                                    <option value="2">2 hours</option>
+                                    <option value="3">3 hours</option>
+                                    <option value="4">4 hours</option>
+                                    <option value="6">6 hours</option>
+                                    <option value="12">12 hours</option>
                                 </select>
                             </div>
                             <div>
-                                <button id="button_addScenario" type="button" class="btn btn-primary btn-sm" onclick="openNewScenarioModal();">New</button>
-                                <button id="button_saveScenario" type="button" class="btn btn-primary btn-sm" onclick="save_scenario();">Save</button>
-                                <button id="button_deleteScenario" type="button" class="btn btn-primary btn-sm" onclick="delete_scenario();">Delete</button>
+                                <input class="btn btn-primary btn-lg" id="run_solver_button" onclick="run_solver();"
+                                    type="button" value="Run" />
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                            <div class="modal fade" id="myProjectModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                                aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                            <h3 id="myModalLabel1">Load Existing Project</h3>
-                                        </div>
-                                        <div class="modal-body">
-                                            <select class='form-Input' style='width: 300px;height: 30px' id='projectname_list'>
-                                                <option value=""></option>
-                                            </select>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-                                            <input type="button" value="Open" class="btn btn-primary" onclick="openProject();" />
-                                        </div>
+        <div class="col-6">
+            <div class="card full-width-panel">
+                <h3 class="card-header">
+                    Scenario management
+                </h3>
+                <div class="card-body">
+                    <div class="panel panel-default">
+                        <!--                        Scenario name:-->
+                        <!--                        <input class="flexdatalist" data-min-length="1" data-selection-required="true" id="scenario_name" list="option_list" placeholder="Type a scenario name" type="text" value=""/>-->
+                        <!--                        <datalist id="option_list">-->
+                        <!--                        <option value="Scenario 1">-->
+                        <!--                        </option>-->
+                        <!--                        <option value="Scenario 2">-->
+                        <!--                        </option>-->
+                        <!--                        </datalist>-->
+                        <!--                        <br/>-->
+                        <!--                        <br/>-->
+                        <!--                        <input class="btn btn-primary btn-sm" onclick="save_scenario();" type="button" value="Save"/>-->
+                        <!--                        <input class="btn btn-primary btn-sm" onclick="load_scenario();" type="button" value="Load"/>-->
+                        <!--                        <input class="btn btn-primary btn-sm" onclick="delete_scenario();" type="button" value="Delete"/>-->
+                        <!--                    </div>-->
+                        <div style="margin-bottom: 10px;">
+                            <label class="mr-2" for="scenarioname_list" style="margin-right: 10px; font-size: 16px">
+                                Scenario Name:
+                            </label>
+                            <select class="form-Input" style="width: 200px; height: 30px;" id="scenarioname_list">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div>
+                            <button id="button_addScenario" type="button" class="btn btn-primary btn-sm"
+                                onclick="openNewScenarioModal();">New</button>
+                            <button id="button_saveScenario" type="button" class="btn btn-primary btn-sm"
+                                onclick="save_scenario();">Save</button>
+                            <button id="button_deleteScenario" type="button" class="btn btn-primary btn-sm"
+                                onclick="delete_scenario();">Delete</button>
+                        </div>
+
+                        <div class="modal fade" id="myProjectModal" tabindex="-1" role="dialog"
+                            aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"
+                                            aria-hidden="true">×</button>
+                                        <h3 id="myModalLabel1">Load Existing Project</h3>
+                                    </div>
+                                    <div class="modal-body">
+                                        <select class='form-Input' style='width: 300px;height: 30px'
+                                            id='projectname_list'>
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                                        <input type="button" value="Open" class="btn btn-primary"
+                                            onclick="openProject();" />
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="modal fade" id="myNewScenarioModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                                aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                            <h3 id="myModalLabel1">Add New Scenario</h3>
-                                        </div>
-                                        <div class="modal-body">
-                                            <label_tab>Scenario name:</label_tab>
-                                            <input style='width: 175px' type="text" id="new_scenarioname" value="">
-                                            <br>
-                                            <label_tab>Copy scenario from:</label_tab>
-                                            <select class='form-Input' style='width: 300px;height: 30px' id='new_scenarioname_list'>
-                                                <option value=""></option>
-                                            </select>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-                                            <input type="button" value="Create" class="btn btn-primary" onclick="addScenario();" />
-                                        </div>
+                        <div class="modal fade" id="myNewScenarioModal" tabindex="-1" role="dialog"
+                            aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"
+                                            aria-hidden="true">×</button>
+                                        <h3 id="myModalLabel1">Add New Scenario</h3>
+                                    </div>
+                                    <div class="modal-body">
+                                        <label_tab>Scenario name:</label_tab>
+                                        <input style='width: 175px' type="text" id="new_scenarioname" value="">
+                                        <br>
+                                        <label_tab>Copy scenario from:</label_tab>
+                                        <select class='form-Input' style='width: 300px;height: 30px'
+                                            id='new_scenarioname_list'>
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                                        <input type="button" value="Create" class="btn btn-primary"
+                                            onclick="addScenario();" />
                                     </div>
                                 </div>
                             </div>
@@ -181,75 +191,89 @@
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Load diagram component parameters html file-->
-    <script>
+<!-- Load diagram component parameters html file-->
+<script>
     const apiEndpoint_1 = "{{ url_for('main.serve_template_file', filename='app_scenario_analysis_component_parameters.html') }}";
-                fetch(apiEndpoint_1)
-                        .then(response => {
-                                if (!response.ok) {
-                                        throw new Error(`Failed to fetch HTML: ${response.status}`);
-                                }
-                                return response.text();
-                        })
-                        .then(html => {
-                                document.getElementById('component_parameters_popup').innerHTML = html;
-                                console.log('HTML file successfully imported');
-                        })
-                        .catch(error => {
-                                console.error('Error importing HTML file:', error);
-                        });
-    </script>
+    fetch(apiEndpoint_1)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch HTML: ${response.status}`);
+            }
+            return response.text();
+        })
+        .then(html => {
+            document.getElementById('component_parameters_popup').innerHTML = html;
+            console.log('HTML file successfully imported');
+        })
+        .catch(error => {
+            console.error('Error importing HTML file:', error);
+        });
+</script>
 
-    <!-- Url for power to hydrogen and power to heat pages that are loaded on the scenario analysis application-->
-    <script>
-        const urlP2H2Case = "{{ url_for('main.serve_template_file', filename='app_scenario_analysis_p2h2case.html') }}";
-        const urlP2HeatCase = "{{ url_for('main.serve_template_file', filename='app_scenario_analysis_p2heatcase.html') }}";
-    </script>
-    {% endblock %}
+<!-- Url for power to hydrogen and power to heat pages that are loaded on the scenario analysis application-->
+<script>
+    const urlP2H2Case = "{{ url_for('main.serve_template_file', filename='app_scenario_analysis_p2h2case.html') }}";
+    const urlP2HeatCase = "{{ url_for('main.serve_template_file', filename='app_scenario_analysis_p2heatcase.html') }}";
+</script>
+{% endblock %}
 
 
-    {% block script %}
-    <style>
-    .modal.right .modal-dialog { position: fixed; margin: auto; width: 500px; height: 100%;
-                -webkit-transform: translate3d(0%, 0, 0); -ms-transform: translate3d(0%, 0, 0); -o-transform: translate3d(0%, 0, 0);
-                transform: translate3d(0%, 0, 0); }
+{% block script %}
+<style>
+    .modal.right .modal-dialog {
+        position: fixed;
+        margin: auto;
+        width: 500px;
+        height: 100%;
+        -webkit-transform: translate3d(0%, 0, 0);
+        -ms-transform: translate3d(0%, 0, 0);
+        -o-transform: translate3d(0%, 0, 0);
+        transform: translate3d(0%, 0, 0);
+    }
 
-                .modal.right .modal-content { height: 100%; overflow-y: auto; }
+    .modal.right .modal-content {
+        height: 100%;
+        overflow-y: auto;
+    }
 
-                .modal.right .modal-body { padding: 15px 15px 80px; }
+    .modal.right .modal-body {
+        padding: 15px 15px 80px;
+    }
 
-                .modal.right.fade .modal-dialog { right: 0px; -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
-                -moz-transition: opacity 0.3s linear, right 0.3s ease-out; -o-transition: opacity 0.3s linear, right 0.3s ease-out;
-                transition: opacity 0.3s linear, right 0.3s ease-out; }
+    .modal.right.fade .modal-dialog {
+        right: 0px;
+        -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
+        -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
+        -o-transition: opacity 0.3s linear, right 0.3s ease-out;
+        transition: opacity 0.3s linear, right 0.3s ease-out;
+    }
 
-                .modal.right.fade.in .modal-dialog { right: 0; }
-    </style>
+    .modal.right.fade.in .modal-dialog {
+        right: 0;
+    }
+</style>
 
-         <!-- LINKS TO THE EXTERNAL JAVASCRIPT FILES -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.1/backbone.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jointjs/3.7.4/joint.js"></script>
-    <script src="{{ url_for('static', filename='vendor/dataTables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='vendor/dataTables/dataTables.bootstrap.min.js') }}"></script>
+<!-- LINKS TO THE EXTERNAL JAVASCRIPT FILES -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.1/backbone.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jointjs/3.7.4/joint.js"></script>
+<script src="{{ url_for('static', filename='vendor/dataTables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/dataTables/dataTables.bootstrap.min.js') }}"></script>
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/jointjs/3.7.4/joint.css" rel="stylesheet" type="text/css"/>
-    <link href="{{ url_for('static', filename='vendor/dataTables/dataTables.bootstrap.css') }}" rel="stylesheet"/>
-    <link href="{{ url_for('static', filename='vendor/dataTables/dataTables.responsive.css') }}" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jointjs/3.7.4/joint.css" rel="stylesheet" type="text/css" />
+<link href="{{ url_for('static', filename='vendor/dataTables/dataTables.bootstrap.css') }}" rel="stylesheet" />
+<link href="{{ url_for('static', filename='vendor/dataTables/dataTables.responsive.css') }}" rel="stylesheet" />
 
-    <!-- Diagram js files -->
-    <script src="{{ url_for('static', filename='page/app_builder/js/diagram.js') }}"></script>
 
-    <!-- App-specific js files -->
-    <script src="{{ url_for('static', filename='page/app_scenarioanalysis/js/diagram.js') }}"></script>
-    <script src="{{ url_for('static', filename='page/app_scenarioanalysis/js/component.js') }}"></script>
-    <script src="{{ url_for('static', filename='page/app_scenarioanalysis/js/scenario_management.js') }}"></script>
-    <script src="{{ url_for('static', filename='page/app_scenarioanalysis/js/parameterstable.js') }}"></script>
-    <script src="{{ url_for('static', filename='page/app_scenarioanalysis/js/profiles.js') }}"></script>
-    <script src="{{ url_for('static', filename='page/app_scenarioanalysis/js/api.js') }}"></script>
+<!-- App-specific js files -->
+<script src="{{ url_for('static', filename='page/app_scenarioanalysis/js/diagram.js') }}"></script>
+<script src="{{ url_for('static', filename='page/app_scenarioanalysis/js/scenario_management.js') }}"></script>
+<script src="{{ url_for('static', filename='page/app_scenarioanalysis/js/parameterstable.js') }}"></script>
+<script src="{{ url_for('static', filename='page/app_scenarioanalysis/js/profiles.js') }}"></script>
+<script src="{{ url_for('static', filename='page/app_scenarioanalysis/js/api.js') }}"></script>
 
-    {% endblock %}
-</body>
-</html>
+{% endblock %}

@@ -14,6 +14,9 @@ def getresultslist():
 
     results_list = []
 
+    if not os.path.isdir(results_folder):
+        os.mkdir(results_folder)
+
     # List all files in the results directory
     for filename in os.listdir(results_folder):
         if filename.endswith("_output.json"):

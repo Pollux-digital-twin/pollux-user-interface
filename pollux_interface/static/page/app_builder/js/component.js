@@ -23,12 +23,8 @@ function addElectrolyser() {
         electrolyser_capacity_MW: '1'
     }
     tagnames = {
-        "measured": {
-            "electrolyser_measured_tagname_example": "tagname_example"
-        },
-        "calculated": {
-            "electrolyser_calculated_tagname_example": "tagname_example"
-        }
+        "measured": {},
+        "calculated": {}
     }
     addComponent(componentStyling, inports, outports, parameters, tagnames);
 }
@@ -47,11 +43,8 @@ function addHydrogenDemand() {
         hydrogen_demand_capacity: 100
     }
     tagnames = {
-        "measured": {
-            "hydrogen_demand_profile": "profile1"
-        },
-        "calculated": {
-        }
+        "measured": {},
+        "calculated": {}
     }
     addComponent(componentStyling, inports, outports, parameters, tagnames);
 }
@@ -91,9 +84,7 @@ function addElectricitySource() {
         electricity_source_capacity: ""
     }
     tagnames = {
-        "measured": {
-            "electricity_source_profile": "source_profile"
-},
+        "measured": {},
         "calculated": {}
     }
     addComponent(componentStyling, inports, outports, parameters, tagnames);
@@ -113,9 +104,7 @@ function addElectricityDemand() {
         type: 'electricity_demand'
     }
     tagnames = {
-        "measured": {
-            "electricity_demand_profile": "demand_profile"
-        },
+        "measured": {},
         "calculated": {}
     }
     addComponent(componentStyling, inports, outports, parameters, tagnames);
@@ -156,8 +145,7 @@ function addHeatDemand() {
         type: 'heat_demand'
     }
     tagnames = {
-        "measured": {
-            "heat_demand_profile": "demand_profile"},
+        "measured": {},
         "calculated": {}
     }
     addComponent(componentStyling, inports, outports, parameters, tagnames);
@@ -198,9 +186,7 @@ function addHeatSource() {
         heat_source_capacity: ""
     }
     tagnames = {
-        "measured": {
-            "heat_source_profile": "source_profile"
-        },
+        "measured": {},
         "calculated": {}
     }
     addComponent(componentStyling, inports, outports, parameters, tagnames);

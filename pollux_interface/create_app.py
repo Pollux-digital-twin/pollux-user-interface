@@ -19,6 +19,7 @@ db = SQLAlchemy()
 
 pollux_root_dir = Path(__file__).parents[2]
 
+
 def create_app():
     """
     Function to create webapp using Flask and importing the blueprints
@@ -36,9 +37,6 @@ def create_app():
 
     app.config['POLLUX_PROJECT_FOLDER'] = \
         os.getenv('POLLUX_PROJECT_FOLDER', os.path.join(pollux_root_dir, 'pollux-project'))
-    app.config['POLLUX_DOCUMENTATION_FOLDER'] = \
-        os.getenv('POLLUX_DOCUMENTATION_FOLDER',
-                  os.path.join(pollux_root_dir, 'pollux-documentation'))
 
     Session(app)
 
@@ -96,11 +94,13 @@ def create_app():
     app.register_blueprint(app_builder_blueprint)
 
     # blueprint for builder routes in our app
-    from pollux_interface.blueprint.app_scenarioanalysis.routes import app_scenarioanalysis as app_scenarioanalysis_blueprint
+    from pollux_interface.blueprint.app_scenarioanalysis.routes import \
+        app_scenarioanalysis as app_scenarioanalysis_blueprint
     app.register_blueprint(app_scenarioanalysis_blueprint)
 
     # blueprint for builder routes in our app
-    from pollux_interface.blueprint.app_visualisation.routes import app_visualisation as app_visualisation_blueprint
+    from pollux_interface.blueprint.app_visualisation.routes import \
+        app_visualisation as app_visualisation_blueprint
     app.register_blueprint(app_visualisation_blueprint)
 
     # blueprint for setting plant routes in our app
@@ -132,6 +132,13 @@ def create_app():
 
                 db.session.add(new_user)
                 db.session.commit()
+
+            project = Project.query.filter_by(name="Power2Hydrogen").first()
+            if not project:
+                new_project = Project(name="Power2Hydrogen", group="")
+                db.session.add(new_project)
+                db.session.commit()
+
     except Exception as exception:
         print(
             "got the following exception when attempting db.create_all() in create_app.py: " + str(
