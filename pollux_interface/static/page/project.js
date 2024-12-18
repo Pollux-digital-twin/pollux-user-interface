@@ -155,10 +155,3 @@ function open_project() {
 
     }
 }
-
-
-
-// Listener updateProjectCase when page is loaded ----------------------------------------------------------
-//document.addEventListener('DOMContentLoaded', () => {
-//    updateProjectCase()
-//});

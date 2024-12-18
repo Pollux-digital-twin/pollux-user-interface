@@ -19,10 +19,6 @@ db = SQLAlchemy()
 
 pollux_root_dir = Path(__file__).parents[2]
 
-if not os.path.exists(os.path.join(pollux_root_dir, 'pollux-project')):
-    os.mkdir(os.path.join(pollux_root_dir, 'pollux-project'))
-
-
 def create_app():
     """
     Function to create webapp using Flask and importing the blueprints
@@ -43,10 +39,6 @@ def create_app():
     app.config['POLLUX_DOCUMENTATION_FOLDER'] = \
         os.getenv('POLLUX_DOCUMENTATION_FOLDER',
                   os.path.join(pollux_root_dir, 'pollux-documentation'))
-
-    sys.path.append(os.getenv('POLLUX_FRAMEWORK_FOLDER',
-                              os.path.join(pollux_root_dir, 'pollux-framework',
-                                           'pollux_interface')))
 
     Session(app)
 
