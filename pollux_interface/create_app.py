@@ -103,16 +103,6 @@ def create_app():
         app_visualisation as app_visualisation_blueprint
     app.register_blueprint(app_visualisation_blueprint)
 
-    # blueprint for setting plant routes in our app
-    from pollux_interface.blueprint.setting_plant.routes import \
-        setting_plant as setting_plant_blueprint
-    app.register_blueprint(setting_plant_blueprint)
-
-    # blueprint for app tagbrowser routes in our app
-    from pollux_interface.blueprint.app_tagbrowser.routes import \
-        app_tagbrowser as app_tagbrowser_blueprint
-    app.register_blueprint(app_tagbrowser_blueprint)
-
     # blueprint for app dashboard routes in our app
     from pollux_interface.blueprint.dashboard.routes import dashboard \
         as dashboard_blueprint
