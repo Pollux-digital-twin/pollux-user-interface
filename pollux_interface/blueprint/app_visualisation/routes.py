@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify, current_app
 import os
-import shutil
 import json
 import numpy as np
 
@@ -8,15 +7,10 @@ import numpy as np
 app_visualisation = Blueprint("visualisation", __name__)
 
 
-current_dir = os.getcwd()
-pollux_main = os.path.dirname(current_dir)
-PROJECT_FOLDER = os.path.join(pollux_main, "pollux-project")
-
-
 @app_visualisation.route("/app/visualisation/getresultslist", methods=["POST"])
 def getresultslist():
     project_name = request.json["project_name"]
-    results_folder = os.path.join(PROJECT_FOLDER, project_name, "results")
+    results_folder = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], project_name, "results")
 
     results_list = []
 
@@ -39,7 +33,7 @@ def loadresults():
     project_name = input["project_name"]
     result_name = input["result_name"]
 
-    output_dir = os.path.join(PROJECT_FOLDER, project_name, "results")
+    output_dir = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], project_name, "results")
     os.makedirs(output_dir, exist_ok=True)
 
     # Create output filenames
