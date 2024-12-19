@@ -15,10 +15,69 @@ document.addEventListener('click', function (event) {
         } else if (event.target.id === 'hydrogen_storage_profile_button') {
             document.getElementById('hydrogen_storage_profile_csv').click();
         }
+
+        if (event.target.id === 'power_supply_profile_plot_button') {
+            setTimeout(function(){plotProfiles('power_supply_profile_data')},500);
+        } else if (event.target.id === 'power_demand_profile_plot_button') {
+            setTimeout(function(){plotProfiles('power_demand_profile_data')},500);
+        } else if (event.target.id === 'hydrogen_demand_profile_plot_button') {
+            setTimeout(function(){plotProfiles('hydrogen_demand_profile_data')},500);
+        } else if (event.target.id === 'splitter1_profile_plot_button') {
+            setTimeout(function(){plotProfiles('splitter1_profile_data')},500);
+        } else if (event.target.id === 'splitter2_profile_plot_button') {
+            setTimeout(function(){plotProfiles('splitter2_profile_data')},500);
+        } else if (event.target.id === 'hydrogen_storage_profile_plot_button') {
+            setTimeout(function(){plotProfiles('hydrogen_storage_profile_data')},500);
+        }
     }
 });
 
-function init_storage(){
+$("#myProfileModal").on('show.bs.modal', function () {
+    Plotly.purge('profiles_plot')
+});
+
+
+function plotProfiles(profile_name) {
+
+    // Extract data
+    storage_json = sessionStorage.getItem('allParsedCSVData');
+    storage_dict = JSON.parse(storage_json);
+
+    plotdata = storage_dict[profile_name]
+    const time_vector = Object.keys(plotdata);
+    const y_values = Object.values(plotdata);
+
+    // Create the trace for the efficiency plot
+    const trace1 = {
+        x: time_vector,
+        y: y_values,
+        mode: 'lines',
+        line: { shape: 'hv', width: 2 }, // 'hv' for step-like lines, 'red' color
+    };
+
+    // Define layout for the plot
+    const layout = {
+        plot_bgcolor: "#27293D",
+        paper_bgcolor: "#27293D",
+        font: {
+            color: "#D2D2D5"
+        },
+        title: profile_name,
+        xaxis: {
+            title: 'Time (hr)'
+        },
+        yaxis: {
+            title: '',
+        }
+    };
+
+    // Show plot
+    Plotly.newPlot('profiles_plot', [trace1], layout);
+
+
+}
+
+function init_storage() {
 
     storageKeys = ['power_supply_profile_data', 'power_demand_profile_data', 'hydrogen_demand_profile_data',
         'splitter1_profile_data', 'splitter2_profile_data', 'hydrogen_storage_profile_data']
@@ -41,7 +100,7 @@ function handleFileSelect(event) {
         reader.onload = function (e) {
             const content = e.target.result;
             const parsedData = parseCSV(content);
-            console.log(`Parsed data from ${file.name}:`, parsedData);
+            
 
             // Get the button id that triggered the file input
             const buttonId = event.target.id;
