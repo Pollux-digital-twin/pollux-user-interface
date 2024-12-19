@@ -1,8 +1,8 @@
 // Function get_table_data ----------------------------------------------------------
-function get_table_data() {
+function get_component_parameters() {
     project_case = document.getElementById('project_case').value;
 
-    if (project_case === "Power to Hydrogen") {
+    if (project_case === "power_to_hydrogen") {
         // Retrieve electrolyser parameters
         const electrolyserTableRows = document.querySelectorAll('#electrolyser_parameters tbody tr');
         const electrolyser_parameters = extract_table_data(electrolyserTableRows);
@@ -13,10 +13,8 @@ function get_table_data() {
 
         // Construct the table data object
         table_data = {
-            'power_to_hydrogen': {
-                'electrolyser_parameters': electrolyser_parameters,
-                'hydrogen_storage_parameters': hydrogen_storage_parameters
-            }
+            'electrolyser_parameters': electrolyser_parameters,
+            'hydrogen_storage_parameters': hydrogen_storage_parameters
         }
     }
     return table_data;
@@ -33,7 +31,11 @@ function extract_table_data(tableRows) {
             const key = keyInput.id.replace(/_key$/, '').trim();
             const value = valueInput.value.trim();
             if (key) { // Only include rows with a non-empty key
-                data[key] = value;
+                if (key != 'cell_type') {
+                    data[key] = parseFloat(value);
+                } else {
+                    data[key] = value;
+                }
             }
         }
     });

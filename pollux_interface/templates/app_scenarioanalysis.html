@@ -37,21 +37,7 @@
 <!--            ====================================================================================    -->
 <div class="container-fluid">
     <div id="scenario_analysis_table"></div>
-    <script>
-<!--        function togglePanels() {-->
-    < !-- var panel1 = document.getElementById('panel1'); -->
-        < !-- var panel2 = document.getElementById('panel2'); -->
-            < !-- if (panel1.style.display === 'none') {
-            -->
-                < !--panel1.style.display='block'; -->
-                    < !--panel2.style.display='none'; -->
-                        < !-- } else {
-            -->
-                            < !--panel1.style.display='none'; -->
-                                < !--panel2.style.display='block'; -->
-                                    < !-- } -->
-                                        < !-- }-->
-    </script>
+
     <!--    ====================================================================================    -->
     <!--                                     2nd ROW, General inputs                                -->
     <!--    ====================================================================================    -->
@@ -63,32 +49,27 @@
                 </h3>
                 <div class="card-body">
                     <div class="panel panel-default">
-                        <!--                            <input id="degradation_model_checkbox" name="degradation_model_checkbox" type="checkbox"/>-->
-                        <!--                            <label for="degradation_model_checkbox">-->
-                        <!--                            Check to enable degradation model-->
-                        <!--                            </label>-->
                         <div class="panel panel-default">
                             <label class="mr-2" for="time_horizon" style="margin-right: 10px; font-size: 16px">
                                 Time horizon [hours]:
                             </label>
                             <input data-min-length="1" id="time_horizon" placeholder="Type a time horizon in hours"
-                                type="text" value="24" readonly />
+                                type="text" value=24 />
                             <div style="display: inline-flex; align-items: center;">
-                                <label class="mr-2" for="time_step" style="margin-right: 10px; font-size: 16px">
-                                    Timestep [hours]:
+                                <label class="mr-2" for="control_step" style="margin-right: 10px; font-size: 16px">
+                                    Control step [hours]:
                                 </label>
-                                <select class="form-control" id="time_step"
-                                    style="background-color: white; color: black; width: auto; min-width: 100px;">
-                                    <option value="1">1 hour</option>
-                                    <option value="2">2 hours</option>
-                                    <option value="3">3 hours</option>
-                                    <option value="4">4 hours</option>
-                                    <option value="6">6 hours</option>
-                                    <option value="12">12 hours</option>
+                                <select class="form-Input" id="control_step" style="width: 100px; height: 30px;">
+                                    <option value=1>1 hour</option>
+                                    <option value=2>2 hours</option>
+                                    <option value=3>3 hours</option>
+                                    <option value=4>4 hours</option>
+                                    <option value=6>6 hours</option>
+                                    <option value=12>12 hours</option>
                                 </select>
                             </div>
                             <div>
-                                <input class="btn btn-primary btn-lg" id="run_solver_button" onclick="run_solver();"
+                                <input class="btn btn-secondary btn-lg" id="run_solver_button" onclick="run_solver();"
                                     type="button" value="Run" />
                             </div>
                         </div>
@@ -104,20 +85,6 @@
                 </h3>
                 <div class="card-body">
                     <div class="panel panel-default">
-                        <!--                        Scenario name:-->
-                        <!--                        <input class="flexdatalist" data-min-length="1" data-selection-required="true" id="scenario_name" list="option_list" placeholder="Type a scenario name" type="text" value=""/>-->
-                        <!--                        <datalist id="option_list">-->
-                        <!--                        <option value="Scenario 1">-->
-                        <!--                        </option>-->
-                        <!--                        <option value="Scenario 2">-->
-                        <!--                        </option>-->
-                        <!--                        </datalist>-->
-                        <!--                        <br/>-->
-                        <!--                        <br/>-->
-                        <!--                        <input class="btn btn-primary btn-sm" onclick="save_scenario();" type="button" value="Save"/>-->
-                        <!--                        <input class="btn btn-primary btn-sm" onclick="load_scenario();" type="button" value="Load"/>-->
-                        <!--                        <input class="btn btn-primary btn-sm" onclick="delete_scenario();" type="button" value="Delete"/>-->
-                        <!--                    </div>-->
                         <div style="margin-bottom: 10px;">
                             <label class="mr-2" for="scenarioname_list" style="margin-right: 10px; font-size: 16px">
                                 Scenario Name:
@@ -127,11 +94,11 @@
                             </select>
                         </div>
                         <div>
-                            <button id="button_addScenario" type="button" class="btn btn-primary btn-sm"
+                            <button id="button_addScenario" type="button" class="btn btn-secondary btn-sm"
                                 onclick="openNewScenarioModal();">New</button>
-                            <button id="button_saveScenario" type="button" class="btn btn-primary btn-sm"
+                            <button id="button_saveScenario" type="button" class="btn btn-secondary btn-sm"
                                 onclick="save_scenario();">Save</button>
-                            <button id="button_deleteScenario" type="button" class="btn btn-primary btn-sm"
+                            <button id="button_deleteScenario" type="button" class="btn btn-secondary btn-sm"
                                 onclick="delete_scenario();">Delete</button>
                         </div>
 
@@ -152,7 +119,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-                                        <input type="button" value="Open" class="btn btn-primary"
+                                        <input type="button" value="Open" class="btn btn-secondary"
                                             onclick="openProject();" />
                                     </div>
                                 </div>
@@ -166,7 +133,7 @@
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal"
                                             aria-hidden="true">×</button>
-                                        <h3 id="myModalLabel1">Add New Scenario</h3>
+                                        <h3 id="myModalLabel1" style="color: black">Add New Scenario</h3>
                                     </div>
                                     <div class="modal-body">
                                         <label_tab>Scenario name:</label_tab>
@@ -180,8 +147,27 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-                                        <input type="button" value="Create" class="btn btn-primary"
+                                        <input type="button" value="Create" class="btn btn-secondary"
                                             onclick="addScenario();" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="myProfileModal" tabindex="-1" role="dialog"
+                            aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"
+                                            aria-hidden="true">×</button>
+                                        <h3 id="myModalLabel1" style="color: black">Input Profile</h3>
+                                    </div>
+                                    <div class="modal-body">
+
+                                    </div>
+                                    <div class="modal-footer">
+
                                     </div>
                                 </div>
                             </div>
@@ -205,7 +191,6 @@
         })
         .then(html => {
             document.getElementById('component_parameters_popup').innerHTML = html;
-            console.log('HTML file successfully imported');
         })
         .catch(error => {
             console.error('Error importing HTML file:', error);
@@ -275,5 +260,6 @@
 <script src="{{ url_for('static', filename='page/app_scenarioanalysis/js/parameterstable.js') }}"></script>
 <script src="{{ url_for('static', filename='page/app_scenarioanalysis/js/profiles.js') }}"></script>
 <script src="{{ url_for('static', filename='page/app_scenarioanalysis/js/api.js') }}"></script>
+
 
 {% endblock %}

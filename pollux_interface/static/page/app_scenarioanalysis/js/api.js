@@ -2,7 +2,7 @@
 //                      EVENT LISTENERS / ON-CHANGE actions
 // ===================================================================================
 // Listener getExistingScenarioList when page is loaded ----------------------------------------------------------
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     initialize_page()
 });
 
@@ -28,8 +28,6 @@ $("#scenarioname_list").change(function () {
 function initialize_page() {
     load_diagram()
 
-    updateProjectCase()
-
     //    Update the dropdown menu with scenarios
     getExistingScenarioList('scenario_default');
 
@@ -38,50 +36,10 @@ function initialize_page() {
 }
 
 
-async function get_case() {
-    try {
-        const data = await getDefaultScenarioData();
-//        $('#project_case').val(data.case);
-        return data.case;
-    } catch (error) {
-        console.error("Error fetching case data:", error);
-        return null;
-    }
-}
-
-
-// Function updateProjectCase ----------------------------------------------------------
-async function updateProjectCase() {
-    try {
-        const data = await getDefaultScenarioData(); // Call getDefaultScenarioData asynchronously
-        let project_case = data.case;
-        let project_case_string = "";
-
-        if (project_case === null || project_case === "") {
-            project_case_string = "Not Defined";
-        }
-        else if (project_case === "power_to_hydrogen") {
-            project_case_string = "Power to Hydrogen";
-        }
-        else if (project_case === "power_to_heat") {
-            project_case_string = "Power to Heat";
-        }
-        else {
-            project_case_string = project_case;
-        }
-
-        document.getElementById('project_case').value = project_case_string;
-
-    } catch (error) {
-        console.error("Error loading scenario data:", error);
-        return null;
-    }
-}
-
 
 async function loadScenarioAnalysisHTML() {
     try {
-        const project_case = await get_case();
+        project_case = document.getElementById("project_case_list").value
         if (!project_case) {
             console.error('Invalid project case returned. Aborting HTML load.');
             document.getElementById('scenario_analysis_table').innerHTML = 'Failed to load data.';
@@ -92,12 +50,10 @@ async function loadScenarioAnalysisHTML() {
 
         // Determine the correct URL to load based on project_case
         if (
-            project_case === "Power to Hydrogen" ||
             project_case === "power_to_hydrogen"
         ) {
             apiEndpoint_2 = urlP2H2Case;
         } else if (
-            project_case === "Power to Heat" ||
             project_case === "power_to_heat"
         ) {
             apiEndpoint_2 = urlP2HeatCase;
@@ -153,7 +109,6 @@ function getDefaultScenarioData() {
             contentType: 'application/json',
             data: JSON.stringify({ project_name: project_name, scenario_name: scenario_name }),
             success: function (data) {
-                console.log('data = ', data);
                 resolve(data); // Resolve the promise with the data
             },
             error: function (xhr, status, error) {
@@ -194,7 +149,7 @@ function load_diagram() {
 }
 
 // Function print_all_cells ----------------------------------------------------------
-function print_all_cells(){
+function print_all_cells() {
     console.log(graph.getCells())
 }
 
@@ -215,52 +170,36 @@ function get_active_mode() {
 
 // Function run_solver ----------------------------------------------------------
 async function run_solver() {
-    console.log('run_solver() FUNCTION CALLED');
-    table_data = get_table_data()
+    scenario_name = $('#scenarioname_list').val();
+    project_name = $('#project_name').val();
 
+    mode = get_active_mode();
+    time_horizon = parseFloat($('#time_horizon').val());
+    control_step = parseFloat($('#control_step').val());
 
-    const mode = get_active_mode();
-    const time_horizon = $('#time_horizon').val();
-    const time_step = $('#time_step').val();
-    const project_case_label = $('#project_case').val();
-    const optimisation_method = $('#optimisation_method').val();
-
-    if (project_case_label == 'Power to Hydrogen'){
-        project_case = 'power_to_hydrogen'
-    } else if (project_case_label == 'Power to Heat'){
-        project_case = 'power_to_heat'
-    }
-    var scenario_name = $('#scenarioname_list').val();
-    var project_name = $('#project_name').val();
-
-    const control_parameters = await get_control_param(mode);
-
-    input_data = {
+    sim_data = {
         "time_horizon": time_horizon,
-        "time_step": time_step,
-        "control_parameters": control_parameters,
-        "table_data": table_data[project_case],
-        "scenario_name": scenario_name,
-        "project_name": project_name,
-        "project_case": project_case,
+        "control_step": control_step,
         "mode": mode,
-        "optimisation_method": optimisation_method
     }
-    console.log('input data = ', input_data)
+
+    if (mode == 'simulation'){
+        window.alert('Running simulation with scenario: ' + scenario_name)
+    }else{
+        window.alert('Running optimisation with scenario: ' + scenario_name + '. It can takes several minutes, dont close this page.')
+    }
+
     $.ajax({
         type: 'POST',
         url: '/app/scenarioanalysis/run_solver',
         contentType: 'application/json',
-        data: JSON.stringify({'input_data': input_data}),
+        data: JSON.stringify({ 'project_name': project_name, 'scenario_name': scenario_name, 'sim_data': sim_data }),
         success: function (data) {
-            console.log('run_solver SUCCESS --> data = ', data);
-
-            // Retrieve the results
-            var filepath = data.result;
-
+            console.log('run_solver SUCCESS --> data = ', data)
+            window.alert('Simulation is finish. Go to visualization app for the results.')
         },
-        error: function(xhr, status, error) {
-            console.error('Error during download:', status, error);
+        error: function (xhr, status, error) {
+            window.alert('Simulation error. logfile: ' + xhr.responseText)
         }
     });
 }

@@ -1,26 +1,6 @@
-// Clear the previous data when the page loads
-//localStorage.removeItem('allParsedCSVData');
+init_storage()
 
-//Evenet listener for the dropdown menu
-//document.addEventListener('change', function(event) {
-//    if (event.target.tagName === 'SELECT' && event.target.value === 'load_csv') {
-//        // Trigger file input click based on selected dropdown
-//        if (event.target.id === 'power_supply_profile') {
-//            document.getElementById('power_supply_profile_csv').click();
-//        } else if (event.target.id === 'power_demand_profile') {
-//            document.getElementById('power_demand_profile_csv').click();
-//        } else if (event.target.id === 'hydrogen_demand_profile') {
-//            document.getElementById('hydrogen_demand_profile_csv').click();
-//        } else if (event.target.id === 'splitter1_profile') {
-//            document.getElementById('splitter1_control_profile_csv').click();
-//        } else if (event.target.id === 'splitter2_profile') {
-//            document.getElementById('splitter2_control_profile_csv').click();
-//        } else if (event.target.id === 'hydrogen_storage_profile') {
-//            document.getElementById('hydrogen_storage_profile_csv').click();
-//        }
-//    }
-//});
-document.addEventListener('click', function(event) {
+document.addEventListener('click', function (event) {
     if (event.target.tagName === 'BUTTON') {
         if (event.target.id === 'power_supply_profile_button') {
             document.getElementById('power_supply_profile_csv').click();
@@ -28,15 +8,28 @@ document.addEventListener('click', function(event) {
             document.getElementById('power_demand_profile_csv').click();
         } else if (event.target.id === 'hydrogen_demand_profile_button') {
             document.getElementById('hydrogen_demand_profile_csv').click();
-        } else if (event.target.id === 'splitter1_control_profile_button') {
-            document.getElementById('splitter1_control_profile_csv').click();
-        } else if (event.target.id === 'splitter2_control_profile_button') {
-            document.getElementById('splitter2_control_profile_csv').click();
+        } else if (event.target.id === 'splitter1_profile_button') {
+            document.getElementById('splitter1_profile_csv').click();
+        } else if (event.target.id === 'splitter2_profile_button') {
+            document.getElementById('splitter2_profile_csv').click();
         } else if (event.target.id === 'hydrogen_storage_profile_button') {
             document.getElementById('hydrogen_storage_profile_csv').click();
         }
     }
 });
+
+function init_storage(){
+
+    storageKeys = ['power_supply_profile_data', 'power_demand_profile_data', 'hydrogen_demand_profile_data',
+        'splitter1_profile_data', 'splitter2_profile_data', 'hydrogen_storage_profile_data']
+
+    initialData = {}
+    for (key of storageKeys) {
+        initialData[key] = {}
+    }
+
+    sessionStorage.setItem('allParsedCSVData', JSON.stringify(initialData))
+};
 
 
 function handleFileSelect(event) {
@@ -45,7 +38,7 @@ function handleFileSelect(event) {
         const reader = new FileReader();
 
         // Read the file and parse its content
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             const content = e.target.result;
             const parsedData = parseCSV(content);
             console.log(`Parsed data from ${file.name}:`, parsedData);
@@ -54,36 +47,33 @@ function handleFileSelect(event) {
             const buttonId = event.target.id;
             let storageKey = '';
 
-            // Map button ids to specific keys in localStorage
+            // Map button ids to specific keys in sessionStorage
             if (buttonId === 'power_supply_profile_csv') {
                 storageKey = 'power_supply_profile_data';
             } else if (buttonId === 'power_demand_profile_csv') {
                 storageKey = 'power_demand_profile_data';
             } else if (buttonId === 'hydrogen_demand_profile_csv') {
                 storageKey = 'hydrogen_demand_profile_data';
-            } else if (buttonId === 'splitter1_control_profile_csv') {
-                storageKey = 'splitter1_control_profile_data';
-            } else if (buttonId === 'splitter2_control_profile_csv') {
-                storageKey = 'splitter2_control_profile_data';
+            } else if (buttonId === 'splitter1_profile_csv') {
+                storageKey = 'splitter1_profile_data';
+            } else if (buttonId === 'splitter2_profile_csv') {
+                storageKey = 'splitter2_profile_data';
             } else if (buttonId === 'hydrogen_storage_profile_csv') {
                 storageKey = 'hydrogen_storage_profile_data';
             }
 
-            // Retrieve existing data from localStorage (if any)
-            const existingData = JSON.parse(localStorage.getItem('allParsedCSVData')) || {};
+            // Retrieve existing data from sessionStorage (if any)
+            const existingData = JSON.parse(sessionStorage.getItem('allParsedCSVData')) || {};
 
             // Add the new data for the specific file
-            existingData[storageKey] = {
-                fileName: file.name,
-                data: parsedData
-            };
+            existingData[storageKey] = parsedData
 
-            // Save the updated data back to localStorage
-            localStorage.setItem('allParsedCSVData', JSON.stringify(existingData));
+            // Save the updated data back to sessionStorage
+            sessionStorage.setItem('allParsedCSVData', JSON.stringify(existingData));
         };
 
         // Handle file reading errors
-        reader.onerror = function(e) {
+        reader.onerror = function (e) {
             console.error(`Error reading file ${file.name}:`, e);
         };
 
