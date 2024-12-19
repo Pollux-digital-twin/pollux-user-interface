@@ -140,7 +140,8 @@ async function store_scenario(project_name, scenario_name, mode) {
                 scenario_name: scenario_name,
                 scenario_data: table_data,
                 project_case: project_case,
-                control_parameters: control_parameters
+                control_parameters: control_parameters,
+                mode: mode
             })
         });
 
@@ -276,19 +277,19 @@ function load_scenario(project_name, scenario_name) {
                 const tablesToUpdate = ["electrolyser_parameters", "hydrogen_storage_parameters"]
 
                 // Loop through each table and call load_table_data
-                tablesToUpdate.forEach(tableKey => {
-                    const tableData = powerToHydrogenData[tableKey]; // Get the subdictionary for this table
-                    load_table_data(tableKey, tableData); // Update the table with the corresponding data
+                tablesToUpdate.forEach(tableID => {
+                    const tableData = powerToHydrogenData[tableID]; // Get the subdictionary for this table
+                    load_table_data(tableID, tableData); // Update the table with the corresponding data
                 });
             } else if (scenarioData['case'] === 'power_to_heat') {
                 const powerToHeatData = scenarioData['power_to_heat'];
 //                const tablesToUpdate = Object.keys(powerToHydrogenData); // Dynamic list of tables to update
-                const tablesToUpdate = ["electrolyser_parameters", "hydrogen_storage_parameters", "input_profiles", "control_profiles"]
+                const tablesToUpdate = ["heatpump_parameters"]
 
                 // Loop through each table and call load_table_data
-                tablesToUpdate.forEach(tableKey => {
-                    const tableData = powerToHeatData[tableKey]; // Get the subdictionary for this table
-                    load_table_data(tableKey, tableData); // Update the table with the corresponding data
+                tablesToUpdate.forEach(tableID => {
+                    const tableData = powerToHeatData[tableID]; // Get the subdictionary for this table
+                    load_table_data(tableID, tableData); // Update the table with the corresponding data
                 });
             } else {
                 console.warn("The scenario case is not 'power_to_hydrogen'. No tables to update.");

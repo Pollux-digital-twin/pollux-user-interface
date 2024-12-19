@@ -26,16 +26,24 @@ $("#scenarioname_list").change(function () {
 //                                       FUNCTIONS
 // ===================================================================================
 function initialize_page() {
-    load_diagram()
-
     updateProjectCase()
-
-    //    Update the dropdown menu with scenarios
-    getExistingScenarioList('scenario_default');
-
-    loadScenarioAnalysisHTML()
-
+        .then(() => load_diagram())
+        .then(() => loadScenarioAnalysisHTML())
+        .then(() => getExistingScenarioList('scenario_default'))
+        .catch(error => console.error('Error during initialization:', error));
 }
+
+//function initialize_page() {
+//    load_diagram()
+//
+//    updateProjectCase()
+//
+//    loadScenarioAnalysisHTML()
+//
+//    //    Update the dropdown menu with scenarios
+//    getExistingScenarioList('scenario_default');
+//
+//}
 
 
 async function get_case() {
@@ -249,18 +257,30 @@ async function run_solver() {
     console.log('input data = ', input_data)
     $.ajax({
         type: 'POST',
-        url: '/app/scenarioanalysis/run_solver',
+        url: '/app/scenarioanalysis/runsolver',
         contentType: 'application/json',
         data: JSON.stringify({'input_data': input_data}),
-        success: function (data) {
-            console.log('run_solver SUCCESS --> data = ', data);
-
-            // Retrieve the results
-            var filepath = data.result;
-
+        success: function (response) {
+            // Log and prompt success
+            if (response && typeof response === 'object') {
+                const successMessage = Object.keys(response)[0];
+                console.log(`run_solver SUCCESS: ${successMessage}`);
+                alert(`Success: ${successMessage}`);
+            } else {
+                console.log('run_solver SUCCESS with unexpected format:', response);
+                alert('Success: Operation completed, but response format was unexpected.');
+            }
         },
-        error: function(xhr, status, error) {
-            console.error('Error during download:', status, error);
+        error: function (xhr, status, error) {
+            // Handle errors
+            let errorMessage;
+            try {
+                errorMessage = JSON.parse(xhr.responseText).error;
+            } catch (e) {
+                errorMessage = 'An unknown error occurred.';
+            }
+            console.error(`run_solver ERROR: ${errorMessage}`);
+            alert(`Error: ${errorMessage}`);
         }
     });
 }

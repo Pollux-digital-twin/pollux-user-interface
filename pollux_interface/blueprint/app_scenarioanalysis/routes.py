@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify, current_app
 import os
 import shutil
 import json
+import numpy as np
 
 from pollux_application.power2hydrogen.p2h2_solver import Power2Hydrogen
 
@@ -15,9 +16,23 @@ pollux_main = os.path.dirname(current_dir)
 PROJECT_FOLDER = os.path.join(pollux_main, "pollux-project")
 
 
-# =================================================================================
-# Initialization
-# =================================================================================
+def convert_numpy_and_sets_to_lists(obj):
+    import numpy as np
+
+    if isinstance(obj, np.ndarray):
+        return obj.tolist()
+    elif isinstance(obj, set):
+        return list(obj)
+    elif isinstance(obj, dict):
+        return {k: convert_numpy_and_sets_to_lists(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [convert_numpy_and_sets_to_lists(elem) for elem in obj]
+    elif isinstance(obj, tuple):
+        return tuple(convert_numpy_and_sets_to_lists(elem) for elem in obj)
+    else:
+        return obj
+
+
 @app_scenarioanalysis.route("/app/scenarioanalysis/get_scenario_data", methods=["POST"])
 def get_scenario_data():
     project_name = request.json["project_name"]
@@ -35,8 +50,8 @@ def get_scenario_data():
 # =================================================================================
 # Run
 # =================================================================================
-@app_scenarioanalysis.route("/app/scenarioanalysis/run_solver", methods=["POST"])
-def run_solver():
+@app_scenarioanalysis.route("/app/scenarioanalysis/runsolver", methods=["POST"])
+def runsolver():
     try:
         input_param = request.json["input_data"]
         control_parameters = input_param["control_parameters"]
@@ -86,11 +101,14 @@ def run_solver():
             "components_with_control": app_solver.components_with_control,
         }
 
+        # Convert numpy arrays to lists
+        solver_param = convert_numpy_and_sets_to_lists(solver_param)
+
         app_solver.save_results(
             PROJECT_FOLDER, project_name, scenario_name, mode, solver_param
         )
         # Return success response with the result filepath
-        return jsonify({f"{mode} ran successfully"}), 200
+        return jsonify({f"{mode} ran successfully": True}), 200
 
     except Exception as e:
         print("Error during solver execution:", str(e))
@@ -151,6 +169,7 @@ def save_scenario():
         scenario_data = request.json["scenario_data"]
         control_parameters = request.json["control_parameters"]
         project_case = request.json["project_case"]
+        mode = request.json["mode"]
 
         # Normalize project_case
         if project_case == "Power to Hydrogen":
@@ -191,8 +210,15 @@ def save_scenario():
             .get("control_parameters", {})
             .keys()
         )
+        if mode == "simulation":
+            addition = "_profile"
+        elif mode == "optimisation":
+            addition = "_bounds"
+        control_titles = existing_scenario_data["scenario"][project_case][
+            "control_parameters"
+        ]["control_titles"]
         for component in control_parameters.keys():
-            profile_key = component + "_profile"
+            profile_key = control_titles[component] + addition
             if profile_key in input_profiles_keys:
                 existing_scenario_data["scenario"][project_case]["input_profiles"][
                     profile_key
