@@ -19,9 +19,6 @@ db = SQLAlchemy()
 
 pollux_root_dir = Path(__file__).parents[2]
 
-if not os.path.exists(os.path.join(pollux_root_dir, 'pollux-project')):
-    os.mkdir(os.path.join(pollux_root_dir, 'pollux-project'))
-
 
 def create_app():
     """
@@ -40,13 +37,6 @@ def create_app():
 
     app.config['POLLUX_PROJECT_FOLDER'] = \
         os.getenv('POLLUX_PROJECT_FOLDER', os.path.join(pollux_root_dir, 'pollux-project'))
-    app.config['POLLUX_DOCUMENTATION_FOLDER'] = \
-        os.getenv('POLLUX_DOCUMENTATION_FOLDER',
-                  os.path.join(pollux_root_dir, 'pollux-documentation'))
-
-    sys.path.append(os.getenv('POLLUX_FRAMEWORK_FOLDER',
-                              os.path.join(pollux_root_dir, 'pollux-framework',
-                                           'pollux_interface')))
 
     Session(app)
 
@@ -85,6 +75,8 @@ def create_app():
     # for migration database
     Migrate(app, db)
 
+    # ========== BLUEPRINTS =====
+
     # blueprint for auth routes in our app
     from pollux_interface.blueprint.auth.routes import auth as auth_blueprint
     app.register_blueprint(auth_blueprint)
@@ -101,31 +93,47 @@ def create_app():
     from pollux_interface.blueprint.app_builder.routes import app_builder as app_builder_blueprint
     app.register_blueprint(app_builder_blueprint)
 
-    # blueprint for setting plant routes in our app
-    from pollux_interface.blueprint.setting_plant.routes import \
-        setting_plant as setting_plant_blueprint
-    app.register_blueprint(setting_plant_blueprint)
+    # blueprint for builder routes in our app
+    from pollux_interface.blueprint.app_scenarioanalysis.routes import \
+        app_scenarioanalysis as app_scenarioanalysis_blueprint
+    app.register_blueprint(app_scenarioanalysis_blueprint)
 
-    # blueprint for app tagbrowser routes in our app
-    from pollux_interface.blueprint.app_tagbrowser.routes import \
-        app_tagbrowser as app_tagbrowser_blueprint
-    app.register_blueprint(app_tagbrowser_blueprint)
+    # blueprint for builder routes in our app
+    from pollux_interface.blueprint.app_visualisation.routes import \
+        app_visualisation as app_visualisation_blueprint
+    app.register_blueprint(app_visualisation_blueprint)
 
     # blueprint for app dashboard routes in our app
     from pollux_interface.blueprint.dashboard.routes import dashboard \
         as dashboard_blueprint
     app.register_blueprint(dashboard_blueprint)
 
-    with app.app_context():
-        db.create_all()
-        user = User.query.filter_by(email="admin@localhost").first()
-        if not user:
-            new_user = User(email=os.getenv('POLLUX_ADMIN_EMAIL', "admin@localhost"),
-                            name=os.getenv('POLLUX_ADMIN_NAME', "admin"),
-                            password=generate_password_hash(
-                                os.getenv('POLLUX_ADMIN_PASSWORD', "Admin123456!@#$"),
-                                method='scrypt'), role="admin")
-            db.session.add(new_user)
-            db.session.commit()
+    try:
+        with app.app_context():
+            db.create_all()
+
+            user = User.query.filter_by(email="admin@localhost").first()
+            if not user:
+                new_user = User(email="admin@localhost",
+                                name=os.getenv('POLLUX_ADMIN_NAME', "admin"),
+                                password=generate_password_hash(
+                                    os.getenv('POLLUX_ADMIN_PASSWORD', "Admin123456!@#$"),
+                                    method='scrypt'), role="admin")
+
+                db.session.add(new_user)
+                db.session.commit()
+
+            project = Project.query.filter_by(name="Power2Hydrogen").first()
+            if not project:
+                new_project = Project(name="Power2Hydrogen", group="")
+                db.session.add(new_project)
+                db.session.commit()
+
+    except Exception as exception:
+        print(
+            "got the following exception when attempting db.create_all() in create_app.py: " + str(
+                exception))
+    finally:
+        print("db.create_all() in create_app.py was successful - no exceptions were raised")
 
     return app

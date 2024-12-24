@@ -16,7 +16,9 @@ var paper = new joint.dia.Paper({
             },
         }
     }),
-    snapLinks: { radius: 50 }
+    snapLinks: {
+        radius: 50
+    }
 
 });
 
@@ -28,11 +30,14 @@ paper.options.defaultRouter = {
     },
 };
 
-paper.options.defaultConnector = { name: "jumpover", size: 10 };
+paper.options.defaultConnector = {
+    name: "jumpover",
+    size: 10
+};
 
 // ZOOOM
 graphScale = 1
-paper.on('blank:mousewheel', function (evt, x, y, delta) {
+paper.on('blank:mousewheel', function(evt, x, y, delta) {
     if (delta > 0) {
         graphScale = graphScale + 0.1
     } else {
@@ -65,11 +70,11 @@ function onBlankRightClick(view) {
 }
 
 
-function delete_element(){
+function delete_element() {
     graph.removeCells(selected_cell)
 }
 
-function show_parameter_modal(){
+function show_parameter_modal() {
     $('#componentModal').modal('show');
 
 }
@@ -80,24 +85,22 @@ $('.jumbotron').on('contextmenu', function(e) {
     var top = e.pageY - 1000;
     var left = e.pageX - 400;
 
-    if (selected_element==''){
+    if (selected_element == '') {
         display = "none"
-    }else{
+    } else {
         display = "block"
     }
 
     $("#context-menu").css({
-      display: display,
-      top: top,
-      left: left
+        display: display,
+        top: top,
+        left: left
     }).addClass("show");
     return false; //blocks default Webbrowser right click menu
-  }).on("click", function() {
+}).on("click", function() {
     $("#context-menu").removeClass("show").hide();
-  });
-  
-  $("#context-menu a").on("click", function() {
+});
+
+$("#context-menu a").on("click", function() {
     $(this).parent().removeClass("show").hide();
-  });
-
-
+});

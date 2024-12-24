@@ -24,16 +24,12 @@
 
 <body>
     <div id="wrapper">
-
         <div class="main-panel" data="blue">
             <nav class="navbar navbar-expand-lg navbar-absolute navbar-transparent">
                 <div class="container-fluid">
                     <ul class="navbar-nav ml-auto">
                         <li class="dropdown nav-item">
                             <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-                                {% if current_user.is_authenticated %}
-                                {{ current_user.name }}
-                                {% endif %}
                                 {% if not current_user.is_authenticated %}
                                 anonymous
                                 {% endif %}
@@ -43,18 +39,20 @@
                                 </div>
                             </a>
                             <ul class="dropdown-menu dropdown-navbar">
-                                <li><a href="/documentation" target="_blank" class="nav-item dropdown-item"><i
-                                    class="tim-icons icon-single-copy-04"></i>Documentation</a>
-                                </li>
                                 {% if not current_user.is_authenticated %}
-                                <li><a href="{{ url_for('auth.login') }}" class="nav-item dropdown-item"><i
-                                            class="tim-icons icon-single-02"></i>Login</a>
+                                <li>
+                                    <a class="nav-item dropdown-item" href="{{ url_for('auth.login') }}">
+                                        <i class="tim-icons icon-single-02">
+                                        </i>
+                                        Login
+                                    </a>
                                 </li>
-                                {% endif %}
-                                {% if current_user.is_authenticated %}
-                                <li class="nav-link"><a href="{{ url_for('auth.logout') }}"
-                                        class="nav-item dropdown-item"><i class="tim-icons icon-user-run"></i>Log
-                                        out</a>
+                                <li>
+                                    <a class="nav-item dropdown-item" href="{{ url_for('auth.signup') }}">
+                                        <i class="tim-icons icon-tap-02">
+                                        </i>
+                                        Sign Up
+                                    </a>
                                 </li>
                                 {% endif %}
                             </ul>

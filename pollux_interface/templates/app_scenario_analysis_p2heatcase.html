@@ -1,0 +1,474 @@
+<!--<html>-->
+<!--<body>-->
+<!--            ====================================================================================-->
+<!--                                                 LEFT COLUMN                                    -->
+<!--            ====================================================================================-->
+<html>
+<body>
+    <div class="row" >
+        <div class="col-4">
+        <div class="card full-width-panel">
+            <!--Electrolyser parameters table-->
+            <h4 class="card-header">
+            POWER TO HEAT PAGE
+            </h4>
+            <div class="card-body">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                <table class="table table-bordered" id="electrolyser_parameters">
+                    <thead>
+                    <tr>
+                        <th>
+                        Parameter
+                        </th>
+                        <th>
+                        Value
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                        <input class="form-control" id="T_cell" value="Cell temperature [K]"/>
+                        </td>
+                        <td>
+                        <input class="form-control" id="T_cell_value" value="313.15"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <input class="form-control" id="P_cathode" value="Cathode Pressure [bar]"/>
+                        </td>
+                        <td>
+                        <input class="form-control" id="P_cathode_value" value="100"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <input class="form-control" id="P_anode" value="Anode Pressure [bar]"/>
+                        </td>
+                        <td>
+                        <input class="form-control" id="P_anode_value" value="100"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <input class="form-control" id="P_0_H2O" value="Initial H2O pressure [bar]"/>
+                        </td>
+                        <td>
+                        <input class="form-control" id="P_0_H2O_value" value="100"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <input class="form-control" id="eta_Faraday_array" value="Faraday's efficiency [-]"/>
+                        </td>
+                        <td>
+                        <input class="form-control" id="eta_Faraday_array_value" value="1"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <input class="form-control" id="Faraday_const" value="Faraday constant [(s*A)/mol]"/>
+                        </td>
+                        <td>
+                        <input class="form-control" id="Faraday_const_value" value="96485.3329"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <input class="form-control" id="A_cell" value="Cell surface area [m^2]"/>
+                        </td>
+                        <td>
+                        <input class="form-control" id="A_cell_value" value="0.436"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <input class="form-control" id="cell_type" value="Cell type"/>
+                        </td>
+                        <td>
+                        <input class="form-control" id="cell_type_value" value="low_power_cell"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <input class="form-control" id="capacity" value="Capacity [MW]"/>
+                        </td>
+                        <td>
+                        <input class="form-control" id="capacity_value" value="1"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            </div>
+            <!-- Hydrogen storage parameters table-->
+            <h4 class="card-header">
+            Hydrogen storage PARAMETERS
+            </h4>
+            <div class="card-body">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                <table class="table table-bordered" id="hydrogen_storage_parameters">
+                    <thead>
+                    <tr>
+                        <th>
+                        Parameter
+                        </th>
+                        <th>
+                        Value
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                        <input class="form-control" id="storage_capacity" value="Maximum capacity [kg H2]"/>
+                        </td>
+                        <td>
+                        <input class="form-control" id="storage_capacity_value" value="3000"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <input class="form-control" id="initial_mass" value="Initial mass content [kg H2]"/>
+                        </td>
+                        <td>
+                        <input class="form-control" id="initial_mass_value" value="1000"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+        <!--            ====================================================================================-->
+        <!--                                                 MIDDLE COLUMN                                    -->
+        <!--            ====================================================================================-->
+        <div class="col-8">
+        <div class="card full-width-panel">
+            <h4 class="card-header">
+            Input profiles
+            </h4>
+            <div class="card-body">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                <table class="table table-bordered" id="input_profiles">
+                    <thead>
+                    <tr>
+                        <th>
+                        Parameter
+                        </th>
+                        <th>
+                        Value
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                        <div class="form-control" id="power_supply_profile_label">
+                            Power supply profile
+                        </div>
+                        </td>
+                        <td>
+                        <select class="form-control" id="power_supply_profile" style="background-color: white; color: black;">
+                            <option value="profile_1">
+                            Supply profile 1
+                            </option>
+                            <option value="profile_2">
+                            Supply profile 2
+                            </option>
+                            <option value="load_csv">
+                            Load CSV...
+                            </option>
+                        </select>
+                        <input accept=".csv" id="power_supply_profile_csv" onchange="handleFileSelect(event)" style="display: none;" type="file"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <div class="form-control" id="power_demand_profile_label">
+                            Power demand profile
+                        </div>
+                        </td>
+                        <td>
+                        <select class="form-control" id="power_demand_profile" style="background-color: white; color: black;">
+                            <option value="profile_1">
+                            Demand profile 1
+                            </option>
+                            <option value="profile_2">
+                            Demand profile 2
+                            </option>
+                            <option value="load_csv">
+                            Load CSV...
+                            </option>
+                        </select>
+                        <input accept=".csv" id="power_demand_profile_csv" onchange="handleFileSelect(event)" style="display: none;" type="file"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <div class="form-control" id="hydrogen_demand_profile_label">
+                            Hydrogen demand profile
+                        </div>
+                        </td>
+                        <td>
+                        <select class="form-control" id="hydrogen_demand_profile" style="background-color: white; color: black;">
+                            <option value="profile_1">
+                            Demand profile 1
+                            </option>
+                            <option value="profile_2">
+                            Demand profile 2
+                            </option>
+                            <option value="load_csv">
+                            Load CSV...
+                            </option>
+                        </select>
+                        <input accept=".csv" id="hydrogen_demand_profile_csv" onchange="handleFileSelect(event)" style="display: none;" type="file"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            </div>
+        </div>
+        <!--                <div class="d-flex justify-content-center mb-3">-->
+        <!--                    <button type="button" class="btn btn-primary btn-sm" id="toggleButton" onclick="togglePanels()">Toggle Panels</button>-->
+        <!--                </div>-->
+        <div class="card full-width-panel" id="control_parameters_panel">
+            <div class="d-flex justify-content-start align-items-center mb-3">
+            <button class="btn btn-primary btn-sm ml-3" id="toggleButton" onclick="togglePanels()" type="button">
+                Toggle mode
+            </button>
+            <h3 class="mb-0 ml-3">
+                Simulation mode
+            </h3>
+            </div>
+            <h4 class="card-header">
+            Control parameters
+            </h4>
+            <div class="card-body">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                <table class="table table-bordered" id="control_parameters">
+                    <thead>
+                    <tr>
+                        <th>
+                        Parameter
+                        </th>
+                        <th>
+                        Value
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                        <div class="form-control" id="splitter1_profile_label">
+                            Power splitter control profile
+                        </div>
+                        </td>
+                        <td>
+                        <select class="form-control" id="splitter1_profile" style="background-color: white; color: black;">
+                            <option value="profile_1">
+                            Control profile 1
+                            </option>
+                            <option value="profile_2">
+                            Control profile 2
+                            </option>
+                            <option value="load_csv">
+                            Load CSV...
+                            </option>
+                        </select>
+                        <input accept=".csv" id="splitter1_control_profile_csv" onchange="handleFileSelect(event)" style="display: none;" type="file"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <div class="form-control" id="splitter2_profile_label">
+                            Hydrogen splitter control profile
+                        </div>
+                        </td>
+                        <td>
+                        <select class="form-control" id="splitter2_profile" style="background-color: white; color: black;">
+                            <option value="profile_1">
+                            Control profile 1
+                            </option>
+                            <option value="profile_2">
+                            Control profile 2
+                            </option>
+                            <option value="load_csv">
+                            Load CSV...
+                            </option>
+                        </select>
+                        <input accept=".csv" id="splitter2_control_profile_csv" onchange="handleFileSelect(event)" style="display: none;" type="file"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <div class="form-control" id="hydrogen_storage_profile_label">
+                            Gas storage control profile
+                        </div>
+                        </td>
+                        <td>
+                        <select class="form-control" id="hydrogen_storage_profile" style="background-color: white; color: black;">
+                            <option value="profile_1">
+                            Control profile 1
+                            </option>
+                            <option value="profile_2">
+                            Control profile 2
+                            </option>
+                            <option value="load_csv">
+                            Load CSV...
+                            </option>
+                        </select>
+                        <input accept=".csv" id="hydrogen_storage_profile_csv" onchange="handleFileSelect(event)" style="display: none;" type="file"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="card full-width-panel" id="panel2" style="display: none;">
+            <div class="d-flex justify-content-start align-items-center mb-3">
+            <button class="btn btn-primary btn-sm ml-3" id="toggleButton" onclick="togglePanels()" type="button">
+                Toggle mode
+            </button>
+            <h3 class="mb-0 ml-3">
+                Optimisation mode
+            </h3>
+            </div>
+            <h4 class="card-header">
+            Optimisation parameters
+            </h4>
+            <div class="card-body">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                <table class="table table-bordered" id="table2">
+                    <thead>
+                    <tr>
+                        <th>
+                        Parameter
+                        </th>
+                        <th>
+                        Initial guess
+                        </th>
+                        <th>
+                        Lower bound
+                        </th>
+                        <th>
+                        Upper bound
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                        <input class="form-control" id="splitter1_bounds" value="Power splitter control"/>
+                        </td>
+                        <td>
+                        <input class="form-control" id="splitter1_initial_guess" value="0.5"/>
+                        </td>
+                        <td>
+                        <input class="form-control" id="splitter1_upper_bound" value="0"/>
+                        </td>
+                        <td>
+                        <input class="form-control" id="splitter1_lower_bound" value="1"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <input class="form-control" id="splitter2_bounds" value="Hydrogen splitter control"/>
+                        </td>
+                        <td>
+                        <input class="form-control" id="splitter2_initial_guess" value="0.5"/>
+                        </td>
+                        <td>
+                        <input class="form-control" id="splitter2_upper_bound" value="0"/>
+                        </td>
+                        <td>
+                        <input class="form-control" id="splitter2_lower_bound" value="1"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <input class="form-control" id="storage_control_bounds" value="Gas storage control"/>
+                        </td>
+                        <td>
+                        <input class="form-control" id="storage_control_initial_guess" value="50"/>
+                        </td>
+                        <td>
+                        <input class="form-control" id="storage_control_upper_bound" value="0"/>
+                        </td>
+                        <td>
+                        <input class="form-control" id="storage_control_lower_bound" value="100"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="form-group d-flex align-items-center">
+                    <label class="mr-2" for="optimisation_obj_func">
+                    Optimisation objective function:
+                    </label>
+                    <select class="form-control custom-select-width" id="optimisation_obj_func" style="background-color: white; color: black;">
+                    <option value="objective_func_1">
+                        Objective function 1
+                    </option>
+                    <option value="objective_func_2">
+                        Objective function 2
+                    </option>
+                    </select>
+                </div>
+                <div class="form-group d-flex align-items-center">
+                    <label class="mr-2" for="control_step_size">
+                    Control step size [hours]:
+                    </label>
+                    <select class="form-control custom-select-width" id="control_step_size" style="background-color: white; color: black;">
+                    <option value="1">
+                        1 hour
+                    </option>
+                    <option value="2">
+                        2 hours
+                    </option>
+                    <option value="3">
+                        3 hours
+                    </option>
+                    <option value="4">
+                        4 hours
+                    </option>
+                    <option value="6">
+                        6 hours
+                    </option>
+                    <option value="12">
+                        12 hours
+                    </option>
+                    </select>
+                </div>
+                <label class="mr-2" for="max_iter">
+                    Maximum number of iterations:
+                </label>
+                <input data-min-length="1" id="max_iter" placeholder="Type a maximum number of iterations" type="text" value="50"/>
+                <br/>
+                <br/>
+                <label class="mr-2" for="finite_diff_step">
+                    Finite differential step size:
+                </label>
+                <input data-min-length="1" id="finite_diff_step" placeholder="Type a finite differential step size" type="text" value="0.001"/>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    <!--</body>-->
+    <!--</html>-->
+</body>
+</html>

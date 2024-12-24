@@ -38,38 +38,12 @@ def login_post():
     return redirect(url_for('main.index'))
 
 
-@auth.route('/password')
-@login_required
-def password():
-    return render_template('password.html')
-
-
-@auth.route('/password', methods=['POST'])
-def password_post():
-    old_password = request.form.get('old_password')
-    new_password = request.form.get('new_password')
-
-    if not check_password_hash(current_user.password, old_password):
-        flash('old password does not match.')
-        return redirect(url_for('auth.password'))
-
-    current_user.password = generate_password_hash(new_password, method='scrypt')
-    db.session.commit()
-
-    return redirect(url_for('main.index'))
-
-
 @auth.route('/signup')
-@login_required
 def signup():
-    if not current_user.role == 'admin':
-        return redirect(url_for('main.index'))
-
     return render_template('signup.html')
 
 
 @auth.route('/signup', methods=['POST'])
-@login_required
 def signup_post():
     # code to validate and add user to database goes here
     email = request.form.get('email')
@@ -91,14 +65,23 @@ def signup_post():
         flash('Please fill in your name.')
         return redirect(url_for('auth.signup'))
 
+    user = User.query.filter_by(
+        name=name).first()  # if this returns a user, then the email already exists in database
+
+    if user:  # if a user is found, we want to redirect back to signup page so user can try again
+        flash('Name already exists.')
+        return redirect(url_for('auth.signup'))
+
     # create a new user with the form data. Hash the password so the plaintext version isn't saved.
     new_user = User(email=email, name=name,
                     password=generate_password_hash(password, method='scrypt'),
-                    group='none')
+                    group='')
 
     # add the new user to the database
     db.session.add(new_user)
     db.session.commit()
+
+    login_user(new_user, remember=True)
 
     return redirect(url_for('main.index'))
 

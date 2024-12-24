@@ -12,7 +12,7 @@ function hide_all_database_parameter_table() {
 }
 
 function get_plant_parameters() {
-    var fieldID = $('#select_project').val();
+    var fieldID = $('#project_name').val();
 
     $.ajax({
         type: 'POST',
@@ -36,7 +36,7 @@ function get_plant_parameters() {
 function get_database_parameters() {
 
 
-    var fieldID = $('#select_project').val();
+    var fieldID = $('#project_name').val();
     var database = $('#select_database').val();
 
     $.ajax({
@@ -52,7 +52,7 @@ function get_database_parameters() {
 
 
 function save_plant_parameters() {
-    var fieldID = $('#select_project').val();
+    var fieldID = $('#project_name').val();
 
 
     $.ajax({
@@ -87,7 +87,7 @@ function save_plant_parameters() {
 }
 
 function save_database_parameters() {
-    var fieldID = $('#select_project').val();
+    var fieldID = $('#project_name').val();
     var database = $('#select_database').val();
 
 
