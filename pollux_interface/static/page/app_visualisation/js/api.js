@@ -2,18 +2,16 @@
 //                      EVENT LISTENERS / ON-CHANGE actions
 // ===================================================================================
 // Listener get_results_list when page is loaded ----------------------------------------------------------
-document.addEventListener("DOMContentLoaded", function() {
-//    Update the dropdown menu with available results
+document.addEventListener("DOMContentLoaded", function () {
+    //    Update the dropdown menu with available results
     get_results_list();
 });
 
 $('#results_list').on('change', async function () {
     try {
         const result = await load_results();
-        console.log('load_results returned the data: ', result);
 
         const result_name = $('#results_list').val();
-        console.log('result_name = ', result_name);
 
         // Assuming plot_results is a function that takes the results_data as input
         plot_results(result.results_data, result_name);
@@ -39,8 +37,6 @@ function get_results_list() {
         contentType: 'application/json',
         data: JSON.stringify({ project_name: project_name }),
         success: function (data) {
-            console.log('getresultslist was succesful, returned data = ', data)
-
             const results_list = data.results_list;
 
             var fieldselect = document.getElementById('results_list');
@@ -48,17 +44,12 @@ function get_results_list() {
             // Clear any existing options
             fieldselect.options.length = 0;
 
-            // Check if there are any results to add
-            if (results_list.length === 0) {
-                // If no results are available, display the "Select result" message
-                var defaultOption = new Option("Select result", "", true, false);
-                fieldselect.options[fieldselect.options.length] = defaultOption;
-            } else {
-                // If there are results, add them to the dropdown
-                for (var i = 0; i < results_list.length; i++) {
-                    fieldselect.options[fieldselect.options.length] = new Option(results_list[i], results_list[i]);
-                }
+
+            // If there are results, add them to the dropdown
+            for (var i = 0; i < results_list.length; i++) {
+                fieldselect.options[fieldselect.options.length] = new Option(results_list[i], results_list[i]);
             }
+
             // After updating the options, ensure no option is selected
             fieldselect.selectedIndex = -1;
         }
@@ -70,49 +61,47 @@ function get_results_list() {
 function plot_results(results_data, result_name) {
     const mode = result_name.endsWith('_simulation') ? 'simulation' : result_name.endsWith('_optimisation') ? 'optimisation' : null;
 
-//    Optimisation plots
-    if (mode == 'optimisation') {
-//        Unhide panels
-        const panels = [
-            { id: 'objective_func_plot', panel: $('#objective_func_plot') },
-            { id: 'scaled_control_plot', panel: $('#scaled_control_plot') }
-        ];
-        panels.forEach(({ id, panel }) => {
-            panel.closest('.panel').show();
-        });
-//        Create objective function plot
-        const obj_func_plot_data = results_data['objective_func_plot']
-        obj_func_plot(obj_func_plot_data)
-//        Create scaled controls plot
-        const scaled_control_plot_data = results_data['scaled_control_plot']
-        scaled_control_plot(scaled_control_plot_data)
-    } else {
-//        Hide panels
-        const panels = [
+    const panels = [
         { id: 'objective_func_plot', panel: $('#objective_func_plot') },
         { id: 'scaled_control_plot', panel: $('#scaled_control_plot') }
     ];
     panels.forEach(({ id, panel }) => {
-            panel.closest('.panel').hide();
+        panel.closest('.panel').hide();
+    });
+    //    Optimisation plots
+    if (mode == 'optimisation') {
+        //        Unhide panels
+        const panels = [
+            { id: 'objective_func_plot', panel: $('#objective_func_plot') },
+            //{ id: 'scaled_control_plot', panel: $('#scaled_control_plot') }
+        ];
+        panels.forEach(({ id, panel }) => {
+            panel.closest('.panel').show();
         });
+        //        Create objective function plot
+        const obj_func_plot_data = results_data['objective_func_plot']
+        obj_func_plot(obj_func_plot_data)
+        // //        Create scaled controls plot
+        // const scaled_control_plot_data = results_data['scaled_control_plot']
+        // scaled_control_plot(scaled_control_plot_data)
     }
-//    Create control profiles plot
+    //    Create control profiles plot
     const control_profiles_plot_data = results_data['control_profiles_plot']
     control_profiles_plot(control_profiles_plot_data)
-//    Create power profiles plot
+    //    Create power profiles plot
     const power_profiles_plot_data = results_data['power_profiles_plot']
     power_profiles_plot(power_profiles_plot_data)
-//    Create hydrogen profiles plot
+    //    Create hydrogen profiles plot
     const hydrogen_profiles_plot_data = results_data['hydrogen_profiles_plot']
     hydrogen_profiles_plot(hydrogen_profiles_plot_data)
-//    Create mismatch plot
+    //    Create mismatch plot
     const mismatch_plot_data = results_data['mismatch_plot']
     mismatch_plot(mismatch_plot_data)
-//    Create kpi plot
+    //    Create kpi plot
     const kpi_plot_data = results_data['kpi_plot']
     kpi_plot(kpi_plot_data)
-//    Create hydrogen storage plot
-    const hydrogen_storage_plot_data = results_data['kpi_plot']
+    //    Create hydrogen storage plot
+    const hydrogen_storage_plot_data = results_data['hydrogen_storage_plot']
     hydrogen_storage_plot(hydrogen_storage_plot_data)
 
 }
@@ -136,8 +125,6 @@ function load_results() {
             contentType: 'application/json',
             data: JSON.stringify({ input: input }),
             success: function (data) {
-                console.log('loadresults was successful, returned data = ', data);
-
                 var results_data = data;
 
                 // Resolve the promise with the dictionaries
@@ -160,32 +147,26 @@ function obj_func_plot(data) {
     const trace = {
         x: Array.from({ length: function_value.length }, (_, i) => i + 1), // Iteration (1, 2, 3, ...)
         y: function_value,
-        type: 'scatter',
         mode: 'lines',
-        line: { color: 'blue' },
         name: 'Objective Value'
     };
 
     // Define the layout
     const layout = {
+        plot_bgcolor: "#27293D",
+        paper_bgcolor: "#27293D",
+        font: {
+            color: "#D2D2D5"
+
+        },
         title: 'Objective Function',
         xaxis: {
             title: 'Iteration',
-            tickmode: 'linear',
-            dtick: 10
         },
         yaxis: {
-            title: objective_label,
-            gridcolor: 'rgba(200, 200, 200, 0.75)',
-            zeroline: false
+            title: objective_label
         },
-        grid: {
-            y: { visible: true, color: 'rgba(200, 200, 200, 0.75)' }
-        },
-        margin: {
-            l: 50, r: 30, t: 50, b: 50
-        },
-        plot_bgcolor: 'white',
+        grid: { visible: true },
         showlegend: false
     };
 
@@ -245,19 +226,22 @@ function scaled_control_plot(data) {
 
     // Layout for the plot
     const layout = {
+        plot_bgcolor: "#27293D",
+        paper_bgcolor: "#27293D",
+        font: {
+            color: "#D2D2D5"
+
+        },
         title: 'Scaled Control',
         grid: { rows: 3, columns: 1, pattern: 'independent' },
         xaxis: {
             title: 'Iteration',
-            tickmode: 'linear',
         },
         xaxis2: {
             title: 'Iteration',
-            tickmode: 'linear',
         },
         xaxis3: {
             title: 'Iteration',
-            tickmode: 'linear',
         },
         yaxis: { showticklabels: true },
         yaxis2: { showticklabels: true },
@@ -293,16 +277,14 @@ function control_profiles_plot(data) {
         x: time_vector_control,
         y: control_reshaped[0],
         mode: 'lines',
-        line: { color: 'red' },
-        name: components_with_control[0]
+        name: 'splitter electricity demand/electrolyzer'
     };
 
     const trace2 = {
         x: time_vector_control,
         y: control_reshaped[1],
         mode: 'lines',
-        line: { color: 'red', dash: 'dash' },
-        name: components_with_control[1]
+        name: 'splitter hydrogen demand/storage'
     };
 
     // Create trace for the right y-axis
@@ -310,33 +292,35 @@ function control_profiles_plot(data) {
         x: time_vector_control,
         y: control_reshaped[2].map(val => val * 3600), // Convert to [kg/hr]
         mode: 'lines',
-        line: { color: 'blue' },
-        name: 'Hydrogen Storage mass flow out',
+        name: 'hydrogen storage mass flow out',
         yaxis: 'y2'
     };
 
     // Define layout with dual y-axes
     const layout = {
+        plot_bgcolor: "#27293D",
+        paper_bgcolor: "#27293D",
+        font: {
+            color: "#D2D2D5"
+
+        },
         title: 'Control Profiles',
         xaxis: {
             title: 'Time (hr)',
-            tickvals: time_vector_control
         },
         yaxis: {
-            title: 'Splitter Control [-]',
-            titlefont: { color: 'red' },
-            tickfont: { color: 'red' }
+            title: 'Splitter Control [-]'
         },
         yaxis2: {
             title: 'Storage production rate [kg/hr]',
-            titlefont: { color: 'blue' },
-            tickfont: { color: 'blue' },
             overlaying: 'y',
             side: 'right'
         },
         legend: {
-            x: 0,
-            y: 1
+            orientation: 'h',
+            x: 0.5,
+            xanchor: 'center',
+            y: -0.2
         },
         grid: { visible: true }
     };
@@ -360,32 +344,32 @@ function power_profiles_plot(data) {
         x: time_vector,
         y: power_supply,
         mode: 'lines',
-        line: { shape: 'hv', color: 'red', width: 2 },
-        name: 'Power Supply'
+        line: { shape: 'hv', width: 2 },
+        name: 'Electricity Supply'
     };
 
     const trace2 = {
         x: time_vector,
         y: power_delivered,
         mode: 'lines',
-        line: { shape: 'hv', color: 'green' },
-        name: 'Power Delivered'
+        line: { shape: 'hv', width: 2 },
+        name: 'Electricity Delivered'
     };
 
     const trace3 = {
         x: time_vector,
         y: electrolyser_power_input,
         mode: 'lines',
-        line: { shape: 'hv', color: 'cyan' },
-        name: 'Electrolyser Power Input'
+        line: { shape: 'hv', width: 2 },
+        name: 'Electrolyser Electricity Input'
     };
 
     const trace4 = {
         x: time_vector,
         y: power_demand,
         mode: 'lines',
-        line: { shape: 'hv', color: 'blue', width: 2 },
-        name: 'Power Demand'
+        line: { shape: 'hv', width: 2 },
+        name: 'Electricity Demand'
     };
 
     // Combine all traces
@@ -393,6 +377,12 @@ function power_profiles_plot(data) {
 
     // Define the layout
     const layout = {
+        plot_bgcolor: "#27293D",
+        paper_bgcolor: "#27293D",
+        font: {
+            color: "#D2D2D5"
+
+        },
         title: 'Power Profiles',
         xaxis: {
             title: 'Time (hr)',
@@ -407,7 +397,6 @@ function power_profiles_plot(data) {
             y: -0.2
         },
         grid: { visible: true },
-        margin: { t: 50, b: 50, l: 50, r: 50 },
     };
 
     // Show plot
@@ -429,7 +418,7 @@ function hydrogen_profiles_plot(data) {
         x: time_vector,
         y: hydrogen_electrolyser_to_demand,
         mode: 'lines',
-        line: {shape: 'hv', color: 'cyan'},
+        line: { shape: 'hv', width: 2 },
         name: 'Hydrogen from Electrolyser to Demand'
     };
 
@@ -437,7 +426,7 @@ function hydrogen_profiles_plot(data) {
         x: time_vector,
         y: hydrogen_electrolyser_to_storage,
         mode: 'lines',
-        line: {shape: 'hv', color: 'magenta'},
+        line: { shape: 'hv', width: 2 },
         name: 'Hydrogen from Electrolyser to Storage'
     };
 
@@ -445,7 +434,7 @@ function hydrogen_profiles_plot(data) {
         x: time_vector,
         y: hydrogen_storage_mass_flow_out,
         mode: 'lines',
-        line: {shape: 'hv', color: 'yellow'},
+        line: { shape: 'hv', width: 2 },
         name: 'Hydrogen from Storage to Demand'
     };
 
@@ -453,7 +442,7 @@ function hydrogen_profiles_plot(data) {
         x: time_vector,
         y: hydrogen_demand,
         mode: 'lines',
-        line: {shape: 'hv', color: 'blue', width: 2},
+        line: { shape: 'hv', width: 2 },
         name: 'Hydrogen Demand'
     };
 
@@ -461,7 +450,7 @@ function hydrogen_profiles_plot(data) {
         x: time_vector,
         y: hydrogen_delivered,
         mode: 'lines',
-        line: {shape: 'hv', color: 'green'},
+        line: { shape: 'hv', width: 2 },
         name: 'Hydrogen Delivered'
     };
 
@@ -470,6 +459,12 @@ function hydrogen_profiles_plot(data) {
 
     // Layout configuration
     const layout = {
+        plot_bgcolor: "#27293D",
+        paper_bgcolor: "#27293D",
+        font: {
+            color: "#D2D2D5"
+
+        },
         title: 'Hydrogen Profiles',
         xaxis: {
             title: 'Time (hr)'
@@ -483,7 +478,7 @@ function hydrogen_profiles_plot(data) {
             xanchor: 'center',
             y: -0.2
         },
-        grid: true
+        grid: { visible: true },
     };
 
     // Show plot
@@ -504,7 +499,7 @@ function mismatch_plot(data) {
         mode: 'lines',
         line: {
             shape: 'hv', // Equivalent to `where='post'` in Matplotlib
-            color: 'red'
+            width: 2
         },
         name: 'Power',
         yaxis: 'y1'
@@ -516,7 +511,7 @@ function mismatch_plot(data) {
         mode: 'lines',
         line: {
             shape: 'hv',
-            color: 'blue'
+            width: 2
         },
         name: 'Hydrogen',
         yaxis: 'y2'
@@ -524,34 +519,33 @@ function mismatch_plot(data) {
 
     // Define the layout of the plot
     const layout = {
-        title: '(Demand - Delivered)/Demand',
+        plot_bgcolor: "#27293D",
+        paper_bgcolor: "#27293D",
+        font: {
+            color: "#D2D2D5"
+
+        },
+        title: 'Relative Error (Demand - Delivered)/Demand',
         xaxis: {
             title: 'Time (hr)'
         },
         yaxis: {
-            title: 'Power [MW]',
-            titlefont: { color: 'red' },
-            tickfont: { color: 'red' },
+            title: 'Power [frac]',
             range: [-1, 1]
         },
         yaxis2: {
-            title: 'Hydrogen [kg/hr]',
-            titlefont: { color: 'blue' },
-            tickfont: { color: 'blue' },
+            title: 'Hydrogen [frac]',
             overlaying: 'y',
             side: 'right',
             range: [-1, 1]
         },
         legend: {
+            orientation: 'h',
             x: 0.5,
-            y: -0.2,
-            orientation: 'h'
+            xanchor: 'center',
+            y: -0.2
         },
-        grid: {
-            rows: 1,
-            columns: 1,
-            pattern: 'independent'
-        }
+        grid: { visible: true },
     };
 
     // Show plot
@@ -569,33 +563,33 @@ function kpi_plot(data) {
     const trace1 = {
         x: time_vector,
         y: efficiency_electrolyser,
-        mode: 'lines+markers',
-        line: {shape: 'hv', color: 'red'}, // 'hv' for step-like lines, 'red' color
+        mode: 'lines',
+        line: { shape: 'hv', width: 2 }, // 'hv' for step-like lines, 'red' color
         name: 'Efficiency %'
     };
 
     // Define layout for the plot
     const layout = {
+        plot_bgcolor: "#27293D",
+        paper_bgcolor: "#27293D",
+        font: {
+            color: "#D2D2D5"
+
+        },
         title: 'Electrolyser',
         xaxis: {
             title: 'Time (hr)'
         },
         yaxis: {
             title: 'Efficiency [%]',
-            titlefont: {color: 'red'},
-            tickfont: {color: 'red'}
         },
         legend: {
-            x: 1,
-            xanchor: 'right',
-            y: 1
+            orientation: 'h',
+            x: 0.5,
+            xanchor: 'center',
+            y: -0.2
         },
-        grid: {
-            rows: 1,
-            columns: 1,
-            pattern: 'independent'
-        },
-        showgrid: true
+        grid: { visible: true },
     };
 
     // Show plot
@@ -615,9 +609,8 @@ function hydrogen_storage_plot(data) {
     const trace1 = {
         x: time_vector,
         y: hydrogen_mass_stored,
-        type: 'scatter',
         mode: 'lines',
-        line: { color: 'red', shape: 'hv' },
+        line: { shape: 'hv', width: 2 },
         name: 'Hydrogen Mass Stored',
         xaxis: 'x',
         yaxis: 'y1'
@@ -626,9 +619,8 @@ function hydrogen_storage_plot(data) {
     const trace2 = {
         x: time_vector,
         y: fill_level,
-        type: 'scatter',
         mode: 'lines',
-        line: { color: 'black', shape: 'hv' },
+        line: { shape: 'hv', width: 2 },
         name: 'Fill Level %',
         xaxis: 'x',
         yaxis: 'y2'
@@ -637,9 +629,8 @@ function hydrogen_storage_plot(data) {
     const trace3 = {
         x: time_vector,
         y: hydrogen_storage_mass_flow_in,
-        type: 'scatter',
         mode: 'lines',
-        line: { color: 'blue', shape: 'hv' },
+        line: { shape: 'hv', width: 2 },
         name: 'Hydrogen Storage Mass Flow In',
         xaxis: 'x',
         yaxis: 'y2'
@@ -648,9 +639,8 @@ function hydrogen_storage_plot(data) {
     const trace4 = {
         x: time_vector,
         y: hydrogen_storage_mass_flow_out,
-        type: 'scatter',
         mode: 'lines',
-        line: { color: 'green', shape: 'hv' },
+        line: { shape: 'hv', width: 2 },
         name: 'Hydrogen Storage Mass Flow Out',
         xaxis: 'x',
         yaxis: 'y2'
@@ -658,37 +648,31 @@ function hydrogen_storage_plot(data) {
 
     // Layout configuration
     const layout = {
+        plot_bgcolor: "#27293D",
+        paper_bgcolor: "#27293D",
+        font: {
+            color: "#D2D2D5"
+
+        },
         title: 'Hydrogen Storage Profiles',
         xaxis: {
             title: 'Time (hr)',
-            tickmode: 'linear',
         },
         yaxis: {
             title: 'Hydrogen Mass Stored [kg]',
-            titlefont: { color: 'red' },
-            tickfont: { color: 'red' }
         },
         yaxis2: {
             title: 'Fill Level [%] / Hydrogen Mass Flow [kg/hr]',
-            titlefont: { color: 'blue' },
-            tickfont: { color: 'blue' },
             overlaying: 'y',
             side: 'right'
         },
         legend: {
-            x: 0.5,
-            y: -0.2,
-            xanchor: 'center',
             orientation: 'h',
-            bgcolor: 'rgba(255, 255, 255, 0.5)'
+            x: 0.5,
+            xanchor: 'center',
+            y: -0.2
         },
-        height: 600,
-        margin: {
-            t: 50,
-            b: 50,
-            l: 70,
-            r: 70
-        }
+        grid: { visible: true },
     };
 
     // Combine traces

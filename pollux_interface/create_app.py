@@ -9,7 +9,6 @@ from flask_login import LoginManager, current_user
 from flask_session import Session
 import os
 from pathlib import Path
-import sys
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_migrate import Migrate
@@ -18,9 +17,6 @@ from werkzeug.security import generate_password_hash
 db = SQLAlchemy()
 
 pollux_root_dir = Path(__file__).parents[2]
-
-if not os.path.exists(os.path.join(pollux_root_dir, 'pollux-project')):
-    os.mkdir(os.path.join(pollux_root_dir, 'pollux-project'))
 
 
 def create_app():
@@ -40,13 +36,6 @@ def create_app():
 
     app.config['POLLUX_PROJECT_FOLDER'] = \
         os.getenv('POLLUX_PROJECT_FOLDER', os.path.join(pollux_root_dir, 'pollux-project'))
-    app.config['POLLUX_DOCUMENTATION_FOLDER'] = \
-        os.getenv('POLLUX_DOCUMENTATION_FOLDER',
-                  os.path.join(pollux_root_dir, 'pollux-documentation'))
-
-    sys.path.append(os.getenv('POLLUX_FRAMEWORK_FOLDER',
-                              os.path.join(pollux_root_dir, 'pollux-framework',
-                                           'pollux_interface')))
 
     Session(app)
 
@@ -104,22 +93,14 @@ def create_app():
     app.register_blueprint(app_builder_blueprint)
 
     # blueprint for builder routes in our app
-    from pollux_interface.blueprint.app_scenarioanalysis.routes import app_scenarioanalysis as app_scenarioanalysis_blueprint
+    from pollux_interface.blueprint.app_scenarioanalysis.routes import \
+        app_scenarioanalysis as app_scenarioanalysis_blueprint
     app.register_blueprint(app_scenarioanalysis_blueprint)
 
     # blueprint for builder routes in our app
-    from pollux_interface.blueprint.app_visualisation.routes import app_visualisation as app_visualisation_blueprint
+    from pollux_interface.blueprint.app_visualisation.routes import \
+        app_visualisation as app_visualisation_blueprint
     app.register_blueprint(app_visualisation_blueprint)
-
-    # blueprint for setting plant routes in our app
-    from pollux_interface.blueprint.setting_plant.routes import \
-        setting_plant as setting_plant_blueprint
-    app.register_blueprint(setting_plant_blueprint)
-
-    # blueprint for app tagbrowser routes in our app
-    from pollux_interface.blueprint.app_tagbrowser.routes import \
-        app_tagbrowser as app_tagbrowser_blueprint
-    app.register_blueprint(app_tagbrowser_blueprint)
 
     # blueprint for app dashboard routes in our app
     from pollux_interface.blueprint.dashboard.routes import dashboard \
@@ -140,6 +121,13 @@ def create_app():
 
                 db.session.add(new_user)
                 db.session.commit()
+
+            project = Project.query.filter_by(name="Power2Hydrogen").first()
+            if not project:
+                new_project = Project(name="Power2Hydrogen", group="template")
+                db.session.add(new_project)
+                db.session.commit()
+
     except Exception as exception:
         print(
             "got the following exception when attempting db.create_all() in create_app.py: " + str(

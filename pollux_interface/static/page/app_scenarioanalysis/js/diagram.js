@@ -17,11 +17,9 @@ var paper = new joint.dia.Paper({
         }
     }),
     snapLinks: { radius: 50 },
-    interactive: {
-        elementMove: false // Disable moving elements
-    }
 
 });
+paper.setInteractivity(false);
 
 // LINE
 paper.options.defaultRouter = {
@@ -54,47 +52,11 @@ selected_element = ''
 selected_cell = null
 
 function onElementRightClick(view) {
-    cell = graph.getCell(view.model.id)
-
-    selected_cell = cell
-    selected_element = 'element'
-
-    open_element_parameter(selected_cell)
+    selected_cell = null
+    selected_element = ''
 }
 
 function onBlankRightClick(view) {
     selected_cell = null
     selected_element = ''
 }
-
-function show_parameter_modal(){
-    $('#componentModal').modal('show');
-
-}
-
-
-$('.jumbotron').on('contextmenu', function(e) {
-    var top = e.pageY - 750;
-    var left = e.pageX - 450;
-
-    if (selected_element == '') {
-        display = "none"
-    } else {
-        display = "block"
-    }
-
-    $("#context-menu").css({
-        display: display,
-        top: top,
-        left: left
-    }).addClass("show");
-    return false; //blocks default Webbrowser right click menu
-}).on("click", function() {
-    $("#context-menu").removeClass("show").hide();
-});
-
-$("#context-menu a").on("click", function() {
-    $(this).parent().removeClass("show").hide();
-});
-
-

@@ -3,61 +3,40 @@ import os
 import shutil
 import json
 import numpy as np
+import traceback
 
 from pollux_application.power2hydrogen.p2h2_solver import Power2Hydrogen
 
-
 # Create Blueprint
 app_scenarioanalysis = Blueprint("scenarioanalysis", __name__)
-
-def convert_numpy_and_sets_to_lists(obj):
-    import numpy as np
-
-    if isinstance(obj, np.ndarray):
-        return obj.tolist()
-    elif isinstance(obj, set):
-        return list(obj)
-    elif isinstance(obj, dict):
-        return {k: convert_numpy_and_sets_to_lists(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [convert_numpy_and_sets_to_lists(elem) for elem in obj]
-    elif isinstance(obj, tuple):
-        return tuple(convert_numpy_and_sets_to_lists(elem) for elem in obj)
-    else:
-        return obj
-
-
-@app_scenarioanalysis.route("/app/scenarioanalysis/get_scenario_data", methods=["POST"])
-def get_scenario_data():
-    project_name = request.json["project_name"]
-    scenario_name = request.json["scenario_name"]
-
-    PROJECT_DIR = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], project_name)
-    file_path = os.path.join(PROJECT_DIR, scenario_name + ".json")
-
-    with open(file_path, "r") as file:
-        scenario_data = json.load(file)
-
-    return jsonify(scenario_data["scenario"])
 
 
 # =================================================================================
 # Run
 # =================================================================================
-@app_scenarioanalysis.route("/app/scenarioanalysis/runsolver", methods=["POST"])
-def runsolver():
+@app_scenarioanalysis.route("/app/scenarioanalysis/run_solver", methods=["POST"])
+def run_solver():
     try:
-        input_param = request.json["input_data"]
-        control_parameters = input_param["control_parameters"]
+        project_name = request.json["project_name"]
+        scenario_name = request.json["scenario_name"]
+        sim_data = request.json["sim_data"]
+
+        PROJECT_DIR = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], project_name)
+        with open(os.path.join(PROJECT_DIR, scenario_name + '.json'), "r") as json_file:
+            scenario_data = json.load(json_file)
+            scenario_data = scenario_data["scenario"]
+
+        transformed_profiles = transform_profiles(scenario_data, sim_data)
+
         parameters = {
-            "component_parameters": input_param["table_data"],
-            "project_name": input_param["project_name"],
-            "project_case": input_param["project_case"],
-            "time_horizon": input_param["time_horizon"],
-            "time_step": input_param["time_step"],
-            "control_parameters": control_parameters,
-            "mode": input_param["mode"],
-            "optimisation_method": input_param["optimisation_method"],
+            "component_parameters": scenario_data["component_parameters"],
+            "project_name": scenario_data["project_name"],
+            "project_case": scenario_data["project_case"],
+            "time_horizon": sim_data["time_horizon"],
+            "control_step": sim_data["control_step"],
+            "profiles_parameters": transformed_profiles,
+            "optimisation_parameters": scenario_data['optimisation_parameters'],
+            "mode": sim_data["mode"],
         }
 
         app_solver = Power2Hydrogen()
@@ -65,24 +44,17 @@ def runsolver():
         app_solver.init_parameters(parameters)
 
         # Define inputs
-        input = {
-            "time_horizon": float(input_param["time_horizon"]),
-            "time_step": float(input_param["time_step"]),
-            "project_case": input_param["project_case"],
-            "mode": input_param["mode"],
-            "optimisation_method": input_param["optimisation_method"],
-            "control_parameters": control_parameters,
+        input_solver = {
+            "mode": sim_data["mode"],
+            "optimisation_parameters": scenario_data['optimisation_parameters'],
             "maxiter": 200,
             "finite_diff_step": 0.001,
+            "optimisation_method": 'trust-constr'
         }
 
-        app_solver.calculate(input)
+        app_solver.calculate(input_solver)
 
         app_solver.get_output()
-
-        project_name = input_param["project_name"]
-        scenario_name = input_param["scenario_name"]
-        mode = input_param["mode"]
 
         solver_param = {
             "control_reshaped": app_solver.control_reshaped,
@@ -95,19 +67,16 @@ def runsolver():
             "components_with_control": app_solver.components_with_control,
         }
 
-        # Convert numpy arrays to lists
-        solver_param = convert_numpy_and_sets_to_lists(solver_param)
-
         app_solver.save_results(
-            current_app.config['POLLUX_PROJECT_FOLDER'], project_name, scenario_name, mode, solver_param
+            current_app.config['POLLUX_PROJECT_FOLDER'], project_name, scenario_name,
+            sim_data['mode'],
+            solver_param
         )
         # Return success response with the result filepath
-        return jsonify({f"{mode} ran successfully": True}), 200
+        return "okay", 200
 
-    except Exception as e:
-        print("Error during solver execution:", str(e))
-        # Return an error response
-        return jsonify({"error": str(e)}), 500
+    except Exception:
+        return traceback.format_exc(), 500
 
 
 # =================================================================================
@@ -125,7 +94,8 @@ def get_existing_scenario_list():
         full_path = os.path.join(PROJECT_DIR, x)
 
         # Check if it is a file, ends with '.conf', and is not 'diagram.json'
-        if os.path.isfile(full_path) and x.endswith(".json") and x != "diagram.json":
+        if os.path.isfile(full_path) and x.endswith(
+                ".json") and x != "diagram.json" and x != "project_info.json":
             filename.append(x[:-5])
     return jsonify(filename)
 
@@ -160,16 +130,9 @@ def save_scenario():
     try:
         project_name = request.json["project_name"]
         scenario_name = request.json["scenario_name"]
-        scenario_data = request.json["scenario_data"]
-        control_parameters = request.json["control_parameters"]
-        project_case = request.json["project_case"]
-        mode = request.json["mode"]
-
-        # Normalize project_case
-        if project_case == "Power to Hydrogen":
-            project_case = "power_to_hydrogen"
-        elif project_case == "Power to Heat":
-            project_case = "power_to_heat"
+        component_parameters = request.json["component_parameters"]
+        profiles_parameters = request.json["profiles_parameters"]
+        optimisation_parameters = request.json["optimisation_parameters"]
 
         projectpath = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], project_name)
         file_path = os.path.join(projectpath, f"{scenario_name}.json")
@@ -183,44 +146,27 @@ def save_scenario():
             with open(file_path, "r") as json_file:
                 existing_scenario_data = json.load(json_file)
         else:
-            default_path = os.path.join(projectpath, f"scenario_default.json")
+            default_path = os.path.join(projectpath, "scenario_default.json")
             with open(default_path, "r") as json_file:
                 existing_scenario_data = json.load(json_file)
 
-        # Update scenario data
-        for key in scenario_data[project_case].keys():
-            existing_scenario_data["scenario"][project_case][key] = scenario_data[
-                project_case
-            ][key]
+        # Update component_parameters data
+        existing_scenario_data["scenario"]["component_parameters"] = {}
+        for key in component_parameters.keys():
+            existing_scenario_data["scenario"]["component_parameters"][key] = \
+                component_parameters[key]
 
-        # Update control data
-        input_profiles_keys = (
-            existing_scenario_data["scenario"][project_case]
-            .get("input_profiles", {})
-            .keys()
-        )
-        control_param_keys = (
-            existing_scenario_data["scenario"][project_case]
-            .get("control_parameters", {})
-            .keys()
-        )
-        if mode == "simulation":
-            addition = "_profile"
-        elif mode == "optimisation":
-            addition = "_bounds"
-        control_titles = existing_scenario_data["scenario"][project_case][
-            "control_parameters"
-        ]["control_titles"]
-        for component in control_parameters.keys():
-            profile_key = control_titles[component] + addition
-            if profile_key in input_profiles_keys:
-                existing_scenario_data["scenario"][project_case]["input_profiles"][
-                    profile_key
-                ] = control_parameters[component]
-            elif profile_key in control_param_keys:
-                existing_scenario_data["scenario"][project_case]["control_parameters"][
-                    profile_key
-                ] = control_parameters[component]
+        # Update optimisation parameters
+        existing_scenario_data["scenario"]["optimisation_parameters"] = {}
+        for key in optimisation_parameters.keys():
+            existing_scenario_data["scenario"]["optimisation_parameters"][key] = \
+                optimisation_parameters[key]
+
+        # Update profiles parameters
+        existing_scenario_data["scenario"]["profiles_parameters"] = {}
+        for key in profiles_parameters.keys():
+            existing_scenario_data["scenario"]["profiles_parameters"][key] = \
+                profiles_parameters[key]
 
         # Save the scenario data to the JSON file
         with open(file_path, "w") as json_file:
@@ -231,10 +177,6 @@ def save_scenario():
             jsonify(
                 {
                     "message": f"Scenario '{scenario_name}' saved successfully.",
-                    "project_name": project_name,
-                    "scenario_name": scenario_name,
-                    "file_path": file_path,
-                    "project_case": project_case,
                 }
             ),
             200,
@@ -255,7 +197,6 @@ def save_scenario():
 
 @app_scenarioanalysis.route("/app/scenarioanalysis/newscenario", methods=["POST"])
 def newscenario():
-
     project_name = request.json["project_name"]
     new_scenario_name = request.json["new_scenario_name"]
     copy_scenario_name = request.json["copy_scenario_name"]
@@ -272,7 +213,6 @@ def newscenario():
 
 @app_scenarioanalysis.route("/app/scenarioanalysis/deletescenario", methods=["POST"])
 def deletescenario():
-
     project_name = request.json["project_name"]
     scenario_name = request.json["scenario_name"]
 
@@ -281,3 +221,27 @@ def deletescenario():
     os.remove(os.path.join(PROJECT_DIR, scenario_name + ".json"))
 
     return ""
+
+
+def transform_profiles(scenario_data, sim_data):
+    original_profiles = scenario_data["profiles_parameters"]
+    transformed_profiles = {}
+    control_length = int(np.ceil(sim_data["time_horizon"] / sim_data["control_step"]))
+    for key in list(original_profiles.keys()):
+        if key in ['hydrogen_storage', 'hydrogen_demand']:
+            multi = 1 / 3600
+        elif key in ['power_supply', 'power_demand']:
+            multi = 1e6
+        else:
+            multi = 1
+
+        transformed_profiles[key] = np.array(list(original_profiles[key].values())) * multi
+        if sim_data["mode"] == "optimisation":
+            if key in ['splitter1', 'splitter2', 'hydrogen_storage']:
+                transformed_profiles[key] = np.ones(control_length) * \
+                                            scenario_data["optimisation_parameters"][key][
+                                                "initial_value"] * multi
+
+        transformed_profiles[key] = transformed_profiles[key].tolist()
+
+    return transformed_profiles

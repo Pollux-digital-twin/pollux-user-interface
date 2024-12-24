@@ -1,7 +1,6 @@
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, request, current_app
 import os
 import json
-import numpy as np
 
 # Create Blueprint
 app_visualisation = Blueprint("visualisation", __name__)
@@ -10,9 +9,13 @@ app_visualisation = Blueprint("visualisation", __name__)
 @app_visualisation.route("/app/visualisation/getresultslist", methods=["POST"])
 def getresultslist():
     project_name = request.json["project_name"]
-    results_folder = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], project_name, "results")
+    results_folder = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'],
+                                  project_name, "results")
 
     results_list = []
+
+    if not os.path.isdir(results_folder):
+        os.mkdir(results_folder)
 
     # List all files in the results directory
     for filename in os.listdir(results_folder):
@@ -49,12 +52,6 @@ def loadresults():
     else:
         print(f"Error: The file {result_data_filename} does not exist.")
 
-    time_horizon = result_data["solver_param"]["time_horizon"]
-    step_size_control = result_data["solver_param"]["step_size_control"]
-    time_vector_control = np.linspace(
-        0, time_horizon, time_horizon // step_size_control + 1
-    )
-
     plot_data = {
         "objective_func_plot": {
             "function_value": result_data["solver_param"]["function_value"],
@@ -73,7 +70,6 @@ def loadresults():
             "components_with_control": result_data["solver_param"][
                 "components_with_control"
             ],
-            "time_vector_control": result_data["solver_param"]["time_vector_control"],
         },
         "power_profiles_plot": {
             "time_vector": result_data["solver_param"]["time_vector"],
