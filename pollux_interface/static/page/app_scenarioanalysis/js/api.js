@@ -39,7 +39,8 @@ function initialize_page() {
 
 async function loadScenarioAnalysisHTML() {
     try {
-        project_case = document.getElementById("project_case_list").value
+//        project_case = document.getElementById("project_case_list").value
+        project_case = document.getElementById("project_case").value
         if (!project_case) {
             console.error('Invalid project case returned. Aborting HTML load.');
             document.getElementById('scenario_analysis_table').innerHTML = 'Failed to load data.';
@@ -180,7 +181,7 @@ async function run_solver() {
     sim_data = {
         "time_horizon": time_horizon,
         "control_step": control_step,
-        "mode": mode,
+        "mode": mode
     }
 
     if (mode == 'simulation'){

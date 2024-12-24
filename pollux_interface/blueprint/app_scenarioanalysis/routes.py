@@ -6,6 +6,7 @@ import numpy as np
 import traceback
 
 from pollux_application.power2hydrogen.p2h2_solver import Power2Hydrogen
+from pollux_application.power2heat.p2heat_solver import Power2Heat
 
 # Create Blueprint
 app_scenarioanalysis = Blueprint("scenarioanalysis", __name__)
@@ -21,8 +22,10 @@ def run_solver():
         scenario_name = request.json["scenario_name"]
         sim_data = request.json["sim_data"]
 
-        PROJECT_DIR = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], project_name)
-        with open(os.path.join(PROJECT_DIR, scenario_name + '.json'), "r") as json_file:
+        PROJECT_DIR = os.path.join(
+            current_app.config["POLLUX_PROJECT_FOLDER"], project_name
+        )
+        with open(os.path.join(PROJECT_DIR, scenario_name + ".json"), "r") as json_file:
             scenario_data = json.load(json_file)
             scenario_data = scenario_data["scenario"]
 
@@ -35,21 +38,24 @@ def run_solver():
             "time_horizon": sim_data["time_horizon"],
             "control_step": sim_data["control_step"],
             "profiles_parameters": transformed_profiles,
-            "optimisation_parameters": scenario_data['optimisation_parameters'],
+            "optimisation_parameters": scenario_data["optimisation_parameters"],
             "mode": sim_data["mode"],
         }
 
-        app_solver = Power2Hydrogen()
+        if scenario_data["project_case"] == "power_to_hydrogen":
+            app_solver = Power2Hydrogen()
+        elif scenario_data["project_case"] == "power_to_heat":
+            app_solver = Power2Heat()
 
         app_solver.init_parameters(parameters)
 
         # Define inputs
         input_solver = {
             "mode": sim_data["mode"],
-            "optimisation_parameters": scenario_data['optimisation_parameters'],
+            "optimisation_parameters": scenario_data["optimisation_parameters"],
             "maxiter": 200,
             "finite_diff_step": 0.001,
-            "optimisation_method": 'trust-constr'
+            "optimisation_method": "trust-constr",
         }
 
         app_solver.calculate(input_solver)
@@ -68,9 +74,11 @@ def run_solver():
         }
 
         app_solver.save_results(
-            current_app.config['POLLUX_PROJECT_FOLDER'], project_name, scenario_name,
-            sim_data['mode'],
-            solver_param
+            current_app.config["POLLUX_PROJECT_FOLDER"],
+            project_name,
+            scenario_name,
+            sim_data["mode"],
+            solver_param,
         )
         # Return success response with the result filepath
         return "okay", 200
@@ -88,14 +96,20 @@ def run_solver():
 def get_existing_scenario_list():
     filename = []
     project_name = request.json["project_name"]
-    PROJECT_DIR = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], project_name)
+    PROJECT_DIR = os.path.join(
+        current_app.config["POLLUX_PROJECT_FOLDER"], project_name
+    )
     for x in os.listdir(PROJECT_DIR):
         # Get the full path of the item
         full_path = os.path.join(PROJECT_DIR, x)
 
         # Check if it is a file, ends with '.conf', and is not 'diagram.json'
-        if os.path.isfile(full_path) and x.endswith(
-                ".json") and x != "diagram.json" and x != "project_info.json":
+        if (
+            os.path.isfile(full_path)
+            and x.endswith(".json")
+            and x != "diagram.json"
+            and x != "project_info.json"
+        ):
             filename.append(x[:-5])
     return jsonify(filename)
 
@@ -107,7 +121,9 @@ def loadscenario():
     if scenario_name == "":
         scenario_name = "scenario_default"
 
-    projectpath = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], project_name)
+    projectpath = os.path.join(
+        current_app.config["POLLUX_PROJECT_FOLDER"], project_name
+    )
     file_path = os.path.join(projectpath, f"{scenario_name}.json")
 
     if os.path.exists(file_path):
@@ -134,7 +150,9 @@ def save_scenario():
         profiles_parameters = request.json["profiles_parameters"]
         optimisation_parameters = request.json["optimisation_parameters"]
 
-        projectpath = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], project_name)
+        projectpath = os.path.join(
+            current_app.config["POLLUX_PROJECT_FOLDER"], project_name
+        )
         file_path = os.path.join(projectpath, f"{scenario_name}.json")
 
         # Ensure the project folder exists
@@ -153,20 +171,23 @@ def save_scenario():
         # Update component_parameters data
         existing_scenario_data["scenario"]["component_parameters"] = {}
         for key in component_parameters.keys():
-            existing_scenario_data["scenario"]["component_parameters"][key] = \
+            existing_scenario_data["scenario"]["component_parameters"][key] = (
                 component_parameters[key]
+            )
 
         # Update optimisation parameters
         existing_scenario_data["scenario"]["optimisation_parameters"] = {}
         for key in optimisation_parameters.keys():
-            existing_scenario_data["scenario"]["optimisation_parameters"][key] = \
+            existing_scenario_data["scenario"]["optimisation_parameters"][key] = (
                 optimisation_parameters[key]
+            )
 
         # Update profiles parameters
         existing_scenario_data["scenario"]["profiles_parameters"] = {}
         for key in profiles_parameters.keys():
-            existing_scenario_data["scenario"]["profiles_parameters"][key] = \
+            existing_scenario_data["scenario"]["profiles_parameters"][key] = (
                 profiles_parameters[key]
+            )
 
         # Save the scenario data to the JSON file
         with open(file_path, "w") as json_file:
@@ -201,7 +222,9 @@ def newscenario():
     new_scenario_name = request.json["new_scenario_name"]
     copy_scenario_name = request.json["copy_scenario_name"]
 
-    projectpath = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], project_name)
+    projectpath = os.path.join(
+        current_app.config["POLLUX_PROJECT_FOLDER"], project_name
+    )
 
     copy_conf = os.path.join(projectpath, copy_scenario_name + ".json")
     new_conf = os.path.join(projectpath, new_scenario_name + ".json")
@@ -216,7 +239,9 @@ def deletescenario():
     project_name = request.json["project_name"]
     scenario_name = request.json["scenario_name"]
 
-    PROJECT_DIR = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], project_name)
+    PROJECT_DIR = os.path.join(
+        current_app.config["POLLUX_PROJECT_FOLDER"], project_name
+    )
 
     os.remove(os.path.join(PROJECT_DIR, scenario_name + ".json"))
 
@@ -228,19 +253,23 @@ def transform_profiles(scenario_data, sim_data):
     transformed_profiles = {}
     control_length = int(np.ceil(sim_data["time_horizon"] / sim_data["control_step"]))
     for key in list(original_profiles.keys()):
-        if key in ['hydrogen_storage', 'hydrogen_demand']:
+        if key in ["hydrogen_storage", "hydrogen_demand"]:
             multi = 1 / 3600
-        elif key in ['power_supply', 'power_demand']:
+        elif key in ["power_supply", "power_demand", "heat_demand"]:
             multi = 1e6
         else:
             multi = 1
 
-        transformed_profiles[key] = np.array(list(original_profiles[key].values())) * multi
+        transformed_profiles[key] = (
+            np.array(list(original_profiles[key].values())) * multi
+        )
         if sim_data["mode"] == "optimisation":
-            if key in ['splitter1', 'splitter2', 'hydrogen_storage']:
-                transformed_profiles[key] = np.ones(control_length) * \
-                                            scenario_data["optimisation_parameters"][key][
-                                                "initial_value"] * multi
+            if key in ["splitter1", "splitter2", "hydrogen_storage"]:
+                transformed_profiles[key] = (
+                    np.ones(control_length)
+                    * scenario_data["optimisation_parameters"][key]["initial_value"]
+                    * multi
+                )
 
         transformed_profiles[key] = transformed_profiles[key].tolist()
 

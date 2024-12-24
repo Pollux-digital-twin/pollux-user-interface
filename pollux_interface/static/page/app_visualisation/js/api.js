@@ -111,12 +111,14 @@ function load_results() {
     return new Promise((resolve, reject) => {
         var result_name = $('#results_list').val();
         var project_name = $('#project_name').val();
+        var project_case = $('#project_case').val();
         var mode = $('#mode').val();
 
         var input = {
             "result_name": result_name,
             "project_name": project_name,
-            "mode": mode
+            "mode": mode,
+            "project_case": project_case
         };
 
         $.ajax({

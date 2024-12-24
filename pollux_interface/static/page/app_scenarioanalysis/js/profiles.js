@@ -8,6 +8,8 @@ document.addEventListener('click', function (event) {
             document.getElementById('power_demand_profile_csv').click();
         } else if (event.target.id === 'hydrogen_demand_profile_button') {
             document.getElementById('hydrogen_demand_profile_csv').click();
+        } else if (event.target.id === 'heat_demand_profile_button') {
+            document.getElementById('heat_demand_profile_csv').click();
         } else if (event.target.id === 'splitter1_profile_button') {
             document.getElementById('splitter1_profile_csv').click();
         } else if (event.target.id === 'splitter2_profile_button') {
@@ -22,6 +24,8 @@ document.addEventListener('click', function (event) {
             setTimeout(function(){plotProfiles('power_demand_profile_data')},500);
         } else if (event.target.id === 'hydrogen_demand_profile_plot_button') {
             setTimeout(function(){plotProfiles('hydrogen_demand_profile_data')},500);
+        } else if (event.target.id === 'heat_demand_profile_plot_button') {
+            setTimeout(function(){plotProfiles('heat_demand_profile_data')},500);
         } else if (event.target.id === 'splitter1_profile_plot_button') {
             setTimeout(function(){plotProfiles('splitter1_profile_data')},500);
         } else if (event.target.id === 'splitter2_profile_plot_button') {
@@ -79,7 +83,7 @@ function plotProfiles(profile_name) {
 
 function init_storage() {
 
-    storageKeys = ['power_supply_profile_data', 'power_demand_profile_data', 'hydrogen_demand_profile_data',
+    storageKeys = ['power_supply_profile_data', 'power_demand_profile_data', 'hydrogen_demand_profile_data', 'heat_demand_profile_data',
         'splitter1_profile_data', 'splitter2_profile_data', 'hydrogen_storage_profile_data']
 
     initialData = {}
@@ -113,6 +117,8 @@ function handleFileSelect(event) {
                 storageKey = 'power_demand_profile_data';
             } else if (buttonId === 'hydrogen_demand_profile_csv') {
                 storageKey = 'hydrogen_demand_profile_data';
+            } else if (buttonId === 'heat_demand_profile_csv') {
+                storageKey = 'heat_demand_profile_data';
             } else if (buttonId === 'splitter1_profile_csv') {
                 storageKey = 'splitter1_profile_data';
             } else if (buttonId === 'splitter2_profile_csv') {
