@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash,
 from pollux_interface.create_app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from pollux_interface.blueprint.dbmodels import User
-from flask_login import login_user, login_required, logout_user, current_user
+from flask_login import login_user, login_required, logout_user
 
 auth = Blueprint('auth', __name__)
 

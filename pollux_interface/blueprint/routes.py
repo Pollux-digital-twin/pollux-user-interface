@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, current_app, send_from_directory
+from flask import Blueprint, render_template, send_from_directory
 from flask_login import login_required
 
 main = Blueprint('main', __name__)

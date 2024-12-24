@@ -1,10 +1,6 @@
-from flask import Blueprint, request
-from flask import current_app
-import os
-import json
+from flask import Blueprint
 
 dashboard = Blueprint('dashboard', __name__)
-
 
 # ================================================================
 # API FUNCTION

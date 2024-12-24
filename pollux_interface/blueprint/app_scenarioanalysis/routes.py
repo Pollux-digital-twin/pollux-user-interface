@@ -146,7 +146,7 @@ def save_scenario():
             with open(file_path, "r") as json_file:
                 existing_scenario_data = json.load(json_file)
         else:
-            default_path = os.path.join(projectpath, f"scenario_default.json")
+            default_path = os.path.join(projectpath, "scenario_default.json")
             with open(default_path, "r") as json_file:
                 existing_scenario_data = json.load(json_file)
 
