@@ -125,7 +125,7 @@ def create_app():
 
             project = Project.query.filter_by(name="Power2Hydrogen").first()
             if not project:
-                new_project = Project(name="Power2Hydrogen", group="")
+                new_project = Project(name="Power2Hydrogen", group="template")
                 db.session.add(new_project)
                 db.session.commit()
 

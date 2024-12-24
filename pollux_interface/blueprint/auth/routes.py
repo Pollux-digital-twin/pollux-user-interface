@@ -35,6 +35,10 @@ def login_post():
 
     # if the above check passes, then we know the user has the right credentials
     login_user(user, remember=remember)
+
+    session["project_name"] = ''
+    session["project_case"] = ''
+
     return redirect(url_for('main.index'))
 
 
@@ -83,6 +87,9 @@ def signup_post():
 
     login_user(new_user, remember=True)
 
+    session["project_name"] = ''
+    session["project_case"] = ''
+
     return redirect(url_for('main.index'))
 
 
@@ -91,7 +98,7 @@ def signup_post():
 def logout():
     logout_user()
 
-    session["projectname"] = ''
-    session['system_assets'] = []
+    session["project_name"] = ''
+    session["project_case"] = ''
 
     return redirect(url_for('auth.login'))
