@@ -128,6 +128,12 @@ def create_app():
                 db.session.add(new_project)
                 db.session.commit()
 
+            project = Project.query.filter_by(name="Power2Heat").first()
+            if not project:
+                new_project = Project(name="Power2Heat", group="template")
+                db.session.add(new_project)
+                db.session.commit()
+
     except Exception as exception:
         print(
             "got the following exception when attempting db.create_all() in create_app.py: " + str(

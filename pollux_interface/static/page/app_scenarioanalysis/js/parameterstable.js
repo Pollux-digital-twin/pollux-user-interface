@@ -16,6 +16,20 @@ function get_component_parameters() {
             'electrolyser_parameters': electrolyser_parameters,
             'hydrogen_storage_parameters': hydrogen_storage_parameters
         }
+    } else if (project_case === "power_to_heat") {
+        // Retrieve heatpump parameters
+        const heatpumpTableRows = document.querySelectorAll('#heatpump_parameters tbody tr');
+        const heatpump_parameters = extract_table_data(heatpumpTableRows);
+
+        // Retrieve heat storage parameters
+//        const heatstorageTableRows = document.querySelectorAll('#heat_storage_parameters tbody tr');
+//        const heat_storage_parameters = extract_table_data(heatstorageTableRows);
+
+        // Construct the table data object
+        table_data = {
+            'heatpump_parameters': heatpump_parameters,
+//            'heatstorage_parameters': heat_storage_parameters
+        }
     }
     return table_data;
 }
@@ -94,7 +108,13 @@ function load_table_data(tableId, data) {
         'cell_type': "Cell type",
         'eta_Faraday': "Faraday's efficiency [-]",
         'initial_mass': "Initial mass content [kg H2]",
-        'storage_capacity': "Maximum capacity [kg H2]"
+        'storage_capacity': "Maximum capacity [kg H2]",
+        'hot_temperature_desired': "Desired temperature [deg Celsius]",
+        'hot_temperature_return': "Return temperature [deg Celsius]",
+        'cold_temperature_available': "Cold temperature [deg Celsius]",
+        'cold_deltaT': "Temperature delta [deg Celsius]",
+        'hot_mass_flowrate': "Water flow rate [kg/hour]",
+        'electricity_power_in': "Power input [MW]"
     }
     if (table && data) {
         const tbody = table.querySelector('tbody');

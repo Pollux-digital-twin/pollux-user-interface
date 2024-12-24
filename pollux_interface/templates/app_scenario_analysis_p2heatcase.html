@@ -165,6 +165,9 @@
                             Load CSV
                         </button>
                         <input accept=".csv" id="power_supply_profile_csv" onchange="handleFileSelect(event)" style="display: none;" type="file"/>
+                        <button class="btn btn-secondary" id="power_supply_profile_plot_button" data-toggle="modal" href="#myProfileModal" >
+                            <i class="tim-icons icon-sound-wave"></i>
+                        </button>
                         </td>
                     </tr>
                     <tr>
@@ -178,6 +181,9 @@
                             Load CSV
                         </button>
                         <input accept=".csv" id="power_demand_profile_csv" onchange="handleFileSelect(event)" style="display: none;" type="file"/>
+                        <button class="btn btn-secondary" id="power_demand_profile_plot_button" data-toggle="modal" href="#myProfileModal" >
+                            <i class="tim-icons icon-sound-wave"></i>
+                        </button>
                         </td>
                     </tr>
                     <tr>
@@ -191,6 +197,9 @@
                             Load CSV
                         </button>
                         <input accept=".csv" id="heat_demand_profile_csv" onchange="handleFileSelect(event)" style="display: none;" type="file"/>
+                        <button class="btn btn-secondary" id="heat_demand_profile_plot_button" data-toggle="modal" href="#myProfileModal" >
+                            <i class="tim-icons icon-sound-wave"></i>
+                        </button>
                         </td>
                     </tr>
                     </tbody>
@@ -230,10 +239,13 @@
                         </div>
                         </td>
                         <td>
-                        <button class="btn btn-primary" id="splitter1_control_profile_button" style="background-color: white; color: black;">
+                        <button class="btn btn-primary" id="splitter1_profile_button" style="background-color: white; color: black;">
                             Load CSV
                         </button>
-                        <input accept=".csv" id="splitter1_control_profile_csv" onchange="handleFileSelect(event)" style="display: none;" type="file"/>
+                        <input accept=".csv" id="splitter1_profile_csv" onchange="handleFileSelect(event)" style="display: none;" type="file"/>
+                        <button class="btn btn-secondary" id="splitter1_profile_plot_button" data-toggle="modal" href="#myProfileModal" >
+                            <i class="tim-icons icon-sound-wave"></i>
+                        </button>
                         </td>
                     </tr>
                     </tbody>
