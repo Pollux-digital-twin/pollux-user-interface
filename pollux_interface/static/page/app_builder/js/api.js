@@ -2,7 +2,7 @@ function save_diagram() {
 
     var jsonObject = graph.toJSON();
 
-    var fieldID = $('#select_project').val();
+    var fieldID = $('#project_name').val();
     if (fieldID) {
         $.ajax({
             type: 'POST',
@@ -19,7 +19,7 @@ function save_diagram() {
 
 function load_diagram() {
 
-    var fieldID = $('#select_project').val();
+    var fieldID = $('#project_name').val();
 
     if (fieldID) {
         $.ajax({
@@ -42,7 +42,7 @@ function load_diagram() {
 
 }
 
-$('#select_project').on('change', function () {
+$('#project_name').on('change', function () {
     load_diagram()
 })
 

@@ -2,7 +2,7 @@
 name = "pollux-user-interface"
 version = "0.1.0"
 description = "Core GUI library of the POLLUX Digital Twin"
-authors = ["Ryvo Octaviano <ryvo.octaviano@tno.nl>"]
+authors = ["Demetris Palochis <demetris.palochis@tno.nl>"]
 readme = "README.md"
 packages = [{ include = "pollux_interface" }]
 classifiers = [
@@ -39,7 +39,7 @@ influxdb-client = "^1.36.1"
 pytz = "^2024.1"
 flask-admin = "1.6.1"
 Flask-Migrate = "^4.0.7"
-pollux-framework = "^0.1.0"
+pollux-application = "^0.1.5"
 
 [build-system]
 requires = ["poetry-core"]

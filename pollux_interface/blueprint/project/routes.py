@@ -5,6 +5,7 @@ import shutil
 from pollux_interface.blueprint.dbmodels import Project
 from flask_login import current_user
 from pollux_interface.create_app import db
+import json
 
 projectmanager = Blueprint('projectmanager', __name__)
 
@@ -14,6 +15,7 @@ def closeproject():
     project_name = request.json['project_name']
 
     session["project_name"] = ''
+    session["project_case"] = ''
 
     return project_name + " is closed."
 
@@ -22,14 +24,21 @@ def closeproject():
 def loadproject():
     project_name = request.json['project_name']
 
-    session["project_name"] = project_name
+    project_folder_path = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], project_name)
+    if os.path.exists(os.path.join(project_folder_path, 'project_info.json')):
+        with open(os.path.join(project_folder_path, 'project_info.json'), 'r') as json_file:
+            json_str = json.load(json_file)
 
-    return project_name + " is loaded."
+    session["project_name"] = project_name
+    session["project_case"] = json_str['project_case']
+
+    return jsonify(json_str)
 
 
 @projectmanager.route('/createproject', methods=['POST'])
 def createproject():
     project_name = request.json['project_name']
+    project_case = request.json['project_case']
 
     if project_name == '':
         return "ERROR: Please fill in your project name."
@@ -39,13 +48,24 @@ def createproject():
     if os.path.isdir(project_folder_path):
         return project_name + " already exists."
     else:
-        os.mkdir(project_folder_path)
+        if project_case == 'power_to_hydrogen':
+            src_dir = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], 'Power2Hydrogen')
+        elif project_case == 'power_to_heat':
+            src_dir = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], 'Power2Heat')
 
-    template_folder_path = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'], '_template')
-    shutil.copy(os.path.join(template_folder_path, 'template_plant.conf'),
-                os.path.join(project_folder_path, 'plant.conf'))
+        shutil.copytree(src_dir, project_folder_path)
+
+    # overwrite project name
+    if os.path.exists(os.path.join(project_folder_path, 'project_info.json')):
+        with open(os.path.join(project_folder_path, 'project_info.json'), 'r') as json_file:
+            json_str = json.load(json_file)
+    json_str['project_name'] = project_name
+
+    with open(os.path.join(project_folder_path, 'project_info.json'), 'w') as json_file:
+        json.dump(json_str, json_file, indent=4)
 
     session["project_name"] = project_name
+    session["project_case"] = project_case
 
     new_project = Project(name=project_name, user=current_user.name)
 
@@ -89,6 +109,7 @@ def deleteproject():
         db.session.commit()
 
         session["project_name"] = ''
+        session["project_case"] = ''
 
         project_folder_path = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'],
                                            projectname)

@@ -1,0 +1,254 @@
+<!--<html>-->
+<!--<body>-->
+<!--            ====================================================================================-->
+<!--                                            INPUT PARAMETERS                                    -->
+<!--            ====================================================================================-->
+<html>
+<body>
+    <div class="row" >
+        <div class="col-4">
+            <div class="card full-width-panel">
+                <!--Heat pump parameters table-->
+                <h3 class="card-header">
+                    Heat pump parameters
+                </h3>
+                <div class="card-body">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <table class="table table-bordered" id="heatpump_parameters">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Parameter
+                                        </th>
+                                        <th>
+                                            Value
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                    <input class="form-control" id="hot_temperature_desired" value="Desired temperature [deg Celsius]"/>
+                                    </td>
+                                    <td>
+                                    <input class="form-control" id="hot_temperature_desired_value" value="150"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    <input class="form-control" id="hot_temperature_return" value="Return temperature [deg Celsius]"/>
+                                    </td>
+                                    <td>
+                                    <input class="form-control" id="hot_temperature_return_value" value="100"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    <input class="form-control" id="cold_temperature_available" value="Cold temperature [deg Celsius]"/>
+                                    </td>
+                                    <td>
+                                    <input class="form-control" id="cold_temperature_available_value" value="80"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    <input class="form-control" id="cold_deltaT" value="Temperature delta [deg Celsius]"/>
+                                    </td>
+                                    <td>
+                                    <input class="form-control" id="cold_deltaT_value" value="40"/>
+                                    </td>
+                                </tr>
+            <!--                    <tr>-->
+            <!--                        <td>-->
+            <!--                        <input class="form-control" id="process_heat_requirement" value=""/>-->
+            <!--                        </td>-->
+            <!--                        <td>-->
+            <!--                        <input class="form-control" id="process_heat_requirement_value" value="NaN"/>-->
+            <!--                        </td>-->
+            <!--                    </tr>-->
+            <!--                    <tr>-->
+            <!--                        <td>-->
+            <!--                        <input class="form-control" id="hot_mass_flowrate" value="Water flow rate [kg/hour]"/>-->
+            <!--                        </td>-->
+            <!--                        <td>-->
+            <!--                        <input class="form-control" id="hot_mass_flowrate_value" value="NaN"/>-->
+            <!--                        </td>-->
+            <!--                    </tr>-->
+                                <tr>
+                                    <td>
+                                    <input class="form-control" id="electricity_power_in" value="Power input [MW]"/>
+                                    </td>
+                                    <td>
+                                    <input class="form-control" id="electricity_power_in_value" value="0.1"/>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            <!-- Heat storage parameters table-->
+<!--            <h3 class="card-header">-->
+<!--            Heat storage parameters-->
+<!--            </h3>-->
+<!--            <div class="card-body">-->
+<!--                <div class="panel panel-default">-->
+<!--                    <div class="panel-body">-->
+<!--                    <table class="table table-bordered" id="heat_storage_parameters">-->
+<!--                        <thead>-->
+<!--                        <tr>-->
+<!--                            <th>-->
+<!--                            Parameter-->
+<!--                            </th>-->
+<!--                            <th>-->
+<!--                            Value-->
+<!--                            </th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody>-->
+<!--                        <tr>-->
+<!--                            <td>-->
+<!--                            <input class="form-control" id="storage_capacity" value="Maximum capacity [kg H2]"/>-->
+<!--                            </td>-->
+<!--                            <td>-->
+<!--                            <input class="form-control" id="storage_capacity_value" value="3000"/>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td>-->
+<!--                            <input class="form-control" id="initial_mass" value="Initial mass content [kg H2]"/>-->
+<!--                            </td>-->
+<!--                            <td>-->
+<!--                            <input class="form-control" id="initial_mass_value" value="1000"/>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        </tbody>-->
+<!--                    </table>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+            </div>
+        </div>
+        <!--            ====================================================================================-->
+        <!--                                           SOLVER PARAMETERS                                    -->
+        <!--            ====================================================================================-->
+        <div class="col-8">
+        <div class="card full-width-panel">
+            <h3 class="card-header">
+            Input profiles
+            </h3>
+            <div class="card-body">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                <table class="table table-bordered" id="input_profiles">
+                    <thead>
+                    <tr>
+                        <th>
+                        Parameter
+                        </th>
+                        <th>
+                        Profile
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                        <div class="form-control" id="power_supply_profile_label">
+                            Power supply [MW]
+                        </div>
+                        </td>
+                        <td>
+                        <button class="btn btn-primary" id="power_supply_profile_button" style="background-color: white; color: black;">
+                            Load CSV
+                        </button>
+                        <input accept=".csv" id="power_supply_profile_csv" onchange="handleFileSelect(event)" style="display: none;" type="file"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <div class="form-control" id="power_demand_profile_label">
+                            Power demand [MW]
+                        </div>
+                        </td>
+                        <td>
+                        <button class="btn btn-primary" id="power_demand_profile_button" style="background-color: white; color: black;">
+                            Load CSV
+                        </button>
+                        <input accept=".csv" id="power_demand_profile_csv" onchange="handleFileSelect(event)" style="display: none;" type="file"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <div class="form-control" id="heat_demand_profile_label">
+                            Heat demand [MW]
+                        </div>
+                        </td>
+                        <td>
+                        <button class="btn btn-primary" id="heat_demand_profile_button" style="background-color: white; color: black;">
+                            Load CSV
+                        </button>
+                        <input accept=".csv" id="heat_demand_profile_csv" onchange="handleFileSelect(event)" style="display: none;" type="file"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            </div>
+        </div>
+<!--        <div class="d-flex justify-content-center mb-3">-->
+<!--            <button type="button" class="btn btn-primary btn-sm" id="toggleButton" onclick="togglePanels()">Switch modes</button>-->
+<!--        </div>-->
+<!--    ============================= Simulation mode panel ============================= -->
+        <div class="card full-width-panel" id="simulation_parameters_panel" style="display: block;">
+
+            <h3 class="card-header">
+            Simulation mode
+            </h3>
+            <div class="card-body">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                <table class="table table-bordered" id="control_profiles">
+                    <thead>
+                    <tr>
+                        <th>
+                        Parameter
+                        </th>
+                        <th>
+                        Value
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                        <div class="form-control" id="splitter1_profile_label">
+                            Power splitter control profile (dimensionless with range: [0, 1])
+                        </div>
+                        </td>
+                        <td>
+                        <button class="btn btn-primary" id="splitter1_control_profile_button" style="background-color: white; color: black;">
+                            Load CSV
+                        </button>
+                        <input accept=".csv" id="splitter1_control_profile_csv" onchange="handleFileSelect(event)" style="display: none;" type="file"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+
+        </div>
+
+
+        </div>
+        </div>
+    </div>
+    <!--</body>-->
+    <!--</html>-->
+</body>
+</html>

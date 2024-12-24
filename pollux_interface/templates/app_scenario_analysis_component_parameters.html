@@ -1,0 +1,442 @@
+<div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times</button>
+            <h3 id="myModalLabel1" style="color: black">Component Parameters</h3>
+        </div>
+        <div class="modal-body">
+            <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#properties">
+                Properties
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#tagnames">
+                Tagnames
+                </a>
+            </li>
+            </ul>
+            <div class="tab-content">
+            <div class="tab-pane fade show active" id="properties">
+                <table class="table" id="table-component-properties">
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Type
+                    </span>
+                    </td>
+                    <td>
+                    <input id="component_type" readonly="" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        ID
+                    </span>
+                    </td>
+                    <td>
+                    <input id="component_id" readonly="" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Name
+                    </span>
+                    </td>
+                    <td>
+                    <input id="component_name" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                </table>
+                <label>
+                Properties:
+                </label>
+                <table class="table" id="table-component-properties-electrolyser">
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Cell temperature [K]
+                    </span>
+                    </td>
+                    <td>
+                    <input id="electrolyser_cell_temp" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Cathode pressure bar]
+                    </span>
+                    </td>
+                    <td>
+                    <input id="electrolyser_cathode_pres" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Anode pressure [bar]
+                    </span>
+                    </td>
+                    <td>
+                    <input id="electrolyser_anode_pres" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Initial H20 pressure [bar]
+                    </span>
+                    </td>
+                    <td>
+                    <input id="electrolyser_init_h2o_pres" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Faraday efficiency [-]
+                    </span>
+                    </td>
+                    <td>
+                    <input id="electrolyser_Far_eff" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Faraday constant [s*A/mol]
+                    </span>
+                    </td>
+                    <td>
+                    <input id="electrolyser_Far_const" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Cell surface area [m^2]
+                    </span>
+                    </td>
+                    <td>
+                    <input id="electrolyser_cell_surface" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Cell type
+                    </span>
+                    </td>
+                    <td>
+                    <input id="electrolyser_cell_type" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Capacity [MW]
+                    </span>
+                    </td>
+                    <td>
+                    <input id="electrolyser_capacity_MW" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                </table>
+                <table class="table" id="table-component-properties-hydrogen_demand">
+<!--                <tr>-->
+<!--                    <td>-->
+<!--                    <span style="color: black">-->
+<!--                        Capacity [MW]-->
+<!--                    </span>-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                    <input id="hydrogen_demand_capacity" style="width:300px" value=""/>-->
+<!--                    </td>-->
+<!--                </tr>-->
+                </table>
+                <table class="table" id="table-component-properties-hydrogen_storage">
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Storage capacity [kg]
+                    </span>
+                    </td>
+                    <td>
+                    <input id="hydrogen_storage_capacity" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Storage initial mass [kg]
+                    </span>
+                    </td>
+                    <td>
+                    <input id="hydrogen_storage_initial_mass" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                </table>
+                <table class="table" id="table-component-properties-electricity_source">
+<!--                <tr>-->
+<!--                    <td>-->
+<!--                    <span style="color: black">-->
+<!--                        PROPERTY_TITLE_UNITS-->
+<!--                    </span>-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                    <input id="PROPERTY_ID" style="width:300px" value=""/>-->
+<!--                    </td>-->
+<!--                </tr>-->
+                </table>
+                <table class="table" id="table-component-properties-electricity_demand">
+<!--                <tr>-->
+<!--                    <td>-->
+<!--                    <span style="color: black">-->
+<!--                        PROPERTY_TITLE_UNITS-->
+<!--                    </span>-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                    <input id="PROPERTY_ID" style="width:300px" value=""/>-->
+<!--                    </td>-->
+<!--                </tr>-->
+                </table>
+                <table class="table" id="table-component-properties-electricity_storage">
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Storage capacity [MWh]
+                    </span>
+                    </td>
+                    <td>
+                    <input id="electricity_storage_capacity" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Storage initial charge [MWh]
+                    </span>
+                    </td>
+                    <td>
+                    <input id="electricity_storage_initial_charge" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                </table>
+                <table class="table" id="table-component-properties-heat_source">
+<!--                <tr>-->
+<!--                    <td>-->
+<!--                    <span style="color: black">-->
+<!--                        PROPERTY_TITLE_UNITS-->
+<!--                    </span>-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                    <input id="PROPERTY_ID" style="width:300px" value=""/>-->
+<!--                    </td>-->
+<!--                </tr>-->
+                </table>
+                <table class="table" id="table-component-properties-heat_demand">
+<!--                <tr>-->
+<!--                    <td>-->
+<!--                    <span style="color: black">-->
+<!--                        PROPERTY_TITLE_UNITS-->
+<!--                    </span>-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                    <input id="PROPERTY_ID" style="width:300px" value=""/>-->
+<!--                    </td>-->
+<!--                </tr>-->
+                </table>
+                <table class="table" id="table-component-properties-heat_storage">
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Storage capacity [MWh]
+                    </span>
+                    </td>
+                    <td>
+                    <input id="heat_storage_capacity" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Storage initial charge [MWh]
+                    </span>
+                    </td>
+                    <td>
+                    <input id="heat_storage_initial_charge" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                </table>
+                <table class="table" id="table-component-properties-heat_pump">
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Capacity [MW]
+                    </span>
+                    </td>
+                    <td>
+                    <input id="heat_pump_capacity" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Heat pump efficiency [-]
+                    </span>
+                    </td>
+                    <td>
+                    <input id="heat_pump_efficiency" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                </table>
+                <table class="table" id="table-component-properties-node">
+                <tr>
+                    <td>
+                    </td>
+                </tr>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="tagnames">
+                <label>
+                Measured:
+                </label>
+                <table class="table" id="table-tagnames-measured-electrolyser">
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                    <input id="electrolyser_measured_tagname_example" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                </table>
+                <table class="table" id="table-tagnames-measured-hydrogen_demand">
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Demand profile
+                    </span>
+                    </td>
+                    <td>
+                    <input id="hydrogen_demand_profile" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                </table>
+                <table class="table" id="table-tagnames-measured-hydrogen_storage">
+                <tr>
+                    <td>
+
+                    </td>
+                </tr>
+                </table>
+                <table class="table" id="table-tagnames-measured-electricity_source">
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Source profile [MW]
+                    </span>
+                    </td>
+                    <td>
+                    <input id="electricity_source_profile" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                </table>
+                <table class="table" id="table-tagnames-measured-electricity_demand">
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Demand profile [MW]
+                    </span>
+                    </td>
+                    <td>
+                    <input id="electricity_demand_profile" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                </table>
+                <table class="table" id="table-tagnames-measured-electricity_storage">
+<!--                <tr>-->
+<!--                    <td>-->
+<!--                    <span style="color: black">-->
+<!--                        TAGNAME TITLE-->
+<!--                    </span>-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                    <input id="TAGNAME_ID" style="width:300px" value=""/>-->
+<!--                    </td>-->
+<!--                </tr>-->
+                </table>
+                <table class="table" id="table-tagnames-measured-heat_source">
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Source profile [MW]
+                    </span>
+                    </td>
+                    <td>
+                    <input id="heat_source_profile" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                </table>
+                <table class="table" id="table-tagnames-measured-heat_demand">
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Demand profile [MW]
+                    </span>
+                    </td>
+                    <td>
+                    <input id="heat_demand_profile" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                </table>
+                <table class="table" id="table-tagnames-measured-heat_storage">
+<!--                <tr>-->
+<!--                    <td>-->
+<!--                    <span style="color: black">-->
+<!--                        TAGNAME TITLE-->
+<!--                    </span>-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                    <input id="TAGNAME_ID" style="width:300px" value=""/>-->
+<!--                    </td>-->
+<!--                </tr>-->
+                </table>
+                <table class="table" id="table-tagnames-measured-heat_pump">
+<!--                <tr>-->
+<!--                    <td>-->
+<!--                    <span style="color: black">-->
+<!--                        TAGNAME TITLE-->
+<!--                    </span>-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                    <input id="TAGNAME_ID" style="width:300px" value=""/>-->
+<!--                    </td>-->
+<!--                </tr>-->
+                </table>
+                <table class="table" id="table-tagnames-measured-node">
+                <tr>
+                    <td>
+                    <span style="color: black">
+                        Control profile [-]
+                    </span>
+                    </td>
+                    <td>
+                    <input id="control_profile" style="width:300px" value=""/>
+                    </td>
+                </tr>
+                </table>
+            </div>
+            </div>
+            <div class="modal-footer">
+            <button aria-hidden="true" class="btn" data-dismiss="modal">
+                Close
+            </button>
+            <input class="btn btn-info" onclick="save_parameters();" type="button" value="Save"/>
+            </div>
+        </div>
+        </div>
+    </div>
