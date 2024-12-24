@@ -63,8 +63,6 @@ function delete_project() {
 
                 window.alert(data);
 
-                document.getElementById("project_name").value = ""
-
                 window.location.reload()
 
             }

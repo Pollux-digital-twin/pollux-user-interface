@@ -19,19 +19,19 @@ document.addEventListener('click', function (event) {
         }
 
         if (event.target.id === 'power_supply_profile_plot_button') {
-            setTimeout(function(){plotProfiles('power_supply_profile_data')},500);
+            setTimeout(function(){plotProfiles('power_supply_profile_data')},200);
         } else if (event.target.id === 'power_demand_profile_plot_button') {
-            setTimeout(function(){plotProfiles('power_demand_profile_data')},500);
+            setTimeout(function(){plotProfiles('power_demand_profile_data')},200);
         } else if (event.target.id === 'hydrogen_demand_profile_plot_button') {
-            setTimeout(function(){plotProfiles('hydrogen_demand_profile_data')},500);
+            setTimeout(function(){plotProfiles('hydrogen_demand_profile_data')},200);
         } else if (event.target.id === 'heat_demand_profile_plot_button') {
-            setTimeout(function(){plotProfiles('heat_demand_profile_data')},500);
+            setTimeout(function(){plotProfiles('heat_demand_profile_data')},200);
         } else if (event.target.id === 'splitter1_profile_plot_button') {
-            setTimeout(function(){plotProfiles('splitter1_profile_data')},500);
+            setTimeout(function(){plotProfiles('splitter1_profile_data')},200);
         } else if (event.target.id === 'splitter2_profile_plot_button') {
-            setTimeout(function(){plotProfiles('splitter2_profile_data')},500);
+            setTimeout(function(){plotProfiles('splitter2_profile_data')},200);
         } else if (event.target.id === 'hydrogen_storage_profile_plot_button') {
-            setTimeout(function(){plotProfiles('hydrogen_storage_profile_data')},500);
+            setTimeout(function(){plotProfiles('hydrogen_storage_profile_data')},200);
         }
     }
 });

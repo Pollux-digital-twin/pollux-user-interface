@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pollux-user-interface"
-version = "0.1.0"
+version = "0.2.0"
 description = "Core GUI library of the POLLUX Digital Twin"
 authors = ["Demetris Palochis <demetris.palochis@tno.nl>"]
 readme = "README.md"
@@ -39,7 +39,7 @@ influxdb-client = "^1.36.1"
 pytz = "^2024.1"
 flask-admin = "1.6.1"
 Flask-Migrate = "^4.0.7"
-pollux-application = "^0.1.5"
+pollux-application = "^0.2.0"
 
 [build-system]
 requires = ["poetry-core"]

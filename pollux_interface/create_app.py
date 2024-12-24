@@ -9,7 +9,6 @@ from flask_login import LoginManager, current_user
 from flask_session import Session
 import os
 from pathlib import Path
-import sys
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_migrate import Migrate
@@ -125,7 +124,7 @@ def create_app():
 
             project = Project.query.filter_by(name="Power2Hydrogen").first()
             if not project:
-                new_project = Project(name="Power2Hydrogen", group="")
+                new_project = Project(name="Power2Hydrogen", group="template")
                 db.session.add(new_project)
                 db.session.commit()
 

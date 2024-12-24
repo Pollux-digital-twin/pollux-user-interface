@@ -213,6 +213,12 @@ function addHeatStorage() {
     addComponent(componentStyling, inports, outports, parameters, tagnames);
 }
 
+
+
+
+
+
+
 function addComponent(styling, inports, outports, parameters, tagnames) {
     element = new joint.shapes.devs.Model({
         position: {
@@ -328,6 +334,171 @@ function addNode() {
     model.addTo(graph);
 }
 
+function addAdder() {
+    var portsIn = {
+        position: {
+            name: 'left'
+        },
+        attrs: {
+            portBody: {
+                magnet: true,
+                r: 5,
+                fill: "#000000",
+            }
+        },
+        markup: [{
+            tagName: 'circle',
+            selector: 'portBody'
+        }]
+    };
+
+    var portsOut = {
+        position: {
+            name: 'right'
+        },
+        attrs: {
+            portBody: {
+                magnet: true,
+                r: 5,
+                fill: "#000000",
+            }
+        },
+        markup: [{
+            tagName: 'circle',
+            selector: 'portBody'
+        }]
+    };
+
+
+    var model = new joint.shapes.standard.Circle({
+        position: {
+            x: 100,
+            y: 100
+        },
+        size: {
+            width: 20,
+            height: 20
+        },
+        ports: {
+            groups: {
+                'in': portsIn,
+                'out': portsOut
+            }
+        }
+    });
+
+
+    model.addPorts([
+        {
+            group: 'in',
+            attrs: {
+                label: {
+                    text: 'in1'
+                }
+            }
+        },
+        {
+            group: 'in',
+            attrs: {
+                label: {
+                    text: 'in2'
+                }
+            }
+        },
+        {
+            group: 'out',
+            attrs: {
+                label: {
+                    text: 'out'
+                }
+            }
+        }]);
+
+    model.addTo(graph);
+}
+
+function addSplitter() {
+    var portsIn = {
+        position: {
+            name: 'left'
+        },
+        attrs: {
+            portBody: {
+                magnet: true,
+                r: 5,
+                fill: "#000000",
+            }
+        },
+        markup: [{
+            tagName: 'circle',
+            selector: 'portBody'
+        }]
+    };
+
+    var portsOut = {
+        position: {
+            name: 'right'
+        },
+        attrs: {
+            portBody: {
+                magnet: true,
+                r: 5,
+                fill: "#000000",
+            }
+        },
+        markup: [{
+            tagName: 'circle',
+            selector: 'portBody'
+        }]
+    };
+
+
+    var model = new joint.shapes.standard.Circle({
+        position: {
+            x: 100,
+            y: 100
+        },
+        size: {
+            width: 20,
+            height: 20
+        },
+        ports: {
+            groups: {
+                'in': portsIn,
+                'out': portsOut
+            }
+        }
+    });
+
+
+    model.addPorts([
+        {
+            group: 'in',
+            attrs: {
+                label: {
+                    text: 'in'
+                }
+            }
+        },
+        {
+            group: 'out',
+            attrs: {
+                label: {
+                    text: 'out1'
+                }
+            }
+        },
+        {
+            group: 'out',
+            attrs: {
+                label: {
+                    text: 'out2'
+                }
+            }
+        }]);
+
+    model.addTo(graph);
+}
 
 
 function open_element_parameter(element) {
@@ -353,7 +524,7 @@ function open_element_parameter(element) {
     //        prop_names = ['esp_type', 'esp_no_stage', 'esp_tubing', 'esp_depth', 'esp_min_flow', 'esp_max_flow', 'esp_bep_flow', 'esp_power_coeff', 'esp_head_coeff']
     //    }
 
-//    Electrolyser
+    //    Electrolyser
     if (element.attributes.parameters.type == 'electrolyser') {
         document.getElementById("table-tagnames-measured-electrolyser").style.display = "block"
         document.getElementById("table-component-properties-electrolyser").style.display = "block"
@@ -363,70 +534,70 @@ function open_element_parameter(element) {
             'electrolyser_cell_type', 'electrolyser_capacity_MW'
         ]
     }
-//    HYDROGEN DEMAND
+    //    HYDROGEN DEMAND
     if (element.attributes.parameters.type == 'hydrogen_demand') {
         document.getElementById("table-tagnames-measured-hydrogen_demand").style.display = "block"
         document.getElementById("table-component-properties-hydrogen_demand").style.display = "block"
 
         prop_names = []
     }
-//    HYDROGEN STORAGE
+    //    HYDROGEN STORAGE
     if (element.attributes.parameters.type == 'hydrogen_storage') {
         document.getElementById("table-tagnames-measured-hydrogen_storage").style.display = "block"
         document.getElementById("table-component-properties-hydrogen_storage").style.display = "block"
 
         prop_names = ["hydrogen_storage_capacity", "hydrogen_storage_initial_mass"]
     }
-//    ELECTRICITY SOURCE
+    //    ELECTRICITY SOURCE
     if (element.attributes.parameters.type == 'electricity_source') {
         document.getElementById("table-tagnames-measured-electricity_source").style.display = "block"
         document.getElementById("table-component-properties-electricity_source").style.display = "block"
 
         prop_names = []
     }
-//    ELECTRICITY DEMAND
+    //    ELECTRICITY DEMAND
     if (element.attributes.parameters.type == 'electricity_demand') {
         document.getElementById("table-tagnames-measured-electricity_demand").style.display = "block"
         document.getElementById("table-component-properties-electricity_demand").style.display = "block"
 
         prop_names = []
     }
-//    ELECTRICITY BATTERY
+    //    ELECTRICITY BATTERY
     if (element.attributes.parameters.type == 'electricity_storage') {
         document.getElementById("table-tagnames-measured-electricity_storage").style.display = "block"
         document.getElementById("table-component-properties-electricity_storage").style.display = "block"
 
         prop_names = ["electricity_storage_capacity", "electricity_storage_initial_charge"]
     }
-//    HEAT SOURCE
+    //    HEAT SOURCE
     if (element.attributes.parameters.type == 'heat_source') {
         document.getElementById("table-tagnames-measured-heat_source").style.display = "block"
         document.getElementById("table-component-properties-heat_source").style.display = "block"
 
         prop_names = []
     }
-//    HEAT DEMAND
+    //    HEAT DEMAND
     if (element.attributes.parameters.type == 'heat_demand') {
         document.getElementById("table-tagnames-measured-heat_demand").style.display = "block"
         document.getElementById("table-component-properties-heat_demand").style.display = "block"
 
         prop_names = []
     }
-//    HEAT STORAGE
+    //    HEAT STORAGE
     if (element.attributes.parameters.type == 'heat_storage') {
         document.getElementById("table-tagnames-measured-heat_storage").style.display = "block"
         document.getElementById("table-component-properties-heat_storage").style.display = "block"
 
         prop_names = ["heat_storage_capacity", "heat_storage_initial_charge"]
     }
-//    HEAT PUMP
+    //    HEAT PUMP
     if (element.attributes.parameters.type == 'heat_pump') {
         document.getElementById("table-tagnames-measured-heat_pump").style.display = "block"
         document.getElementById("table-component-properties-heat_pump").style.display = "block"
 
         prop_names = []
     }
-//    NODE
+    //    NODE
     if (element.attributes.parameters.type == 'node') {
         document.getElementById("table-tagnames-measured-node").style.display = "block"
         document.getElementById("table-component-properties-node").style.display = "block"
@@ -451,7 +622,7 @@ function open_element_parameter(element) {
 hide_all_parameter_table()
 
 function hide_all_parameter_table() {
-//    HIDE TAGNAMES TABLES
+    //    HIDE TAGNAMES TABLES
     document.getElementById("table-tagnames-measured-electrolyser").style.display = "none"
     document.getElementById("table-tagnames-measured-hydrogen_demand").style.display = "none"
     document.getElementById("table-tagnames-measured-hydrogen_storage").style.display = "none"
@@ -463,7 +634,7 @@ function hide_all_parameter_table() {
     document.getElementById("table-tagnames-measured-heat_storage").style.display = "none"
     document.getElementById("table-tagnames-measured-heat_pump").style.display = "none"
     document.getElementById("table-tagnames-measured-node").style.display = "none"
-//    HIDE PROPERTIES TABLES
+    //    HIDE PROPERTIES TABLES
     document.getElementById("table-component-properties-electrolyser").style.display = "none"
     document.getElementById("table-component-properties-hydrogen_demand").style.display = "none"
     document.getElementById("table-component-properties-hydrogen_storage").style.display = "none"

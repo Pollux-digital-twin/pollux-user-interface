@@ -1,7 +1,6 @@
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, request, current_app
 import os
 import json
-import numpy as np
 
 # Create Blueprint
 app_visualisation = Blueprint("visualisation", __name__)
@@ -57,11 +56,6 @@ def loadresults():
     else:
         print(f"Error: The file {result_data_filename} does not exist.")
 
-    time_horizon = result_data["solver_param"]["time_horizon"]
-    step_size_control = result_data["solver_param"]["step_size_control"]
-    time_vector_control = np.linspace(
-        0, time_horizon, time_horizon // step_size_control + 1
-    )
     if project_case == "power_to_hydrogen":
         plot_data = {
             "objective_func_plot": {
@@ -133,6 +127,7 @@ def loadresults():
                     "hydrogen_storage_mass_flow_out"
                 ],
             },
+            "project_case": "power_to_hydrogen"
         }
     elif project_case == "power_to_heat":
         plot_data = {
@@ -166,6 +161,7 @@ def loadresults():
                 "power_difference": result_data["outputs"]["power_difference"],
                 "heat_difference": result_data["outputs"]["heat_difference"],
             },
+            "project_case": "power_to_heat"
         }
 
     return plot_data

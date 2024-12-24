@@ -126,7 +126,6 @@
                                     </i>
                                     Open Project
                                 </li>
-                                {% if current_user.role == 'admin' %}
                                 <li class="dropdown-divider">
                                 </li>
                                 <li class="nav-item dropdown-item">
@@ -136,7 +135,6 @@
                                         Delete Project
                                     </a>
                                 </li>
-                                {% endif %}
 
                             </ul>
                         </li>
@@ -309,19 +307,7 @@
 </script>
 <script src="{{ url_for('static', filename='vendor/waitme/waitMe.js') }}">
 </script>
-<script>
-    var current_effect = 'roundBounce'; //
-
-    function run_waitMe(effect) {
-        $('#container').waitMe({
-            effect: effect,
-            text: 'Please waiting...',
-            bg: 'rgba(255,255,255,0.7)',
-            color: '#000'
-        });
-    }
-
-    run_waitMe(current_effect)
+<script src="{{ url_for('static', filename='page/effect.js') }}">
 </script>
 <script src="{{ url_for('static', filename='page/project.js') }}">
 </script>

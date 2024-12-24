@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash,
 from pollux_interface.create_app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from pollux_interface.blueprint.dbmodels import User
-from flask_login import login_user, login_required, logout_user, current_user
+from flask_login import login_user, login_required, logout_user
 
 auth = Blueprint('auth', __name__)
 
@@ -35,6 +35,10 @@ def login_post():
 
     # if the above check passes, then we know the user has the right credentials
     login_user(user, remember=remember)
+
+    session["project_name"] = ''
+    session["project_case"] = ''
+
     return redirect(url_for('main.index'))
 
 
@@ -83,6 +87,9 @@ def signup_post():
 
     login_user(new_user, remember=True)
 
+    session["project_name"] = ''
+    session["project_case"] = ''
+
     return redirect(url_for('main.index'))
 
 
@@ -91,7 +98,7 @@ def signup_post():
 def logout():
     logout_user()
 
-    session["projectname"] = ''
-    session['system_assets'] = []
+    session["project_name"] = ''
+    session["project_case"] = ''
 
     return redirect(url_for('auth.login'))

@@ -9,9 +9,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 $('#results_list').on('change', async function () {
     try {
-        const result = await load_results();
+        result = await load_results();
 
-        const result_name = $('#results_list').val();
+        result_name = $('#results_list').val();
 
         // Assuming plot_results is a function that takes the results_data as input
         plot_results(result.results_data, result_name);
@@ -37,7 +37,7 @@ function get_results_list() {
         contentType: 'application/json',
         data: JSON.stringify({ project_name: project_name }),
         success: function (data) {
-            const results_list = data.results_list;
+            results_list = data.results_list;
 
             var fieldselect = document.getElementById('results_list');
 
@@ -59,11 +59,15 @@ function get_results_list() {
 
 // Function plot_results ----------------------------------------------------------
 function plot_results(results_data, result_name) {
-    const mode = result_name.endsWith('_simulation') ? 'simulation' : result_name.endsWith('_optimisation') ? 'optimisation' : null;
+    mode = result_name.endsWith('_simulation') ? 'simulation' : result_name.endsWith('_optimisation') ? 'optimisation' : null;
 
-    const panels = [
+    panels = [
         { id: 'objective_func_plot', panel: $('#objective_func_plot') },
-        { id: 'scaled_control_plot', panel: $('#scaled_control_plot') }
+        { id: 'scaled_control_plot', panel: $('#scaled_control_plot') },
+        { id: 'hydrogen_profiles_plot', panel: $('#hydrogen_profiles_plot') },
+        { id: 'heat_profiles_plot', panel: $('#heat_profiles_plot') },
+        { id: 'kpi_plot', panel: $('#kpi_plot') },
+        { id: 'hydrogen_storage_plot', panel: $('#hydrogen_storage_plot') }
     ];
     panels.forEach(({ id, panel }) => {
         panel.closest('.panel').hide();
@@ -71,7 +75,7 @@ function plot_results(results_data, result_name) {
     //    Optimisation plots
     if (mode == 'optimisation') {
         //        Unhide panels
-        const panels = [
+        panels = [
             { id: 'objective_func_plot', panel: $('#objective_func_plot') },
             //{ id: 'scaled_control_plot', panel: $('#scaled_control_plot') }
         ];
@@ -79,30 +83,56 @@ function plot_results(results_data, result_name) {
             panel.closest('.panel').show();
         });
         //        Create objective function plot
-        const obj_func_plot_data = results_data['objective_func_plot']
+        obj_func_plot_data = results_data['objective_func_plot']
         obj_func_plot(obj_func_plot_data)
         // //        Create scaled controls plot
-        // const scaled_control_plot_data = results_data['scaled_control_plot']
+        //  scaled_control_plot_data = results_data['scaled_control_plot']
         // scaled_control_plot(scaled_control_plot_data)
     }
     //    Create control profiles plot
-    const control_profiles_plot_data = results_data['control_profiles_plot']
-    control_profiles_plot(control_profiles_plot_data)
+    control_profiles_plot_data = results_data['control_profiles_plot']
+    control_profiles_plot(control_profiles_plot_data, results_data["project_case"])
     //    Create power profiles plot
-    const power_profiles_plot_data = results_data['power_profiles_plot']
-    power_profiles_plot(power_profiles_plot_data)
-    //    Create hydrogen profiles plot
-    const hydrogen_profiles_plot_data = results_data['hydrogen_profiles_plot']
-    hydrogen_profiles_plot(hydrogen_profiles_plot_data)
+    power_profiles_plot_data = results_data['power_profiles_plot']
+    power_profiles_plot(power_profiles_plot_data, results_data["project_case"])
+
     //    Create mismatch plot
-    const mismatch_plot_data = results_data['mismatch_plot']
-    mismatch_plot(mismatch_plot_data)
-    //    Create kpi plot
-    const kpi_plot_data = results_data['kpi_plot']
-    kpi_plot(kpi_plot_data)
-    //    Create hydrogen storage plot
-    const hydrogen_storage_plot_data = results_data['hydrogen_storage_plot']
-    hydrogen_storage_plot(hydrogen_storage_plot_data)
+    mismatch_plot_data = results_data['mismatch_plot']
+    mismatch_plot(mismatch_plot_data, results_data["project_case"])
+
+    if (results_data["project_case"] == "power_to_hydrogen") {
+        //        Unhide panels
+        panels = [
+            { id: 'hydrogen_profiles_plot', panel: $('#hydrogen_profiles_plot') },
+            { id: 'hydrogen_storage_plot', panel: $('#hydrogen_storage_plot') },
+            { id: 'kpi_plot', panel: $('#kpi_plot') }
+        ];
+        panels.forEach(({ id, panel }) => {
+            panel.closest('.panel').show();
+        });
+        //    Create kpi plot
+        kpi_plot_data = results_data['kpi_plot']
+        kpi_plot(kpi_plot_data)
+        //    Create hydrogen profiles plot
+        hydrogen_profiles_plot_data = results_data['hydrogen_profiles_plot']
+        hydrogen_profiles_plot(hydrogen_profiles_plot_data)
+
+        //    Create hydrogen storage plot
+        hydrogen_storage_plot_data = results_data['hydrogen_storage_plot']
+        hydrogen_storage_plot(hydrogen_storage_plot_data)
+    } else if (results_data["project_case"] == "power_to_heat") {
+        //        Unhide panels
+        panels = [
+            { id: 'heat_profiles_plot', panel: $('#heat_profiles_plot') }
+        ];
+        panels.forEach(({ id, panel }) => {
+            panel.closest('.panel').show();
+        });
+        //    Create heat profiles plot
+        heat_profiles_plot_data = results_data['heat_profiles_plot']
+        heat_profiles_plot(heat_profiles_plot_data)
+
+    }
 
 }
 
@@ -146,7 +176,7 @@ function obj_func_plot(data) {
     const { function_value, objective_label } = data;
 
     // Create the trace for the plot
-    const trace = {
+    trace = {
         x: Array.from({ length: function_value.length }, (_, i) => i + 1), // Iteration (1, 2, 3, ...)
         y: function_value,
         mode: 'lines',
@@ -154,7 +184,7 @@ function obj_func_plot(data) {
     };
 
     // Define the layout
-    const layout = {
+    layout = {
         plot_bgcolor: "#27293D",
         paper_bgcolor: "#27293D",
         font: {
@@ -178,14 +208,14 @@ function obj_func_plot(data) {
 
 //Scaled controls plot
 function scaled_control_plot(data) {
-    const time_vector = data.time_vector_control;
-    const control_scaled_value = data.control_scaled_value;
-    const components_with_control = data.components_with_control;
+    time_vector = data.time_vector_control;
+    control_scaled_value = data.control_scaled_value;
+    components_with_control = data.components_with_control;
 
-    const n = time_vector.length - 1;
+    n = time_vector.length - 1;
 
     // Create traces for each subplot
-    const traces = [];
+    traces = [];
 
     // Subplot 1: Multiple curves from control_scaled_value[:, :n]
     for (let i = 0; i < control_scaled_value.length; i++) {
@@ -227,7 +257,7 @@ function scaled_control_plot(data) {
     }
 
     // Layout for the plot
-    const layout = {
+    layout = {
         plot_bgcolor: "#27293D",
         paper_bgcolor: "#27293D",
         font: {
@@ -268,81 +298,127 @@ function scaled_control_plot(data) {
 
 //SIMULATION AND OPTIMIZATION PLOTS -----------------------------------------------
 //Control profiles plot
-function control_profiles_plot(data) {
+function control_profiles_plot(data, project_case) {
     // Extract data from the input object
-    const time_vector_control = data.time_vector_control;
-    const control_reshaped = data.control_reshaped;
-    const components_with_control = data.components_with_control;
+    time_vector_control = data.time_vector_control;
+    control_reshaped = data.control_reshaped;
+    components_with_control = data.components_with_control;
 
-    // Create traces for the left y-axis
-    const trace1 = {
-        x: time_vector_control,
-        y: control_reshaped[0],
-        mode: 'lines',
-        name: 'splitter electricity demand/electrolyzer'
-    };
+    if (project_case == "power_to_heat") {
+        trace1 = {
+            x: time_vector_control,
+            y: control_reshaped[0],
+            mode: 'lines',
+            line: { shape: 'hv', width: 2 },
+            name: 'splitter electricity demand/heatpump'
+        };
 
-    const trace2 = {
-        x: time_vector_control,
-        y: control_reshaped[1],
-        mode: 'lines',
-        name: 'splitter hydrogen demand/storage'
-    };
 
-    // Create trace for the right y-axis
-    const trace3 = {
-        x: time_vector_control,
-        y: control_reshaped[2].map(val => val * 3600), // Convert to [kg/hr]
-        mode: 'lines',
-        name: 'hydrogen storage mass flow out',
-        yaxis: 'y2'
-    };
+        // Define layout with dual y-axes
+        layout = {
+            plot_bgcolor: "#27293D",
+            paper_bgcolor: "#27293D",
+            font: {
+                color: "#D2D2D5"
 
-    // Define layout with dual y-axes
-    const layout = {
-        plot_bgcolor: "#27293D",
-        paper_bgcolor: "#27293D",
-        font: {
-            color: "#D2D2D5"
+            },
+            title: 'Control Profiles',
+            xaxis: {
+                title: 'Time (hr)',
+            },
+            yaxis: {
+                title: 'Splitter Control [-]'
+            },
+            legend: {
+                orientation: 'h',
+                x: 0.5,
+                xanchor: 'center',
+                y: -0.2
+            },
+            grid: { visible: true }
+        };
 
-        },
-        title: 'Control Profiles',
-        xaxis: {
-            title: 'Time (hr)',
-        },
-        yaxis: {
-            title: 'Splitter Control [-]'
-        },
-        yaxis2: {
-            title: 'Storage production rate [kg/hr]',
-            overlaying: 'y',
-            side: 'right'
-        },
-        legend: {
-            orientation: 'h',
-            x: 0.5,
-            xanchor: 'center',
-            y: -0.2
-        },
-        grid: { visible: true }
-    };
+        traces = [trace1];
+
+    } else if (project_case == "power_to_hydrogen") {
+        // Create traces for the left y-axis
+        trace1 = {
+            x: time_vector_control,
+            y: control_reshaped[0],
+            mode: 'lines',
+            line: { shape: 'hv', width: 2 },
+            name: 'splitter electricity demand/electrolyzer'
+        };
+
+        trace2 = {
+            x: time_vector_control,
+            y: control_reshaped[1],
+            mode: 'lines',
+            line: { shape: 'hv', width: 2 },
+            name: 'splitter hydrogen demand/storage'
+        };
+
+        // Create trace for the right y-axis
+        trace3 = {
+            x: time_vector_control,
+            y: control_reshaped[2].map(val => val * 3600), // Convert to [kg/hr]
+            mode: 'lines',
+            line: { shape: 'hv', width: 2 },
+            name: 'hydrogen storage mass flow out',
+            yaxis: 'y2'
+        };
+
+        // Define layout with dual y-axes
+        layout = {
+            plot_bgcolor: "#27293D",
+            paper_bgcolor: "#27293D",
+            font: {
+                color: "#D2D2D5"
+
+            },
+            title: 'Control Profiles',
+            xaxis: {
+                title: 'Time (hr)',
+            },
+            yaxis: {
+                title: 'Splitter Control [-]'
+            },
+            yaxis2: {
+                title: 'Storage production rate [kg/hr]',
+                overlaying: 'y',
+                side: 'right'
+            },
+            legend: {
+                orientation: 'h',
+                x: 0.5,
+                xanchor: 'center',
+                y: -0.2
+            },
+            grid: { visible: true }
+        };
+
+        traces = [trace1, trace2, trace3];
+    }
 
     // Show plot
-    const traces = [trace1, trace2, trace3];
+
     Plotly.newPlot('control_profiles_plot', traces, layout);
 }
 
 //Power profiles plot
-function power_profiles_plot(data) {
+function power_profiles_plot(data, project_case) {
     // Extract the necessary data from the input object
-    const time_vector = data.time_vector
-    const power_supply = data.power_supply
-    const power_delivered = data.power_delivered
-    const electrolyser_power_input = data.electrolyser_power_input
-    const power_demand = data.power_demand
-
+    time_vector = data.time_vector
+    power_supply = data.power_supply
+    power_delivered = data.power_delivered
+    power_demand = data.power_demand
+    if (project_case == "power_to_hydrogen") {
+        electrolyser_power_input = data.electrolyser_power_input
+    } else if (project_case == "power_to_heat") {
+        heatpump_power_input = data.heatpump_power_input
+    }
     // Define the traces for the plot
-    const trace1 = {
+    trace1 = {
         x: time_vector,
         y: power_supply,
         mode: 'lines',
@@ -350,7 +426,7 @@ function power_profiles_plot(data) {
         name: 'Electricity Supply'
     };
 
-    const trace2 = {
+    trace2 = {
         x: time_vector,
         y: power_delivered,
         mode: 'lines',
@@ -358,15 +434,27 @@ function power_profiles_plot(data) {
         name: 'Electricity Delivered'
     };
 
-    const trace3 = {
-        x: time_vector,
-        y: electrolyser_power_input,
-        mode: 'lines',
-        line: { shape: 'hv', width: 2 },
-        name: 'Electrolyser Electricity Input'
-    };
+    if (project_case == "power_to_hydrogen") {
 
-    const trace4 = {
+        trace3 = {
+            x: time_vector,
+            y: electrolyser_power_input,
+            mode: 'lines',
+            line: { shape: 'hv', width: 2 },
+            name: 'Electrolyser Electricity Input'
+        };
+    } else if (project_case == "power_to_heat") {
+        trace3 = {
+            x: time_vector,
+            y: heatpump_power_input,
+            mode: 'lines',
+            line: { shape: 'hv', width: 2 },
+            name: 'heatpump Electricity Input'
+        };
+
+    }
+
+    trace4 = {
         x: time_vector,
         y: power_demand,
         mode: 'lines',
@@ -375,10 +463,10 @@ function power_profiles_plot(data) {
     };
 
     // Combine all traces
-    const traces = [trace1, trace2, trace3, trace4];
+    traces = [trace1, trace2, trace3, trace4];
 
     // Define the layout
-    const layout = {
+    layout = {
         plot_bgcolor: "#27293D",
         paper_bgcolor: "#27293D",
         font: {
@@ -408,15 +496,15 @@ function power_profiles_plot(data) {
 //Hydrogen profiles plot
 function hydrogen_profiles_plot(data) {
     // Extract data from the input object
-    const time_vector = data.time_vector;
-    const hydrogen_electrolyser_to_demand = data.hydrogen_electrolyser_to_demand;
-    const hydrogen_electrolyser_to_storage = data.hydrogen_electrolyser_to_storage;
-    const hydrogen_storage_mass_flow_out = data.hydrogen_storage_mass_flow_out;
-    const hydrogen_demand = data.hydrogen_demand;
-    const hydrogen_delivered = data.hydrogen_delivered;
+    time_vector = data.time_vector;
+    hydrogen_electrolyser_to_demand = data.hydrogen_electrolyser_to_demand;
+    hydrogen_electrolyser_to_storage = data.hydrogen_electrolyser_to_storage;
+    hydrogen_storage_mass_flow_out = data.hydrogen_storage_mass_flow_out;
+    hydrogen_demand = data.hydrogen_demand;
+    hydrogen_delivered = data.hydrogen_delivered;
 
     // Create traces for each hydrogen profile
-    const trace1 = {
+    trace1 = {
         x: time_vector,
         y: hydrogen_electrolyser_to_demand,
         mode: 'lines',
@@ -424,7 +512,7 @@ function hydrogen_profiles_plot(data) {
         name: 'Hydrogen from Electrolyser to Demand'
     };
 
-    const trace2 = {
+    trace2 = {
         x: time_vector,
         y: hydrogen_electrolyser_to_storage,
         mode: 'lines',
@@ -432,7 +520,7 @@ function hydrogen_profiles_plot(data) {
         name: 'Hydrogen from Electrolyser to Storage'
     };
 
-    const trace3 = {
+    trace3 = {
         x: time_vector,
         y: hydrogen_storage_mass_flow_out,
         mode: 'lines',
@@ -440,7 +528,7 @@ function hydrogen_profiles_plot(data) {
         name: 'Hydrogen from Storage to Demand'
     };
 
-    const trace4 = {
+    trace4 = {
         x: time_vector,
         y: hydrogen_demand,
         mode: 'lines',
@@ -448,7 +536,7 @@ function hydrogen_profiles_plot(data) {
         name: 'Hydrogen Demand'
     };
 
-    const trace5 = {
+    trace5 = {
         x: time_vector,
         y: hydrogen_delivered,
         mode: 'lines',
@@ -457,10 +545,10 @@ function hydrogen_profiles_plot(data) {
     };
 
     // Combine all traces
-    const traces = [trace1, trace2, trace3, trace4, trace5];
+    traces = [trace1, trace2, trace3, trace4, trace5];
 
     // Layout configuration
-    const layout = {
+    layout = {
         plot_bgcolor: "#27293D",
         paper_bgcolor: "#27293D",
         font: {
@@ -487,59 +575,48 @@ function hydrogen_profiles_plot(data) {
     Plotly.newPlot('hydrogen_profiles_plot', traces, layout);
 }
 
-//Mismatch plot
-function mismatch_plot(data) {
+// heat profiles plot
+function heat_profiles_plot(data) {
     // Extract data from the input object
-    const time_vector = data.time_vector;
-    const power_difference = data.power_difference;
-    const hydrogen_difference = data.hydrogen_difference;
+    time_vector = data.time_vector;
+    heat_demand = data.heat_demand;
+    heat_delivered = data.heat_delivered;
 
-    // Define the traces for the two step plots
-    const powerTrace = {
+    // Create traces for each heat profile
+
+    trace1 = {
         x: time_vector,
-        y: power_difference,
+        y: heat_demand,
         mode: 'lines',
-        line: {
-            shape: 'hv', // Equivalent to `where='post'` in Matplotlib
-            width: 2
-        },
-        name: 'Power',
-        yaxis: 'y1'
+        line: { shape: 'hv', width: 2 },
+        name: 'Heat Demand'
     };
 
-    const hydrogenTrace = {
+    trace2 = {
         x: time_vector,
-        y: hydrogen_difference,
+        y: heat_delivered,
         mode: 'lines',
-        line: {
-            shape: 'hv',
-            width: 2
-        },
-        name: 'Hydrogen',
-        yaxis: 'y2'
+        line: { shape: 'hv', width: 2 },
+        name: 'Heat Delivered'
     };
 
-    // Define the layout of the plot
-    const layout = {
+    // Combine all traces
+    traces = [trace1, trace2];
+
+    // Layout configuration
+    layout = {
         plot_bgcolor: "#27293D",
         paper_bgcolor: "#27293D",
         font: {
             color: "#D2D2D5"
 
         },
-        title: 'Relative Error (Demand - Delivered)/Demand',
+        title: 'Heat Profiles',
         xaxis: {
             title: 'Time (hr)'
         },
         yaxis: {
-            title: 'Power [frac]',
-            range: [-1, 1]
-        },
-        yaxis2: {
-            title: 'Hydrogen [frac]',
-            overlaying: 'y',
-            side: 'right',
-            range: [-1, 1]
+            title: 'Heat flow [MW]'
         },
         legend: {
             orientation: 'h',
@@ -551,18 +628,136 @@ function mismatch_plot(data) {
     };
 
     // Show plot
-    const plotData = [powerTrace, hydrogenTrace];
+    Plotly.newPlot('heat_profiles_plot', traces, layout);
+}
+
+//Mismatch plot
+function mismatch_plot(data, project_case) {
+    // Extract data from the input object
+    time_vector = data.time_vector;
+    power_difference = data.power_difference;
+
+    if (project_case == "power_to_hydrogen") {
+        hydrogen_difference = data.hydrogen_difference;
+    } else if (project_case == "power_to_heat") {
+        heat_difference = data.heat_difference;
+    }
+
+    // Define the traces for the two step plots
+    powerTrace = {
+        x: time_vector,
+        y: power_difference,
+        mode: 'lines',
+        line: {
+            shape: 'hv', // Equivalent to `where='post'` in Matplotlib
+            width: 2
+        },
+        name: 'Power',
+        yaxis: 'y1'
+    };
+    if (project_case == "power_to_hydrogen") {
+        hydrogenTrace = {
+            x: time_vector,
+            y: hydrogen_difference,
+            mode: 'lines',
+            line: {
+                shape: 'hv',
+                width: 2
+            },
+            name: 'Hydrogen',
+            yaxis: 'y2'
+        };
+
+        // Define the layout of the plot
+        layout = {
+            plot_bgcolor: "#27293D",
+            paper_bgcolor: "#27293D",
+            font: {
+                color: "#D2D2D5"
+
+            },
+            title: 'Relative Error (Demand - Delivered)/Demand',
+            xaxis: {
+                title: 'Time (hr)'
+            },
+            yaxis: {
+                title: 'Power [frac]',
+                range: [-1, 1]
+            },
+            yaxis2: {
+                title: 'Hydrogen [frac]',
+                overlaying: 'y',
+                side: 'right',
+                range: [-1, 1]
+            },
+            legend: {
+                orientation: 'h',
+                x: 0.5,
+                xanchor: 'center',
+                y: -0.2
+            },
+            grid: { visible: true },
+        };
+
+        plotData = [powerTrace, hydrogenTrace];
+    } else if (project_case == "power_to_heat") {
+        heatTrace = {
+            x: time_vector,
+            y: heat_difference,
+            mode: 'lines',
+            line: {
+                shape: 'hv',
+                width: 2
+            },
+            name: 'Heat',
+            yaxis: 'y2'
+        };
+
+        // Define the layout of the plot
+        layout = {
+            plot_bgcolor: "#27293D",
+            paper_bgcolor: "#27293D",
+            font: {
+                color: "#D2D2D5"
+
+            },
+            title: 'Relative Error (Demand - Delivered)/Demand',
+            xaxis: {
+                title: 'Time (hr)'
+            },
+            yaxis: {
+                title: 'Power [frac]',
+                range: [-1, 1]
+            },
+            yaxis2: {
+                title: 'Heat [frac]',
+                overlaying: 'y',
+                side: 'right',
+                range: [-1, 1]
+            },
+            legend: {
+                orientation: 'h',
+                x: 0.5,
+                xanchor: 'center',
+                y: -0.2
+            },
+            grid: { visible: true },
+        };
+
+        plotData = [powerTrace, heatTrace];
+    }
+
     Plotly.newPlot('mismatch_plot', plotData, layout);
 }
 
 //KPI plot
 function kpi_plot(data) {
     // Extract data
-    const time_vector = data.time_vector;
-    const efficiency_electrolyser = data.efficiency_electrolyser;
+    time_vector = data.time_vector;
+    efficiency_electrolyser = data.efficiency_electrolyser;
 
     // Create the trace for the efficiency plot
-    const trace1 = {
+    trace1 = {
         x: time_vector,
         y: efficiency_electrolyser,
         mode: 'lines',
@@ -571,7 +766,7 @@ function kpi_plot(data) {
     };
 
     // Define layout for the plot
-    const layout = {
+    layout = {
         plot_bgcolor: "#27293D",
         paper_bgcolor: "#27293D",
         font: {
@@ -601,14 +796,14 @@ function kpi_plot(data) {
 //Hydrogen storage plot
 function hydrogen_storage_plot(data) {
     // Extract data from the input object
-    const time_vector = data.time_vector;
-    const hydrogen_mass_stored = data.hydrogen_mass_stored;
-    const fill_level = data.fill_level;
-    const hydrogen_storage_mass_flow_in = data.hydrogen_storage_mass_flow_in;
-    const hydrogen_storage_mass_flow_out = data.hydrogen_storage_mass_flow_out;
+    time_vector = data.time_vector;
+    hydrogen_mass_stored = data.hydrogen_mass_stored;
+    fill_level = data.fill_level;
+    hydrogen_storage_mass_flow_in = data.hydrogen_storage_mass_flow_in;
+    hydrogen_storage_mass_flow_out = data.hydrogen_storage_mass_flow_out;
 
     // Create traces for the plot with step-like lines (use 'hv' shape for 'post' effect)
-    const trace1 = {
+    trace1 = {
         x: time_vector,
         y: hydrogen_mass_stored,
         mode: 'lines',
@@ -618,7 +813,7 @@ function hydrogen_storage_plot(data) {
         yaxis: 'y1'
     };
 
-    const trace2 = {
+    trace2 = {
         x: time_vector,
         y: fill_level,
         mode: 'lines',
@@ -628,7 +823,7 @@ function hydrogen_storage_plot(data) {
         yaxis: 'y2'
     };
 
-    const trace3 = {
+    trace3 = {
         x: time_vector,
         y: hydrogen_storage_mass_flow_in,
         mode: 'lines',
@@ -638,7 +833,7 @@ function hydrogen_storage_plot(data) {
         yaxis: 'y2'
     };
 
-    const trace4 = {
+    trace4 = {
         x: time_vector,
         y: hydrogen_storage_mass_flow_out,
         mode: 'lines',
@@ -649,7 +844,7 @@ function hydrogen_storage_plot(data) {
     };
 
     // Layout configuration
-    const layout = {
+    layout = {
         plot_bgcolor: "#27293D",
         paper_bgcolor: "#27293D",
         font: {
@@ -678,7 +873,7 @@ function hydrogen_storage_plot(data) {
     };
 
     // Combine traces
-    const traces = [trace1, trace2, trace3, trace4];
+    traces = [trace1, trace2, trace3, trace4];
 
     // Show the plot
     Plotly.newPlot('hydrogen_storage_plot', traces, layout);
