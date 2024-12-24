@@ -25,6 +25,11 @@ function create_new_project() {
     }
     project_case = document.getElementById("project_case_list").value
 
+    if (project_case == "power_to_heat"){
+        alert("Power to Heat is not yet implemented")
+        return
+    }
+
     $.ajax({
         type: 'POST',
         url: '/createproject',
@@ -62,8 +67,6 @@ function delete_project() {
 
 
                 window.alert(data);
-
-                document.getElementById("project_name").value = ""
 
                 window.location.reload()
 

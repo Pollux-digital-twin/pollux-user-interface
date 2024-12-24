@@ -277,6 +277,7 @@ function control_profiles_plot(data) {
         x: time_vector_control,
         y: control_reshaped[0],
         mode: 'lines',
+        line: { shape: 'hv', width: 2 },
         name: 'splitter electricity demand/electrolyzer'
     };
 
@@ -284,6 +285,7 @@ function control_profiles_plot(data) {
         x: time_vector_control,
         y: control_reshaped[1],
         mode: 'lines',
+        line: { shape: 'hv', width: 2 },
         name: 'splitter hydrogen demand/storage'
     };
 
@@ -292,6 +294,7 @@ function control_profiles_plot(data) {
         x: time_vector_control,
         y: control_reshaped[2].map(val => val * 3600), // Convert to [kg/hr]
         mode: 'lines',
+        line: { shape: 'hv', width: 2 },
         name: 'hydrogen storage mass flow out',
         yaxis: 'y2'
     };

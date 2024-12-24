@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 $('#project_name').on('change', function () {
-
     load_diagram()
 })
 
@@ -28,10 +27,9 @@ $("#scenarioname_list").change(function () {
 function initialize_page() {
     load_diagram()
 
-    //    Update the dropdown menu with scenarios
-    getExistingScenarioList('scenario_default');
-
     loadScenarioAnalysisHTML()
+
+    getExistingScenarioList('scenario_default');
 
 }
 
@@ -183,11 +181,12 @@ async function run_solver() {
         "mode": mode,
     }
 
-    if (mode == 'simulation'){
+    if (mode == 'simulation') {
         window.alert('Running simulation with scenario: ' + scenario_name)
-    }else{
+    } else {
         window.alert('Running optimisation with scenario: ' + scenario_name + '. It can takes several minutes, dont close this page.')
     }
+
 
     $.ajax({
         type: 'POST',
@@ -196,7 +195,7 @@ async function run_solver() {
         data: JSON.stringify({ 'project_name': project_name, 'scenario_name': scenario_name, 'sim_data': sim_data }),
         success: function (data) {
             console.log('run_solver SUCCESS --> data = ', data)
-            window.alert('Simulation is finish. Go to visualization app for the results.')
+            window.alert('Simulation is finished. Go to visualization app for the results.')
         },
         error: function (xhr, status, error) {
             window.alert('Simulation error. logfile: ' + xhr.responseText)

@@ -109,6 +109,7 @@ def deleteproject():
         db.session.commit()
 
         session["project_name"] = ''
+        session["project_case"] = ''
 
         project_folder_path = os.path.join(current_app.config['POLLUX_PROJECT_FOLDER'],
                                            projectname)

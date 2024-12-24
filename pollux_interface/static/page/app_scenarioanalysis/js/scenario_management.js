@@ -236,6 +236,9 @@ function load_scenario(project_name, scenario_name) {
                     const tableData = powerToHydrogenData[tableKey]; // Get the subdictionary for this table
                     load_table_data(tableKey, tableData); // Update the table with the corresponding data
                 });
+
+                set_profiles_parameters(scenarioData["profiles_parameters"])
+
             } else if (scenarioData['project_case'] === 'power_to_heat') {
                 const powerToHeatData = scenarioData["component_parameters"];
                 const tablesToUpdate = ["heatpump_parameters", "heat_storage_parameters"]
@@ -265,7 +268,6 @@ function get_profiles_parameters() {
 
     local_storage_dict = JSON.parse(local_storage_json);
     
-    console.log(local_storage_dict)
     profiles_parameters = {
         'power_supply': local_storage_dict['power_supply_profile_data'],
         'power_demand': local_storage_dict['power_demand_profile_data'],
@@ -277,4 +279,21 @@ function get_profiles_parameters() {
     
     return profiles_parameters;
 }
+
+
+function set_profiles_parameters(profiles_parameters){
+
+    profileData = {
+        'power_supply_profile_data': profiles_parameters['power_supply'],
+        'power_demand_profile_data': profiles_parameters['power_demand'],
+        'hydrogen_demand_profile_data': profiles_parameters['hydrogen_demand'],
+        'splitter1_profile_data': profiles_parameters['splitter1'],
+        'splitter2_profile_data': profiles_parameters['splitter2'],
+        'hydrogen_storage_profile_data': profiles_parameters['hydrogen_storage']
+    };
+
+    sessionStorage.setItem('allParsedCSVData', JSON.stringify(profileData))
+    
+}
+
 
