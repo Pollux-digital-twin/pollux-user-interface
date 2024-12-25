@@ -68,13 +68,6 @@
             <div class="sidebar-wrapper">
                 <ul class="nav">
                     <li>
-                        <a href="{{ url_for('main.index') }}">
-                            <i class="tim-icons icon-bank">
-                            </i>
-                            Home
-                        </a>
-                    </li>
-                    <li>
                         <a href="#">
                             <i class="tim-icons icon-app">
                             </i>
@@ -125,6 +118,9 @@
                                     <i class="fa fa-folder-open">
                                     </i>
                                     Open Project
+                                </li>
+                                <li class="nav-item dropdown-item"><a onclick="close_project()"><i
+                                    class="fa fa-close"></i>Close Project</a>
                                 </li>
                                 <li class="dropdown-divider">
                                 </li>

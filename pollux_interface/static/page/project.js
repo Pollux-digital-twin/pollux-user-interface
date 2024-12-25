@@ -97,3 +97,26 @@ function open_project() {
 
     }
 }
+
+function close_project() {
+    project_name = document.getElementById("project_name").value
+
+    if (project_name == "") {
+        return
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/closeproject',
+        contentType: 'application/json',
+        data: JSON.stringify({ project_name: project_name }),
+        success: function (data) {
+            window.alert(data);
+
+            window.location.reload()
+        }
+    })
+
+
+
+}

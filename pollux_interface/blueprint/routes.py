@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, send_from_directory
+from flask import Blueprint, render_template, send_from_directory, redirect, url_for
 from flask_login import login_required
 
 main = Blueprint('main', __name__)
@@ -7,13 +7,13 @@ main = Blueprint('main', __name__)
 @main.route('/')
 @login_required
 def index():
-    return render_template('index.html')
+    return redirect(url_for('main.app_scenarioanalysis'))
 
 
-@main.route('/app/diagram')
-@login_required
-def app_diagram():
-    return render_template('app_diagram.html')
+# @main.route('/app/diagram')
+# @login_required
+# def app_diagram():
+#     return render_template('app_diagram.html')
 
 
 @main.route('/app/scenarioanalysis')
