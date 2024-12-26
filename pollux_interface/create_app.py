@@ -37,6 +37,10 @@ def create_app():
     app.config['POLLUX_PROJECT_FOLDER'] = \
         os.getenv('POLLUX_PROJECT_FOLDER', os.path.join(pollux_root_dir, 'pollux-project'))
 
+    app.config['POLLUX_DOCUMENTATION_FOLDER'] = \
+        os.getenv('POLLUX_DOCUMENTATION_FOLDER',
+                  os.path.join(pollux_root_dir, 'pollux-documentation'))
+
     Session(app)
 
     db.init_app(app)
