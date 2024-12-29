@@ -114,7 +114,6 @@ function load_table_data(tableId, data) {
         'cold_temperature_available': "Cold temperature [deg Celsius]",
         'cold_deltaT': "Temperature delta [deg Celsius]",
         'hot_mass_flowrate': "Water flow rate [kg/hour]",
-        'electricity_power_in': "Power input [MW]"
     }
     if (table && data) {
         const tbody = table.querySelector('tbody');
